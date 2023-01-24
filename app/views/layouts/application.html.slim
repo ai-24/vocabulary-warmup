@@ -11,4 +11,7 @@ html
     = vite_client_tag
     = vite_javascript_tag 'application'
   body
-    = yield
+    = render 'shared/header'
+    main
+      = notice
+      = yield
