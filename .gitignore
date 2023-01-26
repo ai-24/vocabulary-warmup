@@ -32,6 +32,7 @@
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
+app/javascript/entrypoints/application.css
 
 /node_modules
 

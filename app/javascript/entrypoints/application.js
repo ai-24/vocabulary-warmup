@@ -28,4 +28,4 @@ console.log(
 // const channels = import.meta.globEager('./**/*_channel.js')
 
 // Example: Import a stylesheet in app/frontend/index.css
-// import '~/index.css'
+import '../../assets/stylesheets/application.tailwind.css'
