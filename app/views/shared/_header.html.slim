@@ -1,0 +1,17 @@
+header.mx-9.my-4
+  .flex.flex-row
+    .basis-1/2
+      h1.text-2xl.font-bold
+        = link_to 'Word Warmup', root_path
+    .basis-1/2
+      .grid.justify-items-end
+        - if logged_in?
+          label.font-medium.text-lg(for='header-menu')
+            = current_user.name
+          input#header-menu.peer.hidden(type='checkbox')
+          .invisible.peer-checked:visible
+            ul
+              li
+                = button_to 'Log out', logout_path, method: :delete
+        - else
+          = button_to 'Sign up/Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }, class: 'font-medium text-lg'

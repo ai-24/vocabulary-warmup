@@ -4,3 +4,6 @@ inherit_gem:
   rubocop-fjord:
     - "config/rubocop.yml"
     - "config/rails.yml"
+
+RSpec/MultipleExpectations:
+  Max: 2
