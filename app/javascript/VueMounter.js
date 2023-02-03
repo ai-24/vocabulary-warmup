@@ -1,4 +1,6 @@
 import { createApp } from 'vue'
+import { createI18n } from 'vue-i18n'
+import ja from './locales/ja.json'
 
 export default class VueMounter {
   constructor() {
@@ -18,7 +20,13 @@ export default class VueMounter {
           const name = element.dataset.vue
           const component = this.components[name]
 
-          createApp(component).mount(`[data-vue=${name}]`)
+          const i18n = createI18n({
+            locale: 'ja',
+            messages: ja
+          })
+          const app = createApp(component)
+          app.use(i18n)
+          app.mount(`[data-vue=${name}]`)
         })
       }
     })
