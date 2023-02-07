@@ -8,17 +8,22 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 
+WordAndPhraseItem.create!(
+  [
+    {
+      content: 'balcony',
+      explanation: 'A platform on the side of a building, accessible from inside the building.'
+    },
+    {
+      content: 'Veranda',
+      explanation: 'A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.'
+    }
+  ]
+)
+
 unless Rails.env.test?
   WordAndPhraseItem.create!(
     [
-      {
-        content: 'balcony',
-        explanation: 'A platform on the side of a building, accessible from inside the building.'
-      },
-      {
-        content: 'Veranda',
-        explanation: 'A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.'
-      },
       {
         content: 'journey',
         explanation: 'Travelling but this word means more broad.'
