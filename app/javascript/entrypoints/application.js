@@ -2,6 +2,12 @@
 import * as Turbo from '@hotwired/turbo'
 // Import a stylesheet
 import '../../assets/stylesheets/application.tailwind.css'
+import VueMounter from '../VueMounter'
+import WordQuiz from '../components/word-quiz.vue'
+
+const mounter = new VueMounter()
+mounter.addComponent(WordQuiz)
+mounter.mount()
 
 Turbo.start()
 
