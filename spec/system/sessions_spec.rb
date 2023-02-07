@@ -32,7 +32,7 @@ RSpec.describe 'Sessions' do
     end
 
     it 'the logout button is invisible before click user name' do
-      expect(page).to have_css('div.invisible', text: 'Log out')
+      expect(page).not_to have_button 'Log out'
     end
 
     it 'the logout button is visible after click user name' do
