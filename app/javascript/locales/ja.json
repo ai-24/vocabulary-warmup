@@ -1,0 +1,16 @@
+{
+"ja": {
+    "quiz": {
+        "question": "問題",
+        "placeholder": "解答を入力",
+        "submit": "クイズに解答する",
+        "next": "次へ",
+        "correct": "正解",
+        "incorrect": "不正解",
+        "answer": "正解は{answer}です",
+        "completed": "問題が全て出題されました",
+        "result": "クイズの結果を確認する"
+    }
+
+}
+}
