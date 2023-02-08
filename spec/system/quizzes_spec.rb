@@ -46,4 +46,41 @@ RSpec.describe 'Quiz' do
       expect(page).not_to have_button '次へ'
     end
   end
+
+  describe 'quiz result' do
+    it 'change the screen from quiz to result' do
+      fill_in('解答を入力', with: 'balcony')
+      click_button 'クイズに解答する'
+      click_button '次へ'
+      fill_in('解答を入力', with: 'veranda')
+      click_button 'クイズに解答する'
+      click_button 'クイズの結果を確認する'
+
+      expect(page).not_to have_content '問題'
+      expect(page).to have_content '自分の解答を表示'
+    end
+
+    it 'show user answers list' do
+      fill_in('解答を入力', with: 'Balcony')
+      click_button 'クイズに解答する'
+      click_button '次へ'
+      fill_in('解答を入力', with: 'wrong answer')
+      click_button 'クイズに解答する'
+      click_button 'クイズの結果を確認する'
+
+      expect(page).to have_content '◯ Balcony'
+      expect(page).to have_content '× wrong answer'
+    end
+
+    it 'show 未入力 if the user answer is blank' do
+      fill_in('解答を入力', with: '')
+      click_button 'クイズに解答する'
+      click_button '次へ'
+      fill_in('解答を入力', with: 'veranda')
+      click_button 'クイズに解答する'
+      click_button 'クイズの結果を確認する'
+
+      expect(page).to have_content '× 未入力'
+    end
+  end
 end
