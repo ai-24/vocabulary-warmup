@@ -9,7 +9,11 @@
         "incorrect": "不正解",
         "answer": "正解は{answer}です",
         "completed": "問題が全て出題されました",
-        "result": "クイズの結果を確認する"
+        "resultButton": "クイズの結果を確認する",
+        "result": {
+            "showUserAnswers": "自分の解答を表示",
+            "blank": "未入力"
+        }
     }
 
 }
