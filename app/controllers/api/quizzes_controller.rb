@@ -4,7 +4,7 @@ class Api::QuizzesController < ApplicationController
   before_action :check_xhr_header
 
   def show
-    @quiz = WordAndPhraseItem.all
+    @quiz = ExpressionItem.all
   end
 
   private

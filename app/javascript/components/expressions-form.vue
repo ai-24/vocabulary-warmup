@@ -1,6 +1,6 @@
 <template>
   <div class="grid justify-items-stretch place-content-center">
-    <form @submit="onSubmit">
+    <form action="/words_and_phrases" method="POST" @submit="onSubmit">
       <div v-if="currentPage === 1">
         <p>{{ $t('form.wordsAndPhrases')}}</p>
         <p v-if="wordsOrPhrasesError" class="text-red-600">{{ $t('form.wordsAndPhrasesError') }}</p>
@@ -104,7 +104,7 @@
 </template>
 
 <script>
-import WordsAndPhrasesDetailsForm from './words-and-phrases-details-form.vue'
+import WordsAndPhrasesDetailsForm from './expressions-details-form.vue'
 
 export default {
   name: 'WordsAndPhrasesForm',

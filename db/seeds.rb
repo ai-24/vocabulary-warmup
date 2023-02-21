@@ -8,7 +8,7 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 
-WordAndPhraseItem.create!(
+ExpressionItem.create!(
   [
     {
       content: 'balcony',
@@ -22,7 +22,7 @@ WordAndPhraseItem.create!(
 )
 
 unless Rails.env.test?
-  WordAndPhraseItem.create!(
+  ExpressionItem.create!(
     [
       {
         content: 'journey',

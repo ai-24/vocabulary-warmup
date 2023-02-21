@@ -10,9 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_03_102947) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_18_061719) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "expression_items", force: :cascade do |t|
+    t.string "content", null: false
+    t.text "explanation", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "expression_id"
+    t.index ["expression_id"], name: "index_expression_items_on_expression_id"
+  end
+
+  create_table "expressions", force: :cascade do |t|
+    t.text "note"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "uid", null: false
@@ -21,11 +36,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_03_102947) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "word_and_phrase_items", force: :cascade do |t|
-    t.string "content", null: false
-    t.text "explanation", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
+  add_foreign_key "expression_items", "expressions"
 end
