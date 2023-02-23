@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class ExpressionsController < ApplicationController
-  before_action :set_expression, only: %i[ show edit update destroy ]
+  before_action :set_expression, only: %i[show edit update destroy]
 
   # GET /expressions or /expressions.json
   def index
@@ -7,16 +9,13 @@ class ExpressionsController < ApplicationController
   end
 
   # GET /expressions/1 or /expressions/1.json
-  def show
-  end
+  def show; end
 
   # GET /expressions/new
-  def new
-  end
+  def new; end
 
   # GET /expressions/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /expressions or /expressions.json
   def create
@@ -24,7 +23,7 @@ class ExpressionsController < ApplicationController
 
     respond_to do |format|
       if @expression.save
-        format.html { redirect_to expression_url(@expression), notice: "Expression was successfully created." }
+        format.html { redirect_to expression_url(@expression), notice: 'Expression was successfully created.' }
         format.json { render :show, status: :created, location: @expression }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -37,7 +36,7 @@ class ExpressionsController < ApplicationController
   def update
     respond_to do |format|
       if @expression.update(expression_params)
-        format.html { redirect_to expression_url(@expression), notice: "Expression was successfully updated." }
+        format.html { redirect_to expression_url(@expression), notice: 'Expression was successfully updated.' }
         format.json { render :show, status: :ok, location: @expression }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -51,19 +50,20 @@ class ExpressionsController < ApplicationController
     @expression.destroy
 
     respond_to do |format|
-      format.html { redirect_to expressions_url, notice: "Expression was successfully destroyed." }
+      format.html { redirect_to expressions_url, notice: 'Expression was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_expression
-      @expression = Expression.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def expression_params
-      params.require(:expression).permit(:note, expression_items_attributes: [:id, :content, :explanation])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_expression
+    @expression = Expression.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def expression_params
+    params.require(:expression).permit(:note, expression_items_attributes: %i[id content explanation])
+  end
 end

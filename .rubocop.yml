@@ -5,6 +5,10 @@ inherit_gem:
     - "config/rubocop.yml"
     - "config/rails.yml"
 
+Layout/LineLength:
+  Exclude:
+    - "db/seeds.rb"
+
 RSpec/MultipleExpectations:
   Max: 3
 

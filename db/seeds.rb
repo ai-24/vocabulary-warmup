@@ -25,9 +25,7 @@ ExpressionItem.create!(
 )
 
 unless Rails.env.test?
-  4.times do |n|
-    Expression.create!(note: '')
-  end
+  4.times { Expression.create!(note: '') }
 
   ExpressionItem.create!(
     [
