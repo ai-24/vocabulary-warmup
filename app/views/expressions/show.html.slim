@@ -1,0 +1,10 @@
+p style="color: green" = notice
+
+== render @expression
+
+div
+  => link_to 'Edit this expression', edit_expression_path(@expression)
+  '|
+  =< link_to 'Back to expressions', expressions_path
+
+  = button_to 'Destroy this expression', @expression, method: :delete

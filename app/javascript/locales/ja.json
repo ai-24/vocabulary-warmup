@@ -1,5 +1,6 @@
 {
 "ja": {
+    "back": "戻る",
     "quiz": {
         "question": "問題",
         "placeholder": "解答を入力",
@@ -14,6 +15,26 @@
             "showUserAnswers": "自分の解答を表示",
             "blank": "未入力"
         }
+    },
+    "form": {
+        "expressions": "意味の違いや使い分けを学習したい英単語又はフレーズを入力してください",
+        "firstExpression": "１つ目の英単語 / フレーズ",
+        "secondExpression": "２つ目の英単語 / フレーズ",
+        "thirdExpression": "３つ目の英単語 / フレーズ",
+        "fourthExpression": "４つ目の英単語 / フレーズ",
+        "fifthExpression": "５つ目の英単語 / フレーズ",
+        "about": "{word}について",
+        "next": "次へ",
+        "explanation": "{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。",
+        "notice": "ここで入力する内容はこのアプリで行えるクイズの問題として出題されます。\n前ページで登録した英単語やフレーズを含めた内容は後に出てくるメモに記載するのがオススメです",
+        "example": "例文を入力してください",
+        "firstExample": "例文１",
+        "secondExample": "例文２",
+        "thirdExample": "例文３",
+        "note": "メモ（任意）",
+        "tags": "タグ（任意）",
+        "expressionsError": "英単語又はフレーズを２つ以上入力してください",
+        "create": "登録"
     }
 
 }

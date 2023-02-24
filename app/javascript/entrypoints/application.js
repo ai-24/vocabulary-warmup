@@ -4,9 +4,11 @@ import * as Turbo from '@hotwired/turbo'
 import '../../assets/stylesheets/application.tailwind.css'
 import VueMounter from '../VueMounter'
 import WordQuiz from '../components/word-quiz.vue'
+import ExpressionsForm from '../components/expressions-form.vue'
 
 const mounter = new VueMounter()
 mounter.addComponent(WordQuiz)
+mounter.addComponent(ExpressionsForm)
 mounter.mount()
 
 Turbo.start()
