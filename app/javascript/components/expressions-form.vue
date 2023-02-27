@@ -95,7 +95,7 @@
             }}</label>
             <input
               id="first-example-of-first-expression"
-              name="first-example-of-first-expression"
+              name="expression[expression_items_attributes][0][examples_attributes][0][content]"
               class="w-full"
               v-model="firstExpressionDetails.firstExample" />
           </li>
@@ -105,7 +105,7 @@
             }}</label>
             <input
               id="second-example-of-first-expression"
-              name="second-example-of-first-expression"
+              name="expression[expression_items_attributes][0][examples_attributes][1][content]"
               class="w-full"
               v-model="firstExpressionDetails.secondExample" />
           </li>
@@ -115,7 +115,7 @@
             }}</label>
             <input
               id="third-example-of-first-expression"
-              name="third-example-of-first-expression"
+              name="expression[expression_items_attributes][0][examples_attributes][2][content]"
               class="w-full"
               v-model="firstExpressionDetails.thirdExample" />
           </li>
@@ -158,7 +158,7 @@
             }}</label>
             <input
               id="first-example-of-second-expression"
-              name="first-example-of-second-expression"
+              name="expression[expression_items_attributes][1][examples_attributes][0][content]"
               class="w-full"
               v-model="secondExpressionDetails.firstExample" />
           </li>
@@ -168,7 +168,7 @@
             }}</label>
             <input
               id="second-example-of-second-expression"
-              name="second-example-of-second-expression"
+              name="expression[expression_items_attributes][1][examples_attributes][1][content]"
               class="w-full"
               v-model="secondExpressionDetails.secondExample" />
           </li>
@@ -178,7 +178,7 @@
             }}</label>
             <input
               id="third-example-of-second-expression"
-              name="third-example-of-second-expression"
+              name="expression[expression_items_attributes][1][examples_attributes][2][content]"
               class="w-full"
               v-model="secondExpressionDetails.thirdExample" />
           </li>
@@ -230,7 +230,7 @@
             }}</label>
             <input
               id="first-example-of-third-expression"
-              name="first-example-of-third-expression"
+              name="expression[expression_items_attributes][2][examples_attributes][0][content]"
               class="w-full"
               v-model="thirdExpressionDetails.firstExample" />
           </li>
@@ -240,7 +240,7 @@
             }}</label>
             <input
               id="second-example-of-third-expression"
-              name="second-example-of-third-expression"
+              name="expression[expression_items_attributes][2][examples_attributes][1][content]"
               class="w-full"
               v-model="thirdExpressionDetails.secondExample" />
           </li>
@@ -250,7 +250,7 @@
             }}</label>
             <input
               id="third-example-of-third-expression"
-              name="third-example-of-third-expression"
+              name="expression[expression_items_attributes][2][examples_attributes][2][content]"
               class="w-full"
               v-model="thirdExpressionDetails.thirdExample" />
           </li>
@@ -302,7 +302,7 @@
             }}</label>
             <input
               id="first-example-of-fourth-expression"
-              name="first-example-of-fourth-expression"
+              name="expression[expression_items_attributes][3][examples_attributes][0][content]"
               class="w-full"
               v-model="fourthExpressionDetails.firstExample" />
           </li>
@@ -312,7 +312,7 @@
             }}</label>
             <input
               id="second-example-of-fourth-expression"
-              name="second-example-of-fourth-expression"
+              name="expression[expression_items_attributes][3][examples_attributes][1][content]"
               class="w-full"
               v-model="fourthExpressionDetails.secondExample" />
           </li>
@@ -322,7 +322,7 @@
             }}</label>
             <input
               id="third-example-of-fourth-expression"
-              name="third-example-of-fourth-expression"
+              name="expression[expression_items_attributes][3][examples_attributes][2][content]"
               class="w-full"
               v-model="fourthExpressionDetails.thirdExample" />
           </li>
@@ -371,7 +371,7 @@
             }}</label>
             <input
               id="first-example-of-fifth-expression"
-              name="first-example-of-fifth-expression"
+              name="expression[expression_items_attributes][4][examples_attributes][0][content]"
               class="w-full"
               v-model="fifthExpressionDetails.firstExample" />
           </li>
@@ -381,7 +381,7 @@
             }}</label>
             <input
               id="second-example-of-fifth-expression"
-              name="second-example-of-fifth-expression"
+              name="expression[expression_items_attributes][4][examples_attributes][1][content]"
               class="w-full"
               v-model="fifthExpressionDetails.secondExample" />
           </li>
@@ -391,7 +391,7 @@
             }}</label>
             <input
               id="third-example-of-fifth-expression"
-              name="third-example-of-fifth-expression"
+              name="expression[expression_items_attributes][4][examples_attributes][2][content]"
               class="w-full"
               v-model="fifthExpressionDetails.thirdExample" />
           </li>

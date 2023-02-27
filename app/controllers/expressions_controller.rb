@@ -64,6 +64,6 @@ class ExpressionsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def expression_params
-    params.require(:expression).permit(:note, expression_items_attributes: %i[id content explanation])
+    params.require(:expression).permit(:note, expression_items_attributes: [:id, :content, :explanation, { examples_attributes: %i[id content] }])
   end
 end
