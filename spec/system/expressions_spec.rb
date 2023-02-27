@@ -8,14 +8,16 @@ RSpec.describe 'Expressions' do
   end
 
   describe 'create expressions' do
-    context 'when two phrases, the explanations and the note are given' do
+    context 'when two phrases, the explanations, one example for each and the note are given' do
       before do
         fill_in('１つ目の英単語 / フレーズ', with: 'on the beach')
         fill_in('２つ目の英単語 / フレーズ', with: 'at the beach')
         click_button '次へ'
         fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of on the beach')
+        fill_in('例文１', with: 'example of on the beach')
         click_button '次へ'
         fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of at the beach')
+        fill_in('例文２', with: 'example of at the beach')
         click_button '次へ'
         fill_in('メモ（任意）', with: 'note')
       end
@@ -24,17 +26,18 @@ RSpec.describe 'Expressions' do
         expect do
           click_button '登録'
           expect(page).to have_content 'Expression was successfully created.'
-        end.to change(Expression, :count).by(1).and change(ExpressionItem, :count).by(2)
+        end.to change(Expression, :count).by(1).and change(ExpressionItem, :count).by(2).and change(Example, :count).by(2)
       end
     end
 
-    context 'when three words, the explanations without the note are given' do
+    context 'when three words, the explanations, one example for one word without the note are given' do
       before do
         fill_in('１つ目の英単語 / フレーズ', with: 'word1')
         fill_in('２つ目の英単語 / フレーズ', with: 'word2')
         fill_in('３つ目の英単語 / フレーズ', with: 'word3')
         click_button '次へ'
         fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of word1')
+        fill_in('例文１', with: 'example of word1')
         click_button '次へ'
         fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of word2')
         click_button '次へ'
@@ -46,11 +49,11 @@ RSpec.describe 'Expressions' do
         expect do
           click_button '登録'
           expect(page).to have_content 'Expression was successfully created.'
-        end.to change(Expression, :count).by(1).and change(ExpressionItem, :count).by(3)
+        end.to change(Expression, :count).by(1).and change(ExpressionItem, :count).by(3).and change(Example, :count).by(1)
       end
     end
 
-    context 'when four words, the explanations without the note are given' do
+    context 'when four words, the explanations, two examples for each without the note are given' do
       before do
         fill_in('１つ目の英単語 / フレーズ', with: 'word1')
         fill_in('２つ目の英単語 / フレーズ', with: 'word2')
@@ -58,12 +61,20 @@ RSpec.describe 'Expressions' do
         fill_in('４つ目の英単語 / フレーズ', with: 'word4')
         click_button '次へ'
         fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of word1')
+        fill_in('例文１', with: 'first example of word1')
+        fill_in('例文２', with: 'second example of word1')
         click_button '次へ'
         fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of word2')
+        fill_in('例文１', with: 'first example of word2')
+        fill_in('例文２', with: 'second example of word2')
         click_button '次へ'
         fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of word3')
+        fill_in('例文１', with: 'first example of word3')
+        fill_in('例文２', with: 'second example of word3')
         click_button '次へ'
         fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of word4')
+        fill_in('例文１', with: 'first example of word4')
+        fill_in('例文２', with: 'second example of word4')
         click_button '次へ'
       end
 
@@ -71,11 +82,11 @@ RSpec.describe 'Expressions' do
         expect do
           click_button '登録'
           expect(page).to have_content 'Expression was successfully created.'
-        end.to change(Expression, :count).by(1).and change(ExpressionItem, :count).by(4)
+        end.to change(Expression, :count).by(1).and change(ExpressionItem, :count).by(4).and change(Example, :count).by(8)
       end
     end
 
-    context 'when five words, the explanations without the note are given' do
+    context 'when five words, the explanations, three example for two words without the note are given' do
       before do
         fill_in('１つ目の英単語 / フレーズ', with: 'word1')
         fill_in('２つ目の英単語 / フレーズ', with: 'word2')
@@ -90,8 +101,14 @@ RSpec.describe 'Expressions' do
         fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of word3')
         click_button '次へ'
         fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of word4')
+        fill_in('例文１', with: 'first example of word4')
+        fill_in('例文２', with: 'second example of word4')
+        fill_in('例文３', with: 'third example of word4')
         click_button '次へ'
         fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of word5')
+        fill_in('例文１', with: 'first example of word5')
+        fill_in('例文２', with: 'second example of word5')
+        fill_in('例文３', with: 'third example of word5')
         click_button '次へ'
       end
 
@@ -99,7 +116,7 @@ RSpec.describe 'Expressions' do
         expect do
           click_button '登録'
           expect(page).to have_content 'Expression was successfully created.'
-        end.to change(Expression, :count).by(1).and change(ExpressionItem, :count).by(5)
+        end.to change(Expression, :count).by(1).and change(ExpressionItem, :count).by(5).and change(Example, :count).by(6)
       end
     end
   end
@@ -134,6 +151,21 @@ RSpec.describe 'Expressions' do
         expect(page).not_to have_css '.text-red-600'
         click_button '次へ'
         expect(page).to have_css '.text-red-600'
+      end
+    end
+
+    describe 'examples' do
+      before do
+        fill_in('１つ目の英単語 / フレーズ', with: 'word1')
+        fill_in('２つ目の英単語 / フレーズ', with: 'word2')
+        click_button '次へ'
+        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of word1')
+        click_button '次へ'
+      end
+
+      it 'no validation error when examples are not given' do
+        expect(page).to have_content '{word}について'
+        expect(page).not_to have_css '.text-red-600'
       end
     end
 
