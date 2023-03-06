@@ -34,6 +34,7 @@
         "note": "メモ（任意）",
         "tags": "タグ（任意）",
         "expressionsError": "英単語又はフレーズを２つ以上入力してください",
+        "howToUseTagInput": "タグ入力後エンターキーで登録",
         "create": "登録"
     }
 

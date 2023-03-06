@@ -7,4 +7,5 @@ class Expression < ApplicationRecord
   accepts_nested_attributes_for :expression_items, reject_if: lambda { |attributes|
     attributes['content'].blank?
   }
+  accepts_nested_attributes_for :tags
 end

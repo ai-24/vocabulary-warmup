@@ -20,6 +20,7 @@ class ExpressionsController < ApplicationController
   # POST /expressions or /expressions.json
   def create
     @expression = Expression.new(expression_params)
+    @expression.tags = Tag.find_tags_object(@expression.tags)
 
     respond_to do |format|
       if @expression.save
@@ -64,6 +65,7 @@ class ExpressionsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def expression_params
-    params.require(:expression).permit(:note, expression_items_attributes: [:id, :content, :explanation, { examples_attributes: %i[id content] }])
+    params.require(:expression).permit(:note, expression_items_attributes: [:id, :content, :explanation, { examples_attributes: %i[id content] }],
+                                              tags_attributes: %i[id name])
   end
 end
