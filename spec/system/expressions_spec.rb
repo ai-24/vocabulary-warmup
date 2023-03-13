@@ -31,7 +31,7 @@ RSpec.describe 'Expressions' do
       it 'create data' do
         expect do
           click_button '登録'
-          expect(page).to have_content 'Expression was successfully created.'
+          expect(page).to have_content '英単語またはフレーズを新規作成しました'
         end.to change(Expression, :count).by(1).and change(ExpressionItem, :count).by(2).and change(Example, :count).by(2).and change(Tag, :count).by(1)
       end
     end
@@ -58,7 +58,7 @@ RSpec.describe 'Expressions' do
       it 'create data' do
         expect do
           click_button '登録'
-          expect(page).to have_content 'Expression was successfully created.'
+          expect(page).to have_content '英単語またはフレーズを新規作成しました'
         end.to change(Expression, :count).by(1).and change(ExpressionItem, :count).by(3).and change(Example, :count).by(1).and change(Tag, :count).by(1)
       end
     end
@@ -97,7 +97,7 @@ RSpec.describe 'Expressions' do
       it 'create data' do
         expect do
           click_button '登録'
-          expect(page).to have_content 'Expression was successfully created.'
+          expect(page).to have_content '英単語またはフレーズを新規作成しました'
         end.to change(Expression, :count).by(1).and change(ExpressionItem, :count).by(4).and change(Example, :count).by(8).and change(Tag, :count).by(2)
       end
     end
@@ -133,7 +133,7 @@ RSpec.describe 'Expressions' do
       it 'create data' do
         expect do
           click_button '登録'
-          expect(page).to have_content 'Expression was successfully created.'
+          expect(page).to have_content '英単語またはフレーズを新規作成しました'
         end.to change(Expression, :count).by(1).and change(ExpressionItem, :count).by(5).and change(Example, :count).by(6).and change(Tag, :count).by(1)
       end
     end
@@ -223,7 +223,7 @@ RSpec.describe 'Expressions' do
         find('input#tags').send_keys :return
         expect do
           click_button '登録'
-          expect(page).to have_content 'Expression was successfully created.'
+          expect(page).to have_content '英単語またはフレーズを新規作成しました'
         end.to change(Tag, :count).by(5)
       end
 
@@ -232,7 +232,7 @@ RSpec.describe 'Expressions' do
         find('input#tags').send_keys :return
         expect do
           click_button '登録'
-          expect(page).to have_content 'Expression was successfully created.'
+          expect(page).to have_content '英単語またはフレーズを新規作成しました'
         end.to change(Tag, :count).by(5)
       end
 
@@ -241,7 +241,7 @@ RSpec.describe 'Expressions' do
         find('input#tags').send_keys :return
         expect do
           click_button '登録'
-          expect(page).to have_content 'Expression was successfully created.'
+          expect(page).to have_content '英単語またはフレーズを新規作成しました'
         end.to change(Tag, :count).by(5)
       end
 
@@ -250,7 +250,7 @@ RSpec.describe 'Expressions' do
         find('input#tags').send_keys :return
         expect do
           click_button '登録'
-          expect(page).to have_content 'Expression was successfully created.'
+          expect(page).to have_content '英単語またはフレーズを新規作成しました'
         end.to change(Tag, :count).by(5)
       end
 
@@ -259,7 +259,7 @@ RSpec.describe 'Expressions' do
         find('input#tags').send_keys :return
         expect do
           click_button '登録'
-          expect(page).to have_content 'Expression was successfully created.'
+          expect(page).to have_content '英単語またはフレーズを新規作成しました'
         end.to change(Tag, :count).by(5)
       end
     end
