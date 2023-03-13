@@ -415,7 +415,22 @@
           </li>
           <li>
             <label for="tags">{{ $t('form.tags') }}</label>
-            <input id="tags" name="tags" class="w-full" v-model="tag" />
+            <div>
+              <vue-tags-input
+                id="tags"
+                v-model="tag"
+                :tags="tags"
+                @tags-changed="updateTags"
+                :placeholder="$t('form.howToUseTagInput')"></vue-tags-input>
+              <ul>
+                <li v-for="(tagValue, index) in tagsValue" :key="tagValue.id">
+                  <input
+                    type="hidden"
+                    :name="`expression[tags_attributes][${index}][name]`"
+                    :value="tagValue" />
+                </li>
+              </ul>
+            </div>
           </li>
         </ul>
         <button v-if="previousPage === 3" type="button" @click="getThirdPage">
@@ -446,8 +461,13 @@
 </template>
 
 <script>
+import VueTagsInput from '@sipec/vue3-tags-input'
+
 export default {
   name: 'ExpressionsForm',
+  components: {
+    VueTagsInput
+  },
   data() {
     return {
       currentPage: 1,
@@ -490,11 +510,20 @@ export default {
       comparedExpressions: '',
       note: '',
       tag: '',
+      tags: [],
+      tagsValue: [],
       expressionsError: false,
       explanationError: false
     }
   },
   methods: {
+    updateTags(newTags) {
+      this.tags = newTags
+      const tagsArray = newTags.map((tag) => {
+        return tag.text
+      })
+      this.tagsValue = tagsArray
+    },
     getFirstPage() {
       this.currentPage = 1
     },

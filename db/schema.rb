@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_24_172612) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_27_145742) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -37,6 +37,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_24_172612) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "taggings", force: :cascade do |t|
+    t.bigint "expression_id", null: false
+    t.bigint "tag_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["expression_id"], name: "index_taggings_on_expression_id"
+    t.index ["tag_id"], name: "index_taggings_on_tag_id"
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "uid", null: false
     t.string "name", null: false
@@ -46,4 +61,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_24_172612) do
 
   add_foreign_key "examples", "expression_items"
   add_foreign_key "expression_items", "expressions"
+  add_foreign_key "taggings", "expressions"
+  add_foreign_key "taggings", "tags"
 end
