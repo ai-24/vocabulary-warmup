@@ -24,7 +24,7 @@ class ExpressionsController < ApplicationController
 
     respond_to do |format|
       if @expression.save
-        format.html { redirect_to expression_url(@expression), notice: 'Expression was successfully created.' }
+        format.html { redirect_to expression_url(@expression), notice: t('.success') }
         format.json { render :show, status: :created, location: @expression }
       else
         format.html { render :new, status: :unprocessable_entity }

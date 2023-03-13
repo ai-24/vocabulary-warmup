@@ -1,4 +1,13 @@
 ja:
-  user:
+  users:
     confirm_deletion_of_account: "アカウントを削除しますか？\n \n重要:アカウントを削除すると、このアプリに登録した全てのデータは削除されます。"
-    deleted_account: アカウントを削除しました
+    destroy:
+      success: アカウントを削除しました
+  sessions:
+    create:
+      success: ログインしました
+    destroy:
+      success: ログアウトしました
+  expressions:
+    create:
+      success: 英単語またはフレーズを新規作成しました
