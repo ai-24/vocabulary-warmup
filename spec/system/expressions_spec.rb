@@ -155,6 +155,16 @@ RSpec.describe 'Expressions' do
         expect(page).to have_content '英単語又はフレーズを２つ以上入力してください'
         expect(page).not_to have_content '{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。'
       end
+
+      it 'go to next page once users input more than two expressions after validation error' do
+        fill_in('１つ目の英単語 / フレーズ', with: 'word1')
+        click_button '次へ'
+        expect(page).to have_content '英単語又はフレーズを２つ以上入力してください'
+        fill_in('２つ目の英単語 / フレーズ', with: 'word2')
+        click_button '次へ'
+        expect(page).not_to have_content '英単語又はフレーズを２つ以上入力してください'
+        expect(page).to have_content '{word}について'
+      end
     end
 
     describe 'explanations' do

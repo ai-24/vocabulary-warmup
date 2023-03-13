@@ -529,6 +529,7 @@ export default {
     },
     getSecondPage() {
       this.explanationError = false
+      this.expressionsError = false
       this.comparedExpressions = ''
       this.getComparedExpressions([
         this.secondExpression,
