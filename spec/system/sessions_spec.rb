@@ -21,7 +21,7 @@ RSpec.describe 'Sessions' do
     it 'show a message when login succeed' do
       visit '/'
       click_button 'Sign up/Log in with Google'
-      expect(page).to have_content 'Successfully logged in!'
+      expect(page).to have_content 'ログインしました'
     end
   end
 
@@ -51,7 +51,7 @@ RSpec.describe 'Sessions' do
     it 'show a message when logout succeed' do
       find('label', text: user.name).click
       click_button 'Log out'
-      expect(page).to have_content 'Successfully logged out!'
+      expect(page).to have_content 'ログアウトしました'
     end
   end
 end
