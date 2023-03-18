@@ -1,5 +1,7 @@
 <template>
   <div class="grid justify-items-stretch place-content-center">
+    <ExpressionsFormStepNavigation
+      :current-page="currentPage"></ExpressionsFormStepNavigation>
     <form action="/expressions" method="POST">
       <div v-show="currentPage === 1">
         <p>{{ $t('form.expressions') }}</p>
@@ -462,10 +464,12 @@
 
 <script>
 import VueTagsInput from '@sipec/vue3-tags-input'
+import ExpressionsFormStepNavigation from './expressions-form-step-navigation.vue'
 
 export default {
   name: 'ExpressionsForm',
   components: {
+    ExpressionsFormStepNavigation,
     VueTagsInput
   },
   data() {
