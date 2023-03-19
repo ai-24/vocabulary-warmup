@@ -1,7 +1,9 @@
 <template>
   <div class="grid justify-items-stretch place-content-center">
     <ExpressionsFormStepNavigation
-      :current-page="currentPage"></ExpressionsFormStepNavigation>
+      :current-page="currentPage"
+      :previous-page="previousPage"
+      :completed-step2="completedStep2"></ExpressionsFormStepNavigation>
     <form action="/expressions" method="POST">
       <div v-show="currentPage === 1">
         <p>{{ $t('form.expressions') }}</p>
@@ -475,12 +477,14 @@ export default {
   data() {
     return {
       currentPage: 1,
-      previousPage: Number,
+      previousPage: 0,
       firstExpression: '',
       secondExpression: '',
       thirdExpression: '',
       fourthExpression: '',
       fifthExpression: '',
+      expressionsList: [],
+      expressionsAmount: 0,
       firstExpressionDetails: {
         explanation: '',
         firstExample: '',
@@ -516,6 +520,7 @@ export default {
       tag: '',
       tags: [],
       tagsValue: [],
+      completedStep2: false,
       expressionsError: false,
       explanationError: false
     }
@@ -528,10 +533,28 @@ export default {
       })
       this.tagsValue = tagsArray
     },
+    calculateExpressionsAmount() {
+      this.expressionsList = []
+      const expressions = [
+        this.firstExpression,
+        this.secondExpression,
+        this.thirdExpression,
+        this.fourthExpression,
+        this.fifthExpression
+      ]
+      expressions.forEach((expression) => {
+        if (expression) {
+          this.expressionsList.push(expression)
+        }
+        this.expressionsAmount = this.expressionsList.length
+      })
+    },
     getFirstPage() {
+      this.previousPage = this.currentPage
       this.currentPage = 1
     },
     getSecondPage() {
+      this.previousPage = this.currentPage
       this.explanationError = false
       this.expressionsError = false
       this.comparedExpressions = ''
@@ -545,12 +568,21 @@ export default {
         if (this.firstExpression === '' || this.secondExpression === '') {
           this.expressionsError = true
         }
+        const previousExpressionsAmount = this.expressionsAmount
+        this.calculateExpressionsAmount()
+        if (
+          this.completedStep2 &&
+          this.expressionsAmount !== previousExpressionsAmount
+        ) {
+          this.completedStep2 = false
+        }
       }
       if (!this.expressionsError) {
         this.currentPage = 2
       }
     },
     getThirdPage() {
+      this.previousPage = this.currentPage
       if (this.currentPage === 2) {
         if (!this.firstExpressionDetails.explanation) {
           this.explanationError = true
@@ -572,6 +604,7 @@ export default {
       }
     },
     getFourthPage() {
+      this.previousPage = this.currentPage
       if (this.currentPage === 3) {
         if (!this.secondExpressionDetails.explanation) {
           this.explanationError = true
@@ -593,6 +626,7 @@ export default {
       }
     },
     getFifthPage() {
+      this.previousPage = this.currentPage
       if (this.currentPage === 4) {
         if (!this.thirdExpressionDetails.explanation) {
           this.explanationError = true
@@ -614,6 +648,7 @@ export default {
       }
     },
     getSixPage() {
+      this.previousPage = this.currentPage
       if (this.currentPage === 5) {
         if (!this.fourthExpressionDetails.explanation) {
           this.explanationError = true
@@ -641,6 +676,7 @@ export default {
       this.previousPage = this.currentPage
       if (!this.explanationError) {
         this.currentPage = 7
+        this.completedStep2 = true
       }
     },
     getComparedExpressions(expressionsList) {
