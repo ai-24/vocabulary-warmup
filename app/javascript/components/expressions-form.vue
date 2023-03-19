@@ -189,7 +189,7 @@
         </ul>
         <button type="button" @click="getSecondPage">{{ $t('back') }}</button>
         <button
-          v-if="thirdExpression || fourthExpression || fifthExpression"
+          v-if="expressionsAmount > 2"
           type="button"
           @click="getFourthPage">
           {{ $t('form.next') }}
@@ -261,7 +261,7 @@
         </ul>
         <button type="button" @click="getThirdPage">{{ $t('back') }}</button>
         <button
-          v-if="fourthExpression || fifthExpression"
+          v-if="expressionsAmount > 3"
           type="button"
           @click="getFifthPage">
           {{ $t('form.next') }}
