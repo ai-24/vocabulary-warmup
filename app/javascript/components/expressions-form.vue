@@ -549,6 +549,9 @@ export default {
         this.expressionsAmount = this.expressionsList.length
       })
     },
+    isExplanationError(explanation) {
+      this.explanationError = !explanation ? true : false
+    },
     getFirstPage() {
       this.previousPage = this.currentPage
       this.currentPage = 1
@@ -584,11 +587,7 @@ export default {
     getThirdPage() {
       this.previousPage = this.currentPage
       if (this.currentPage === 2) {
-        if (!this.firstExpressionDetails.explanation) {
-          this.explanationError = true
-        } else {
-          this.explanationError = false
-        }
+        this.isExplanationError(this.firstExpressionDetails.explanation)
       } else if (this.currentPage === 4) {
         this.explanationError = false
       }
@@ -606,11 +605,7 @@ export default {
     getFourthPage() {
       this.previousPage = this.currentPage
       if (this.currentPage === 3) {
-        if (!this.secondExpressionDetails.explanation) {
-          this.explanationError = true
-        } else {
-          this.explanationError = false
-        }
+        this.isExplanationError(this.secondExpressionDetails.explanation)
       } else if (this.currentPage === 5) {
         this.explanationError = false
       }
@@ -628,11 +623,7 @@ export default {
     getFifthPage() {
       this.previousPage = this.currentPage
       if (this.currentPage === 4) {
-        if (!this.thirdExpressionDetails.explanation) {
-          this.explanationError = true
-        } else {
-          this.explanationError = false
-        }
+        this.isExplanationError(this.thirdExpressionDetails.explanation)
       } else if (this.currentPage === 6) {
         this.explanationError = false
       }
@@ -650,11 +641,7 @@ export default {
     getSixPage() {
       this.previousPage = this.currentPage
       if (this.currentPage === 5) {
-        if (!this.fourthExpressionDetails.explanation) {
-          this.explanationError = true
-        } else {
-          this.explanationError = false
-        }
+        this.isExplanationError(this.fourthExpressionDetails.explanation)
       }
       if (!this.explanationError) {
         this.comparedExpressions = ''
@@ -668,11 +655,7 @@ export default {
       }
     },
     getSevenPage(explanation) {
-      if (!explanation) {
-        this.explanationError = true
-      } else {
-        this.explanationError = false
-      }
+      this.isExplanationError(explanation)
       this.previousPage = this.currentPage
       if (!this.explanationError) {
         this.currentPage = 7
