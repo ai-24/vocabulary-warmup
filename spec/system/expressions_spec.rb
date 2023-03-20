@@ -374,4 +374,180 @@ RSpec.describe 'Expressions' do
       end
     end
   end
+
+  describe 'step navigation' do
+    describe 'on the first page' do
+      it 'check step1' do
+        within('.bg-yellow-200') do
+          expect(page).to have_css '.fa-pen-to-square'
+          expect(page).to have_content 'Step1'
+        end
+      end
+
+      it 'check step2' do
+        within first(:css, '.text-gray-400') do
+          expect(page).to have_css '.fa-pen-to-square'
+          expect(page).to have_content 'Step2'
+        end
+      end
+
+      it 'check step3' do
+        within all('.text-gray-400').last do
+          expect(page).to have_css '.fa-pen-to-square'
+          expect(page).to have_content 'Step3'
+        end
+      end
+    end
+
+    context 'when two expressions are input without clicking any back buttons' do
+      before do
+        fill_in('１つ目の英単語 / フレーズ', with: 'word1')
+        fill_in('２つ目の英単語 / フレーズ', with: 'word2')
+        click_button '次へ'
+      end
+
+      it 'show check circle after completing the step1' do
+        within first(:css, '.border-gray-300') do
+          expect(page).to have_css '.fa-circle-check'
+          expect(page).to have_css '.text-yellow-400'
+        end
+
+        within('.bg-yellow-200') { expect(page).to have_content 'Step2' }
+      end
+
+      it 'show the check circle after completing the step2' do
+        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of word1')
+        click_button '次へ'
+        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of word2')
+        click_button '次へ'
+
+        expect(all('.fa-circle-check').length).to eq 2
+        within('.bg-yellow-200') { expect(page).to have_content 'Step3' }
+      end
+    end
+
+    context 'when three expressions are input with clicking back buttons' do
+      before do
+        fill_in('１つ目の英単語 / フレーズ', with: 'word1')
+        fill_in('２つ目の英単語 / フレーズ', with: 'word2')
+        fill_in('３つ目の英単語 / フレーズ', with: 'word3')
+        click_button '次へ'
+        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of word1')
+        click_button '次へ'
+        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of word2')
+        click_button '次へ'
+      end
+
+      it 'show the check circle after completing the step2' do
+        within('.bg-yellow-200') { expect(page).to have_content 'Step2' }
+
+        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of word3')
+        click_button '次へ'
+
+        expect(all('.fa-circle-check').length).to eq 2
+      end
+
+      it 'check background color when the page is on the note and tags' do
+        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of word3')
+        click_button '次へ'
+
+        expect(page).to have_content 'メモ（任意）'
+        within('.bg-yellow-200') { expect(page).to have_content 'Step3' }
+      end
+
+      it 'check step1 icon after completing the step1 and then go back to the step from step2' do
+        expect(all('.text-yellow-400').length).to eq 1
+        click_button '戻る'
+        click_button '戻る'
+        click_button '戻る'
+        expect(page).to have_content '意味の違いや使い分けを学習したい英単語又はフレーズを入力してください'
+        within('.bg-yellow-200') { expect(page).to have_css '.fa-circle-check' }
+      end
+
+      it 'check step2 icon after completing the step2 and then go back to the step from step3' do
+        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of word3')
+        click_button '次へ'
+        click_button '戻る'
+        expect(page).to have_content '{word}について'
+        within('.bg-yellow-200') do
+          expect(page).to have_css '.fa-circle-check'
+          expect(page).to have_content 'Step2'
+        end
+      end
+
+      it 'check step1 icon after completing the step2 and then go back to the step from step3' do
+        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of word3')
+        click_button '次へ'
+        click_button '戻る'
+        within first(:css, '.border-gray-300') do
+          expect(page).to have_css '.fa-circle-check'
+          expect(page).to have_css '.text-yellow-400'
+        end
+      end
+    end
+
+    context 'when expressions amount change four from three after completing step2' do
+      before do
+        fill_in('１つ目の英単語 / フレーズ', with: 'word1')
+        fill_in('２つ目の英単語 / フレーズ', with: 'word2')
+        fill_in('３つ目の英単語 / フレーズ', with: 'word3')
+        click_button '次へ'
+        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of word1')
+        click_button '次へ'
+        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of word2')
+        click_button '次へ'
+        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of word3')
+        click_button '次へ'
+        click_button '戻る'
+        click_button '戻る'
+        click_button '戻る'
+        click_button '戻る'
+        fill_in('４つ目の英単語 / フレーズ', with: 'word4')
+        click_button '次へ'
+      end
+
+      it 'check step2 icon if it changes' do
+        within('.bg-yellow-200') do
+          expect(page).to have_css '.fa-pen-to-square'
+          expect(page).to have_content 'Step2'
+        end
+      end
+    end
+
+    context 'when expressions amount change four from five after completing step2' do
+      before do
+        fill_in('１つ目の英単語 / フレーズ', with: 'word1')
+        fill_in('２つ目の英単語 / フレーズ', with: 'word2')
+        fill_in('３つ目の英単語 / フレーズ', with: 'word3')
+        fill_in('４つ目の英単語 / フレーズ', with: 'word4')
+        fill_in('５つ目の英単語 / フレーズ', with: 'word5')
+        click_button '次へ'
+        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of word1')
+        click_button '次へ'
+        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of word2')
+        click_button '次へ'
+        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of word3')
+        click_button '次へ'
+        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of word4')
+        click_button '次へ'
+        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of word5')
+        click_button '次へ'
+        click_button '戻る'
+        click_button '戻る'
+        click_button '戻る'
+        click_button '戻る'
+        click_button '戻る'
+        click_button '戻る'
+        fill_in('５つ目の英単語 / フレーズ', with: '')
+        click_button '次へ'
+      end
+
+      it 'check step2 icon if it changes' do
+        within('.bg-yellow-200') do
+          expect(page).to have_css '.fa-pen-to-square'
+          expect(page).to have_content 'Step2'
+        end
+      end
+    end
+  end
 end
