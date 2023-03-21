@@ -543,9 +543,7 @@ export default {
         this.fifthExpression
       ]
       expressions.forEach((expression) => {
-        if (expression) {
-          this.expressionsList.push(expression)
-        }
+        if (expression) this.expressionsList.push(expression)
         this.expressionsAmount = this.expressionsList.length
       })
     },
@@ -569,9 +567,8 @@ export default {
         this.fifthExpression
       ])
       if (this.currentPage === 1) {
-        if (this.firstExpression === '' || this.secondExpression === '') {
+        if (this.firstExpression === '' || this.secondExpression === '')
           this.expressionsError = true
-        }
         const previousExpressionsAmount = this.expressionsAmount
         this.calculateExpressionsAmount()
         if (
@@ -581,9 +578,7 @@ export default {
           this.completedStep2 = false
         }
       }
-      if (!this.expressionsError) {
-        this.currentPage = 2
-      }
+      if (!this.expressionsError) this.currentPage = 2
     },
     getThirdPage() {
       this.previousPage = this.currentPage
@@ -641,9 +636,8 @@ export default {
     },
     getSixPage() {
       this.previousPage = this.currentPage
-      if (this.currentPage === 5) {
+      if (this.currentPage === 5)
         this.isExplanationError(this.fourthExpressionDetails.explanation)
-      }
       if (!this.explanationError) {
         this.comparedExpressions = ''
         this.getComparedExpressions([
