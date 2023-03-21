@@ -550,7 +550,8 @@ export default {
       })
     },
     isExplanationError(explanation) {
-      this.explanationError = !explanation ? true : false
+      this.explanationError = false
+      if (!explanation) this.explanationError = true
     },
     getFirstPage() {
       this.previousPage = this.currentPage

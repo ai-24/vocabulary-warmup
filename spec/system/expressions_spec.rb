@@ -180,6 +180,27 @@ RSpec.describe 'Expressions' do
         click_button '次へ'
         expect(page).to have_css '.text-red-600'
       end
+
+      it 'go to the next page once users input the explanation after validation error on the second page' do
+        click_button '次へ'
+        expect(page).to have_css '.text-red-600'
+
+        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of on the beach')
+        click_button '次へ'
+        expect(page).not_to have_css '.text-red-600'
+      end
+
+      it 'go to the next page once users input the explanation after validation error on the third page' do
+        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of on the beach')
+        click_button '次へ'
+        click_button '次へ'
+        expect(page).to have_css '.text-red-600'
+
+        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of at the beach')
+        click_button '次へ'
+        expect(page).not_to have_css '.text-red-600'
+        expect(page).to have_content 'メモ（任意）'
+      end
     end
 
     describe 'examples' do
