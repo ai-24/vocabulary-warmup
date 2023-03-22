@@ -653,8 +653,8 @@ export default {
       this.isExplanationError(explanation)
       this.previousPage = this.currentPage
       if (!this.explanationError) {
-        this.currentPage = 7
         this.completedStep2 = true
+        this.currentPage = 7
       }
     },
     getComparedExpressions(expressionsList) {
