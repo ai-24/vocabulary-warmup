@@ -36,7 +36,11 @@
         "expressionsError": "英単語又はフレーズを２つ以上入力してください",
         "howToUseTagInput": "タグ入力後エンターキーで登録",
         "create": "登録"
+    },
+    "stepNavigation": {
+        "wordsOrPhrases": "単語又はフレーズ",
+        "explanationAndExamples": "意味・例文",
+        "noteAndTags": "メモ・タグ（任意）"
     }
-
 }
 }

@@ -1,5 +1,9 @@
 <template>
   <div class="grid justify-items-stretch place-content-center">
+    <ExpressionsFormStepNavigation
+      :current-page="currentPage"
+      :previous-page="previousPage"
+      :completed-step2="completedStep2"></ExpressionsFormStepNavigation>
     <form action="/expressions" method="POST">
       <div v-show="currentPage === 1">
         <p>{{ $t('form.expressions') }}</p>
@@ -185,7 +189,7 @@
         </ul>
         <button type="button" @click="getSecondPage">{{ $t('back') }}</button>
         <button
-          v-if="thirdExpression || fourthExpression || fifthExpression"
+          v-if="expressionsAmount > 2"
           type="button"
           @click="getFourthPage">
           {{ $t('form.next') }}
@@ -257,7 +261,7 @@
         </ul>
         <button type="button" @click="getThirdPage">{{ $t('back') }}</button>
         <button
-          v-if="fourthExpression || fifthExpression"
+          v-if="expressionsAmount > 3"
           type="button"
           @click="getFifthPage">
           {{ $t('form.next') }}
@@ -462,21 +466,25 @@
 
 <script>
 import VueTagsInput from '@sipec/vue3-tags-input'
+import ExpressionsFormStepNavigation from './expressions-form-step-navigation.vue'
 
 export default {
   name: 'ExpressionsForm',
   components: {
+    ExpressionsFormStepNavigation,
     VueTagsInput
   },
   data() {
     return {
       currentPage: 1,
-      previousPage: Number,
+      previousPage: 0,
       firstExpression: '',
       secondExpression: '',
       thirdExpression: '',
       fourthExpression: '',
       fifthExpression: '',
+      expressionsList: [],
+      expressionsAmount: 0,
       firstExpressionDetails: {
         explanation: '',
         firstExample: '',
@@ -512,6 +520,7 @@ export default {
       tag: '',
       tags: [],
       tagsValue: [],
+      completedStep2: false,
       expressionsError: false,
       explanationError: false
     }
@@ -524,10 +533,30 @@ export default {
       })
       this.tagsValue = tagsArray
     },
+    calculateExpressionsAmount() {
+      this.expressionsList = []
+      const expressions = [
+        this.firstExpression,
+        this.secondExpression,
+        this.thirdExpression,
+        this.fourthExpression,
+        this.fifthExpression
+      ]
+      expressions.forEach((expression) => {
+        if (expression) this.expressionsList.push(expression)
+        this.expressionsAmount = this.expressionsList.length
+      })
+    },
+    isExplanationError(explanation) {
+      this.explanationError = false
+      if (!explanation) this.explanationError = true
+    },
     getFirstPage() {
+      this.previousPage = this.currentPage
       this.currentPage = 1
     },
     getSecondPage() {
+      this.previousPage = this.currentPage
       this.explanationError = false
       this.expressionsError = false
       this.comparedExpressions = ''
@@ -538,21 +567,23 @@ export default {
         this.fifthExpression
       ])
       if (this.currentPage === 1) {
-        if (this.firstExpression === '' || this.secondExpression === '') {
+        if (this.firstExpression === '' || this.secondExpression === '')
           this.expressionsError = true
+        const previousExpressionsAmount = this.expressionsAmount
+        this.calculateExpressionsAmount()
+        if (
+          this.completedStep2 &&
+          this.expressionsAmount !== previousExpressionsAmount
+        ) {
+          this.completedStep2 = false
         }
       }
-      if (!this.expressionsError) {
-        this.currentPage = 2
-      }
+      if (!this.expressionsError) this.currentPage = 2
     },
     getThirdPage() {
+      this.previousPage = this.currentPage
       if (this.currentPage === 2) {
-        if (!this.firstExpressionDetails.explanation) {
-          this.explanationError = true
-        } else {
-          this.explanationError = false
-        }
+        this.isExplanationError(this.firstExpressionDetails.explanation)
       } else if (this.currentPage === 4) {
         this.explanationError = false
       }
@@ -568,12 +599,9 @@ export default {
       }
     },
     getFourthPage() {
+      this.previousPage = this.currentPage
       if (this.currentPage === 3) {
-        if (!this.secondExpressionDetails.explanation) {
-          this.explanationError = true
-        } else {
-          this.explanationError = false
-        }
+        this.isExplanationError(this.secondExpressionDetails.explanation)
       } else if (this.currentPage === 5) {
         this.explanationError = false
       }
@@ -589,12 +617,9 @@ export default {
       }
     },
     getFifthPage() {
+      this.previousPage = this.currentPage
       if (this.currentPage === 4) {
-        if (!this.thirdExpressionDetails.explanation) {
-          this.explanationError = true
-        } else {
-          this.explanationError = false
-        }
+        this.isExplanationError(this.thirdExpressionDetails.explanation)
       } else if (this.currentPage === 6) {
         this.explanationError = false
       }
@@ -610,13 +635,9 @@ export default {
       }
     },
     getSixPage() {
-      if (this.currentPage === 5) {
-        if (!this.fourthExpressionDetails.explanation) {
-          this.explanationError = true
-        } else {
-          this.explanationError = false
-        }
-      }
+      this.previousPage = this.currentPage
+      if (this.currentPage === 5)
+        this.isExplanationError(this.fourthExpressionDetails.explanation)
       if (!this.explanationError) {
         this.comparedExpressions = ''
         this.getComparedExpressions([
@@ -629,13 +650,10 @@ export default {
       }
     },
     getSevenPage(explanation) {
-      if (!explanation) {
-        this.explanationError = true
-      } else {
-        this.explanationError = false
-      }
+      this.isExplanationError(explanation)
       this.previousPage = this.currentPage
       if (!this.explanationError) {
+        this.completedStep2 = true
         this.currentPage = 7
       }
     },

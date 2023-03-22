@@ -1,6 +1,14 @@
 import { createApp } from 'vue'
 import { createI18n } from 'vue-i18n'
 import ja from './locales/ja.json'
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import {
+  faCircleCheck,
+  faPenToSquare
+} from '@fortawesome/free-regular-svg-icons'
+
+library.add(faCircleCheck, faPenToSquare)
 
 export default class VueMounter {
   constructor() {
@@ -26,6 +34,7 @@ export default class VueMounter {
           })
           const app = createApp(component)
           app.use(i18n)
+          app.component('font-awesome-icon', FontAwesomeIcon)
           app.mount(`[data-vue=${name}]`)
         })
       }
