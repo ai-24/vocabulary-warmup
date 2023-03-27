@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   resources :expressions
   resource :quiz, only: [:show]
   namespace :api do
+    resources :expressions, only: [:index]
     resource :quiz, only: [:show]
   end
 end

@@ -5,10 +5,12 @@ import '../../assets/stylesheets/application.tailwind.css'
 import VueMounter from '../VueMounter'
 import WordQuiz from '../components/word-quiz.vue'
 import ExpressionsForm from '../components/expressions-form.vue'
+import ExpressionsList from '../components/expressions-list.vue'
 
 const mounter = new VueMounter()
 mounter.addComponent(WordQuiz)
 mounter.addComponent(ExpressionsForm)
+mounter.addComponent(ExpressionsList)
 mounter.mount()
 
 Turbo.start()

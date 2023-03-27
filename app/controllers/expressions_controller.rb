@@ -4,9 +4,9 @@ class ExpressionsController < ApplicationController
   before_action :set_expression, only: %i[show edit update destroy]
 
   # GET /expressions or /expressions.json
-  def index
-    @expressions = Expression.all
-  end
+  # def index
+  #   @expressions = Expression.all
+  # end
 
   # GET /expressions/1 or /expressions/1.json
   def show; end
