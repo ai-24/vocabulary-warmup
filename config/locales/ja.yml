@@ -11,3 +11,10 @@ ja:
   expressions:
     create:
       success: 英単語またはフレーズを新規作成しました
+    show:
+      title: 下記の英単語・フレーズの違いについて
+      explanation: 意味
+      example: 例文
+      note: メモ
+      tag: タグ
+      back: 英単語・フレーズ一覧に戻る

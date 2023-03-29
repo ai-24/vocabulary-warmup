@@ -1,10 +1,43 @@
 p style="color: green" = notice
 
-== render @expression
+h1
+  = t('.title')
+div
+  - @expression.expression_items.each_with_index do |expression_item, i|
+    p #{i + 1}. #{expression_item.content}
+
+div
+  - @expression.expression_items.each do |expression_item|
+    p
+      = expression_item.content
+    p
+      = t('.explanation')
+    p
+      = expression_item.explanation
+    - if expression_item.examples.present?
+      p
+        = t('.example')
+      - expression_item.examples.each do |example|
+        p
+          = example.content
+
+div
+  - if @expression.note.present?
+    p
+      = t('.note')
+    p
+      = @expression.note
+div
+  - if @expression.tags.present?
+    p
+      = t('.tag')
+    - @expression.tags.each do |tag|
+      p
+        = tag.name
 
 div
   => link_to 'Edit this expression', edit_expression_path(@expression)
   '|
-  =< link_to 'Back to expressions', expressions_path
+  = link_to t('.back'), root_path, data: { turbo: false }
 
   = button_to 'Destroy this expression', @expression, method: :delete
