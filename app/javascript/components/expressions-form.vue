@@ -4,7 +4,9 @@
       :current-page="currentPage"
       :previous-page="previousPage"
       :completed-step2="completedStep2"></ExpressionsFormStepNavigation>
-    <form action="/expressions" method="POST">
+
+    <form accept-charset="UTF-8" :action="url" method="POST">
+      <input v-if="expressionId" name="_method" type="hidden" value="put" />
       <div v-show="currentPage === 1">
         <p>{{ $t('form.expressions') }}</p>
         <p v-if="expressionsError" class="text-red-600">
@@ -16,6 +18,11 @@
               $t('form.firstExpression')
             }}</label>
             <input
+              v-if="expressionItemId[0]"
+              type="hidden"
+              name="expression[expression_items_attributes][0][id]"
+              :value="expressionItemId[0].firstExpression" />
+            <input
               id="first-expression"
               name="expression[expression_items_attributes][0][content]"
               v-model="firstExpression"
@@ -25,6 +32,11 @@
             <label for="second-expression">{{
               $t('form.secondExpression')
             }}</label>
+            <input
+              v-if="expressionItemId[1]"
+              type="hidden"
+              name="expression[expression_items_attributes][1][id]"
+              :value="expressionItemId[1].secondExpression" />
             <input
               id="second-expression"
               name="expression[expression_items_attributes][1][content]"
@@ -36,6 +48,11 @@
               $t('form.thirdExpression')
             }}</label>
             <input
+              v-if="expressionItemId[2]"
+              type="hidden"
+              name="expression[expression_items_attributes][2][id]"
+              :value="expressionItemId[2].thirdExpression" />
+            <input
               id="third-expression"
               name="expression[expression_items_attributes][2][content]"
               v-model="thirdExpression"
@@ -46,6 +63,11 @@
               $t('form.fourthExpression')
             }}</label>
             <input
+              v-if="expressionItemId[3]"
+              type="hidden"
+              name="expression[expression_items_attributes][3][id]"
+              :value="expressionItemId[3].fourthExpression" />
+            <input
               id="fourth-expression"
               name="expression[expression_items_attributes][3][content]"
               v-model="fourthExpression"
@@ -55,6 +77,11 @@
             <label for="fifth-expression">{{
               $t('form.fifthExpression')
             }}</label>
+            <input
+              v-if="expressionItemId[4]"
+              type="hidden"
+              name="expression[expression_items_attributes][4][id]"
+              :value="expressionItemId[4].fifthExpression" />
             <input
               id="fifth-expression"
               name="expression[expression_items_attributes][4][content]"
@@ -98,6 +125,11 @@
               $t('form.firstExample')
             }}</label>
             <input
+              v-if="exampleId.firstExpression[0]"
+              type="hidden"
+              name="expression[expression_items_attributes][0][examples_attributes][0][id]"
+              :value="exampleId.firstExpression[0].firstExample" />
+            <input
               id="first-example-of-first-expression"
               name="expression[expression_items_attributes][0][examples_attributes][0][content]"
               class="w-full"
@@ -108,6 +140,11 @@
               $t('form.secondExample')
             }}</label>
             <input
+              v-if="exampleId.firstExpression[1]"
+              type="hidden"
+              name="expression[expression_items_attributes][0][examples_attributes][1][id]"
+              :value="exampleId.firstExpression[1].secondExample" />
+            <input
               id="second-example-of-first-expression"
               name="expression[expression_items_attributes][0][examples_attributes][1][content]"
               class="w-full"
@@ -117,6 +154,11 @@
             <label for="third-example-of-first-expression">{{
               $t('form.thirdExample')
             }}</label>
+            <input
+              v-if="exampleId.firstExpression[2]"
+              type="hidden"
+              name="expression[expression_items_attributes][0][examples_attributes][2][id]"
+              :value="exampleId.firstExpression[2].thirdExample" />
             <input
               id="third-example-of-first-expression"
               name="expression[expression_items_attributes][0][examples_attributes][2][content]"
@@ -161,6 +203,11 @@
               $t('form.firstExample')
             }}</label>
             <input
+              v-if="exampleId.secondExpression[0]"
+              type="hidden"
+              name="expression[expression_items_attributes][1][examples_attributes][0][id]"
+              :value="exampleId.secondExpression[0].firstExample" />
+            <input
               id="first-example-of-second-expression"
               name="expression[expression_items_attributes][1][examples_attributes][0][content]"
               class="w-full"
@@ -171,6 +218,11 @@
               $t('form.secondExample')
             }}</label>
             <input
+              v-if="exampleId.secondExpression[1]"
+              type="hidden"
+              name="expression[expression_items_attributes][1][examples_attributes][1][id]"
+              :value="exampleId.secondExpression[1].secondExample" />
+            <input
               id="second-example-of-second-expression"
               name="expression[expression_items_attributes][1][examples_attributes][1][content]"
               class="w-full"
@@ -180,6 +232,11 @@
             <label for="third-example-of-second-expression">{{
               $t('form.thirdExample')
             }}</label>
+            <input
+              v-if="exampleId.secondExpression[2]"
+              type="hidden"
+              name="expression[expression_items_attributes][1][examples_attributes][2][id]"
+              :value="exampleId.secondExpression[2].thirdExample" />
             <input
               id="third-example-of-second-expression"
               name="expression[expression_items_attributes][1][examples_attributes][2][content]"
@@ -233,6 +290,11 @@
               $t('form.firstExample')
             }}</label>
             <input
+              v-if="exampleId.thirdExpression[0]"
+              type="hidden"
+              name="expression[expression_items_attributes][2][examples_attributes][0][id]"
+              :value="exampleId.thirdExpression[0].firstExample" />
+            <input
               id="first-example-of-third-expression"
               name="expression[expression_items_attributes][2][examples_attributes][0][content]"
               class="w-full"
@@ -243,6 +305,11 @@
               $t('form.secondExample')
             }}</label>
             <input
+              v-if="exampleId.thirdExpression[1]"
+              type="hidden"
+              name="expression[expression_items_attributes][2][examples_attributes][1][id]"
+              :value="exampleId.thirdExpression[1].secondExample" />
+            <input
               id="second-example-of-third-expression"
               name="expression[expression_items_attributes][2][examples_attributes][1][content]"
               class="w-full"
@@ -252,6 +319,11 @@
             <label for="third-example-of-third-expression">{{
               $t('form.thirdExample')
             }}</label>
+            <input
+              v-if="exampleId.thirdExpression[2]"
+              type="hidden"
+              name="expression[expression_items_attributes][2][examples_attributes][2][id]"
+              :value="exampleId.thirdExpression[2].thirdExample" />
             <input
               id="third-example-of-third-expression"
               name="expression[expression_items_attributes][2][examples_attributes][2][content]"
@@ -305,6 +377,11 @@
               $t('form.firstExample')
             }}</label>
             <input
+              v-if="exampleId.fourthExpression[0]"
+              type="hidden"
+              name="expression[expression_items_attributes][3][examples_attributes][0][id]"
+              :value="exampleId.fourthExpression[0].firstExample" />
+            <input
               id="first-example-of-fourth-expression"
               name="expression[expression_items_attributes][3][examples_attributes][0][content]"
               class="w-full"
@@ -315,6 +392,11 @@
               $t('form.secondExample')
             }}</label>
             <input
+              v-if="exampleId.fourthExpression[1]"
+              type="hidden"
+              name="expression[expression_items_attributes][3][examples_attributes][1][id]"
+              :value="exampleId.fourthExpression[1].secondExample" />
+            <input
               id="second-example-of-fourth-expression"
               name="expression[expression_items_attributes][3][examples_attributes][1][content]"
               class="w-full"
@@ -324,6 +406,11 @@
             <label for="third-example-of-fourth-expression">{{
               $t('form.thirdExample')
             }}</label>
+            <input
+              v-if="exampleId.fourthExpression[2]"
+              type="hidden"
+              name="expression[expression_items_attributes][3][examples_attributes][2][id]"
+              :value="exampleId.fourthExpression[2].thirdExample" />
             <input
               id="third-example-of-fourth-expression"
               name="expression[expression_items_attributes][3][examples_attributes][2][content]"
@@ -374,6 +461,11 @@
               $t('form.firstExample')
             }}</label>
             <input
+              v-if="exampleId.fifthExpression[0]"
+              type="hidden"
+              name="expression[expression_items_attributes][4][examples_attributes][0][id]"
+              :value="exampleId.fifthExpression[0].firstExample" />
+            <input
               id="first-example-of-fifth-expression"
               name="expression[expression_items_attributes][4][examples_attributes][0][content]"
               class="w-full"
@@ -384,6 +476,11 @@
               $t('form.secondExample')
             }}</label>
             <input
+              v-if="exampleId.fifthExpression[1]"
+              type="hidden"
+              name="expression[expression_items_attributes][4][examples_attributes][1][id]"
+              :value="exampleId.fifthExpression[1].secondExample" />
+            <input
               id="second-example-of-fifth-expression"
               name="expression[expression_items_attributes][4][examples_attributes][1][content]"
               class="w-full"
@@ -393,6 +490,11 @@
             <label for="third-example-of-fifth-expression">{{
               $t('form.thirdExample')
             }}</label>
+            <input
+              v-if="exampleId.fifthExpression[2]"
+              type="hidden"
+              name="expression[expression_items_attributes][4][examples_attributes][2][id]"
+              :value="exampleId.fifthExpression[2].thirdExample" />
             <input
               id="third-example-of-fifth-expression"
               name="expression[expression_items_attributes][4][examples_attributes][2][content]"
@@ -458,7 +560,10 @@
           @click="getSixPage">
           {{ $t('back') }}
         </button>
-        <button>{{ $t('form.create') }}</button>
+        <button v-if="expressionId" type="submit" name="button">
+          {{ $t('form.edit') }}
+        </button>
+        <button v-else>{{ $t('form.create') }}</button>
       </div>
     </form>
   </div>
@@ -473,6 +578,11 @@ export default {
   components: {
     ExpressionsFormStepNavigation,
     VueTagsInput
+  },
+  props: {
+    expressionId: {
+      type: Number
+    }
   },
   data() {
     return {
@@ -522,10 +632,67 @@ export default {
       tagsValue: [],
       completedStep2: false,
       expressionsError: false,
-      explanationError: false
+      explanationError: false,
+      url: '',
+      expressionItemId: [],
+      exampleId: {
+        firstExpression: [],
+        secondExpression: [],
+        thirdExpression: [],
+        fourthExpression: [],
+        fifthExpression: []
+      }
     }
   },
   methods: {
+    async fetchExpressionResource() {
+      const expressionResource = await fetch(
+        `/api/expressions/${this.expressionId}/edit`,
+        {
+          method: 'GET',
+          headers: { 'X-Requested-With': 'XMLHttpRequest' },
+          credentials: 'same-origin'
+        }
+      )
+      return expressionResource.json()
+    },
+    setupExpression() {
+      this.fetchExpressionResource().then((response) => {
+        this.expressionItemId = []
+        response.expressionItems.forEach((expressionItem, index) => {
+          if (index === 0) {
+            this.firstExpression = expressionItem.expression
+            this.getExpressionDetails(expressionItem, 'firstExpression')
+            this.expressionItemId.push({ firstExpression: expressionItem.id })
+          } else if (index === 1) {
+            this.secondExpression = expressionItem.expression
+            this.getExpressionDetails(expressionItem, 'secondExpression')
+            this.expressionItemId.push({ secondExpression: expressionItem.id })
+          } else if (index === 2) {
+            this.thirdExpression = expressionItem.expression
+            this.getExpressionDetails(expressionItem, 'thirdExpression')
+            this.expressionItemId.push({ thirdExpression: expressionItem.id })
+          } else if (index === 3) {
+            this.fourthExpression = expressionItem.expression
+            this.getExpressionDetails(expressionItem, 'fourthExpression')
+            this.expressionItemId.push({ fourthExpression: expressionItem.id })
+          } else if (index === 4) {
+            this.fifthExpression = expressionItem.expression
+            this.getExpressionDetails(expressionItem, 'fifthExpression')
+            this.expressionItemId.push({ fifthExpression: expressionItem.id })
+          }
+        })
+        this.note = response.note
+        response.tags.forEach((tag) => {
+          this.tags.push({ text: tag })
+        })
+      })
+    },
+    getUrl() {
+      this.expressionId
+        ? (this.url = `/expressions/${this.expressionId}`)
+        : (this.url = '/expressions')
+    },
     updateTags(newTags) {
       this.tags = newTags
       const tagsArray = newTags.map((tag) => {
@@ -668,6 +835,53 @@ export default {
       })
       const comparedExpressions = this.comparedExpressions.slice(0, -2)
       this.comparedExpressions = comparedExpressions
+    },
+    getExpressionDetails(expressionItem, specificExpression) {
+      const expressionDetails = this.getSpecificExpression(specificExpression)
+      expressionDetails.explanation = expressionItem.explanation
+      let exampleId = ''
+      if (specificExpression === 'firstExpression') {
+        exampleId = this.exampleId.firstExpression
+      } else if (specificExpression === 'secondExpression') {
+        exampleId = this.exampleId.secondExpression
+      } else if (specificExpression === 'thirdExpression') {
+        exampleId = this.exampleId.thirdExpression
+      } else if (specificExpression === 'fourthExpression') {
+        exampleId = this.exampleId.fourthExpression
+      } else if (specificExpression === 'fifthExpression') {
+        exampleId = this.exampleId.fifthExpression
+      }
+      expressionItem.examples.forEach((example, index) => {
+        if (index === 0) {
+          exampleId.push({ firstExample: example[0] })
+          expressionDetails.firstExample = example[1]
+        } else if (index === 1) {
+          exampleId.push({ secondExample: example[0] })
+          expressionDetails.secondExample = example[1]
+        } else if (index === 2) {
+          exampleId.push({ thirdExample: example[0] })
+          expressionDetails.thirdExample = example[1]
+        }
+      })
+    },
+    getSpecificExpression(specificExpression) {
+      if (specificExpression === 'firstExpression') {
+        return this.firstExpressionDetails
+      } else if (specificExpression === 'secondExpression') {
+        return this.secondExpressionDetails
+      } else if (specificExpression === 'thirdExpression') {
+        return this.thirdExpressionDetails
+      } else if (specificExpression === 'fourthExpression') {
+        return this.fourthExpressionDetails
+      } else if (specificExpression === 'fifthExpression') {
+        return this.fifthExpressionDetails
+      }
+    }
+  },
+  created() {
+    this.getUrl()
+    if (this.expressionId) {
+      this.setupExpression()
     }
   }
 }

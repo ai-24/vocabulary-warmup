@@ -18,3 +18,7 @@ ja:
       note: メモ
       tag: タグ
       back: 英単語・フレーズ一覧に戻る
+      edit: 編集
+    edit:
+      go_to_show: 詳細画面に戻る
+      go_to_index: 英単語・フレーズ一覧に戻る

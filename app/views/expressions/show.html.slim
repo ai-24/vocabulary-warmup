@@ -36,7 +36,7 @@ p style="color: green" = notice
         = tag.name
 
 div
-  => link_to 'Edit this expression', edit_expression_path(@expression)
+  = link_to t('.edit'), edit_expression_path(@expression), data: { turbo: false }
   '|
   = link_to t('.back'), root_path, data: { turbo: false }
 
