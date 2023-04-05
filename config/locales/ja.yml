@@ -11,6 +11,8 @@ ja:
   expressions:
     create:
       success: 英単語またはフレーズを新規作成しました
+    update:
+      success: 英単語またはフレーズを編集しました
     show:
       title: 下記の英単語・フレーズの違いについて
       explanation: 意味
@@ -18,3 +20,7 @@ ja:
       note: メモ
       tag: タグ
       back: 英単語・フレーズ一覧に戻る
+      edit: 編集
+    edit:
+      go_to_show: 詳細画面に戻る
+      go_to_index: 英単語・フレーズ一覧に戻る

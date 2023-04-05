@@ -1,0 +1,8 @@
+div(data-vue='ExpressionsForm' data-vue-expression-id:number="#{params[:id]}")
+
+br
+
+div
+  = link_to t('.go_to_show'), @expression
+  '|
+  = link_to t('.go_to_index'), root_path, data: { turbo: false }

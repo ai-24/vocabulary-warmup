@@ -35,7 +35,8 @@
         "tags": "タグ（任意）",
         "expressionsError": "英単語又はフレーズを２つ以上入力してください",
         "howToUseTagInput": "タグ入力後エンターキーで登録",
-        "create": "登録"
+        "create": "登録",
+        "edit": "編集する"
     },
     "stepNavigation": {
         "wordsOrPhrases": "単語又はフレーズ",

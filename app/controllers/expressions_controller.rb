@@ -37,7 +37,7 @@ class ExpressionsController < ApplicationController
   def update
     respond_to do |format|
       if @expression.update(expression_params)
-        format.html { redirect_to expression_url(@expression), notice: 'Expression was successfully updated.' }
+        format.html { redirect_to expression_url(@expression), notice: t('.success') }
         format.json { render :show, status: :ok, location: @expression }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -65,7 +65,7 @@ class ExpressionsController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def expression_params
-    params.require(:expression).permit(:note, expression_items_attributes: [:id, :content, :explanation, { examples_attributes: %i[id content] }],
-                                              tags_attributes: %i[id name])
+    params.require(:expression).permit(:id, :note, expression_items_attributes: [:id, :content, :explanation, { examples_attributes: %i[id content] }],
+                                                   tags_attributes: %i[id name])
   end
 end
