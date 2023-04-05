@@ -9,17 +9,17 @@ p style="color: green" = notice
 .details
   - @expression.expression_items.each_with_index do |expression_item, i|
     div class="expression#{i}"
-      p
+      p.content
         = expression_item.content
       p
         = t('.explanation')
-      p
+      p.explanation
         = expression_item.explanation
       - if expression_item.examples.present?
         p
           = t('.example')
         - expression_item.examples.each do |example|
-          p
+          p.example
             = example.content
 .note
   - if @expression.note.present?

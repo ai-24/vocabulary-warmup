@@ -519,7 +519,7 @@
               class="w-full"
               v-model="note"></textarea>
           </li>
-          <li>
+          <li class="tags">
             <label for="tags">{{ $t('form.tags') }}</label>
             <div>
               <vue-tags-input
