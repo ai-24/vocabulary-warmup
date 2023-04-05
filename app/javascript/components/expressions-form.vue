@@ -4,7 +4,6 @@
       :current-page="currentPage"
       :previous-page="previousPage"
       :completed-step2="completedStep2"></ExpressionsFormStepNavigation>
-
     <form accept-charset="UTF-8" :action="url" method="POST">
       <input v-if="expressionId" name="_method" type="hidden" value="put" />
       <div v-show="currentPage === 1">
