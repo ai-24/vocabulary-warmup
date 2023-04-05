@@ -11,6 +11,8 @@ ja:
   expressions:
     create:
       success: 英単語またはフレーズを新規作成しました
+    update:
+      success: 英単語またはフレーズを編集しました
     show:
       title: 下記の英単語・フレーズの違いについて
       explanation: 意味

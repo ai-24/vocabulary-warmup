@@ -37,7 +37,7 @@ class ExpressionsController < ApplicationController
   def update
     respond_to do |format|
       if @expression.update(expression_params)
-        format.html { redirect_to expression_url(@expression), notice: 'Expression was successfully updated.' }
+        format.html { redirect_to expression_url(@expression), notice: t('.success') }
         format.json { render :show, status: :ok, location: @expression }
       else
         format.html { render :edit, status: :unprocessable_entity }
