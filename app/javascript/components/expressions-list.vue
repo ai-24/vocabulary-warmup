@@ -2,7 +2,8 @@
   <ul>
     <li
       v-for="expressionsResource in expressionsResources"
-      :key="expressionsResource.id">
+      :key="expressionsResource.id"
+      class="expression">
       <a :href="`/expressions/${expressionsResource.id}`">{{
         titles[expressionsResource.id]
       }}</a>

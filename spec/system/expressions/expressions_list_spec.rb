@@ -106,4 +106,33 @@ RSpec.describe 'Expressions' do
       end
     end
   end
+
+  describe 'list order after editing note' do
+    context 'when the note is before editing' do
+      it 'check the list order by expression id 1' do
+        visit '/'
+        within first('li.expression') do
+          expect(page).to have_link 'balcony and Veranda', href: expression_path(1)
+        end
+      end
+    end
+
+    context 'when the note is after editing' do
+      before do
+        visit '/'
+        click_link 'balcony and Veranda'
+        click_link '編集'
+        3.times { click_button '次へ' }
+        fill_in('メモ（任意）', with: 'note is added')
+        click_button '編集する'
+      end
+
+      it 'check if the data is on the same place' do
+        visit '/'
+        within first('li.expression') do
+          expect(page).to have_link 'balcony and Veranda', href: expression_path(1)
+        end
+      end
+    end
+  end
 end

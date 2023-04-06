@@ -4,7 +4,7 @@ class Api::ExpressionsController < ApplicationController
   before_action :set_expression, only: %i[edit]
 
   def index
-    @expressions = Expression.all
+    @expressions = Expression.order(:created_at)
   end
 
   def edit; end
