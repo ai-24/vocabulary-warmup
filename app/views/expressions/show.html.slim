@@ -40,4 +40,4 @@ div
   '|
   = link_to t('.back'), root_path, data: { turbo: false }
 
-  = button_to 'Destroy this expression', @expression, method: :delete
+  = button_to t('.delete'), @expression, method: :delete, data: { turbo_confirm: t('.confirm_deletion_of_expression') }

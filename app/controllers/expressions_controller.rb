@@ -48,12 +48,10 @@ class ExpressionsController < ApplicationController
 
   # DELETE /expressions/1 or /expressions/1.json
   def destroy
+    next_expression = @expression.next
     @expression.destroy
 
-    respond_to do |format|
-      format.html { redirect_to expressions_url, notice: 'Expression was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+    redirect_to expression_path(next_expression), notice: t('.success')
   end
 
   private

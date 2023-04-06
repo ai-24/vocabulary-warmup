@@ -8,4 +8,8 @@ class Expression < ApplicationRecord
     attributes['content'].blank?
   }
   accepts_nested_attributes_for :tags
+
+  def next
+    Expression.order(:created_at, :id).find_by('created_at >= ? AND id > ?', created_at, id)
+  end
 end

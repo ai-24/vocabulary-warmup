@@ -13,6 +13,8 @@ ja:
       success: 英単語またはフレーズを新規作成しました
     update:
       success: 英単語またはフレーズを編集しました
+    destroy:
+      success: 英単語又はフレーズを削除しました
     show:
       title: 下記の英単語・フレーズの違いについて
       explanation: 意味
@@ -21,6 +23,8 @@ ja:
       tag: タグ
       back: 英単語・フレーズ一覧に戻る
       edit: 編集
+      delete: 削除
+      confirm_deletion_of_expression: この英単語又はフレーズを本当に削除しますか？
     edit:
       go_to_show: 詳細画面に戻る
       go_to_index: 英単語・フレーズ一覧に戻る
