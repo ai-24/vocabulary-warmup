@@ -22,38 +22,28 @@ class ExpressionsController < ApplicationController
     @expression = Expression.new(expression_params)
     @expression.tags = Tag.find_tags_object(@expression.tags)
 
-    respond_to do |format|
-      if @expression.save
-        format.html { redirect_to expression_url(@expression), notice: t('.success') }
-        format.json { render :show, status: :created, location: @expression }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @expression.errors, status: :unprocessable_entity }
-      end
+    if @expression.save
+      redirect_to expression_url(@expression), notice: t('.success')
+    else
+      render :new, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /expressions/1 or /expressions/1.json
   def update
-    respond_to do |format|
-      if @expression.update(expression_params)
-        format.html { redirect_to expression_url(@expression), notice: t('.success') }
-        format.json { render :show, status: :ok, location: @expression }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @expression.errors, status: :unprocessable_entity }
-      end
+    if @expression.update(expression_params)
+      redirect_to expression_url(@expression), notice: t('.success')
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
 
   # DELETE /expressions/1 or /expressions/1.json
   def destroy
+    next_expression = @expression.next
     @expression.destroy
 
-    respond_to do |format|
-      format.html { redirect_to expressions_url, notice: 'Expression was successfully destroyed.' }
-      format.json { head :no_content }
-    end
+    redirect_to expression_path(next_expression), notice: t('.success')
   end
 
   private
