@@ -136,4 +136,46 @@ RSpec.describe 'Expressions' do
       end
     end
   end
+
+  describe 'next and back button' do
+    it 'check if there is no next button if the expression is the last one' do
+      first_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
+
+      visit "/expressions/#{first_expression_items[0].expression.id}"
+      expect(page).to have_link '１つ前の英単語・フレーズへ', href: '/expressions/1'
+      expect(page).not_to have_link '次の英単語・フレーズへ'
+    end
+
+    it 'check if there is no back button if the expression is the first one' do
+      expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
+
+      visit '/expressions/1'
+      expect(page).to have_link '次の英単語・フレーズへ', href: "/expressions/#{expression_items[0].expression.id}"
+      expect(page).not_to have_link '１つ前の英単語・フレーズへ'
+    end
+
+    it 'check if there is no back and next button when expression is one in a list' do
+      visit '/expressions/1'
+      expect(page).not_to have_link '１つ前の英単語・フレーズへ'
+      expect(page).not_to have_link '次の英単語・フレーズへ'
+    end
+
+    it 'check next button' do
+      first_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
+      second_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
+
+      visit "/expressions/#{first_expression_items[0].expression.id}"
+      click_link '次の英単語・フレーズへ'
+      expect(page).to have_current_path expression_path(second_expression_items[0].expression), ignore_query: true
+    end
+
+    it 'check back button' do
+      first_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
+      second_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
+
+      visit "/expressions/#{second_expression_items[0].expression.id}"
+      click_link '１つ前の英単語・フレーズへ'
+      expect(page).to have_current_path expression_path(first_expression_items[0].expression), ignore_query: true
+    end
+  end
 end
