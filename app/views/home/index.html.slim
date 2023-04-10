@@ -1,3 +1,7 @@
 p style="color: green" = notice
 
-div(data-vue='ExpressionsList')
+- if @expressions.blank?
+  p
+    = t('.no_data')
+- else
+    div(data-vue='ExpressionsList')

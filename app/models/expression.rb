@@ -9,6 +9,10 @@ class Expression < ApplicationRecord
   }
   accepts_nested_attributes_for :tags
 
+  def previous
+    Expression.order(created_at: :desc, id: :desc).find_by('created_at <= ? AND id < ?', created_at, id)
+  end
+
   def next
     Expression.order(:created_at, :id).find_by('created_at >= ? AND id > ?', created_at, id)
   end

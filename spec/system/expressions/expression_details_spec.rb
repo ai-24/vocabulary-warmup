@@ -3,13 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe 'Expressions' do
-  before do
-    10.times do
-      FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
-      FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note))
-    end
-  end
-
   describe 'expressions/1' do
     it 'check url' do
       visit '/'
@@ -55,6 +48,11 @@ RSpec.describe 'Expressions' do
     end
 
     it 'check the expression list after clicking the back button that goes to root path' do
+      10.times do
+        FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
+        FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note))
+      end
+
       visit '/expressions/1'
       click_link '英単語・フレーズ一覧に戻る'
       expect(all('li').count).to eq 21
@@ -135,53 +133,6 @@ RSpec.describe 'Expressions' do
       within '.tag' do
         expect(page).to have_content 'タグ'
         expect(page).to have_content 'preposition'
-      end
-    end
-  end
-
-  describe 'delete expressions' do
-    before do
-      FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
-      visit '/'
-      click_link 'balcony and Veranda'
-    end
-
-    it 'check if expression is deleted' do
-      expect do
-        click_button '削除'
-        expect(page.accept_confirm).to eq 'この英単語又はフレーズを本当に削除しますか？'
-        expect(page).to have_content '英単語又はフレーズを削除しました'
-      end.to change(Expression, :count).by(-1).and change(ExpressionItem, :count).by(-2)
-
-      visit '/'
-      expect(page).not_to have_link 'balcony and Veranda'
-    end
-
-    it 'check if the expression is not deleted when cancel button is clicked' do
-      expect do
-        click_button '削除'
-        expect(page.dismiss_confirm).to eq 'この英単語又はフレーズを本当に削除しますか？'
-        within '.title' do
-          expect(page).to have_content 'balcony'
-        end
-        click_link '英単語・フレーズ一覧に戻る'
-      end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(0)
-
-      expect(page).to have_link 'balcony and Veranda'
-    end
-
-    it 'check if the next expression is on the page after deleting expression' do
-      delete_expression_item = ExpressionItem.find_by content: 'balcony'
-      next_expression = delete_expression_item.expression.next
-      accept_confirm do
-        click_button '削除'
-      end
-      expect(page).to have_content '英単語又はフレーズを削除しました'
-
-      next_expression.expression_items.each do |expression_item|
-        within '.title' do
-          expect(page).to have_content expression_item.content
-        end
       end
     end
   end

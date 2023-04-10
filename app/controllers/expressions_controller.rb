@@ -40,10 +40,15 @@ class ExpressionsController < ApplicationController
 
   # DELETE /expressions/1 or /expressions/1.json
   def destroy
-    next_expression = @expression.next
+    expression = @expression.next || @expression.previous
+
     @expression.destroy
 
-    redirect_to expression_path(next_expression), notice: t('.success')
+    if expression
+      redirect_to expression_path(expression), notice: t('.success')
+    else
+      redirect_to root_path, notice: t('.success')
+    end
   end
 
   private
