@@ -22,4 +22,23 @@ RSpec.describe Expression, type: :model do
       expect(first_expression_items[0].expression.next).to eq third_expression_items[0].expression
     end
   end
+
+  describe '#previous' do
+    it 'get previous expression' do
+      first_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
+      second_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
+
+      expect(second_expression_items[0].expression.previous).to eq first_expression_items[0].expression
+    end
+
+    it 'get previous expression even though the previous id is missing' do
+      first_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
+      second_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
+      third_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
+
+      second_expression_items[0].expression.destroy
+
+      expect(third_expression_items[0].expression.previous).to eq first_expression_items[0].expression
+    end
+  end
 end
