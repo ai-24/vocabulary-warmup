@@ -4,10 +4,10 @@ p style="color: green" = notice
   h1
     = t('.title')
   div
-    - @expression.expression_items.each_with_index do |expression_item, i|
+    - @expression.expression_items.order(:created_at, :id).each_with_index do |expression_item, i|
       p #{i + 1}. #{expression_item.content}
 .details
-  - @expression.expression_items.each_with_index do |expression_item, i|
+  - @expression.expression_items.order(:created_at, :id).each_with_index do |expression_item, i|
     div class="expression#{i}"
       p.content
         = expression_item.content
@@ -18,7 +18,7 @@ p style="color: green" = notice
       - if expression_item.examples.present?
         p
           = t('.example')
-        - expression_item.examples.each do |example|
+        - expression_item.examples.order(:created_at, :id).each do |example|
           p.example
             = example.content
 .note

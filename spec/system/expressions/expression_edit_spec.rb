@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Expressions' do
-  describe 'get the right data to edit' do
+  describe 'get the right data that has not been edited yet to edit' do
     before do
       visit '/expressions/new'
       fill_in('１つ目の英単語 / フレーズ', with: 'on the beach')
@@ -98,6 +98,80 @@ RSpec.describe 'Expressions' do
     end
   end
 
+  describe 'get the right data which are already edited with right order to edit' do
+    describe 'content and explanation of expression_items' do
+      before do
+        visit '/expressions/1'
+        click_link '編集'
+        fill_in('１つ目の英単語 / フレーズ', with: 'journey')
+        click_button '次へ'
+        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'Travelling but this word means more broad.')
+        fill_in('例文１', with: 'The journey was tiring.')
+        2.times { click_button '次へ' }
+        click_button '編集する'
+        has_text? '英単語またはフレーズを編集しました'
+      end
+
+      it 'check if content of expression_items are correct order on editing page after it is edited' do
+        click_link '編集'
+
+        expect(page).to have_field('１つ目の英単語 / フレーズ', with: 'journey')
+        expect(page).to have_field('２つ目の英単語 / フレーズ', with: 'Veranda')
+      end
+
+      it 'check if explanations are correct order on editing page after it is edited' do
+        click_link '編集'
+        click_button '次へ'
+
+        expect(page).to have_field('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。',
+                                   with: 'Travelling but this word means more broad.')
+        expect(page).to have_field('例文１', with: 'The journey was tiring.')
+        click_button '次へ'
+
+        expect(page).to have_field(
+          '{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。',
+          with: 'A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.'
+        )
+      end
+    end
+
+    describe 'examples' do
+      before do
+        visit '/expressions/new'
+        fill_in('１つ目の英単語 / フレーズ', with: 'on the beach')
+        fill_in('２つ目の英単語 / フレーズ', with: 'at the beach')
+        click_button '次へ'
+        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of on the beach')
+        fill_in('例文１', with: 'example1 of on the beach')
+        fill_in('例文２', with: 'example2 of on the beach')
+        fill_in('例文３', with: 'example3 of on the beach')
+        click_button '次へ'
+        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of at the beach')
+        click_button '次へ'
+        click_button '登録'
+
+        visit '/'
+        click_link 'on the beach'
+        click_link '編集'
+        click_button '次へ'
+        fill_in('例文１', with: 'test1')
+        fill_in('例文２', with: 'test2')
+        2.times { click_button '次へ' }
+        click_button '編集する'
+        has_text? '英単語またはフレーズを編集しました'
+      end
+
+      it 'check if examples are correct order on edit page after it is edited' do
+        click_link '編集'
+        click_button '次へ'
+
+        expect(page).to have_field('例文１', with: 'test1')
+        expect(page).to have_field('例文２', with: 'test2')
+        expect(page).to have_field('例文３', with: 'example3 of on the beach')
+      end
+    end
+  end
+
   describe 'edit expressions' do
     context 'when first expression is edited and example is added' do
       before do
@@ -122,11 +196,11 @@ RSpec.describe 'Expressions' do
         has_text? '英単語またはフレーズを編集しました'
 
         within '.title div' do
-          expect(page).to have_content 'journey'
+          expect(page).to have_content '1. journey'
           expect(page).not_to have_content 'balcony'
         end
 
-        within '.details' do
+        within '.details div.expression0' do
           expect(page).to have_content(/^journey$/)
         end
       end
@@ -135,7 +209,7 @@ RSpec.describe 'Expressions' do
         click_button '編集する'
         has_text? '英単語またはフレーズを編集しました'
 
-        within '.details' do
+        within '.details div.expression0' do
           expect(page).to have_content 'Travelling but this word means more broad.'
           expect(page).not_to have_content 'A platform on the side of a building, accessible from inside the building.'
         end
@@ -145,7 +219,7 @@ RSpec.describe 'Expressions' do
         click_button '編集する'
         has_text? '英単語またはフレーズを編集しました'
 
-        within '.details' do
+        within '.details div.expression0' do
           expect(page).to have_content 'The journey was tiring.'
         end
       end
@@ -177,7 +251,7 @@ RSpec.describe 'Expressions' do
         has_text? '英単語またはフレーズを編集しました'
 
         within '.title div' do
-          expect(page).to have_content 'veranda'
+          expect(page).to have_content '2. veranda'
           expect(page).not_to have_content 'Veranda'
         end
 
@@ -232,9 +306,8 @@ RSpec.describe 'Expressions' do
         fill_in('３つ目の英単語 / フレーズ', with: 'test3')
         3.times { click_button '次へ' }
         fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of test3')
-        fill_in('例文１', with: 'example1 of around the beach test1')
+        fill_in('例文１', with: 'test1')
         fill_in('例文２', with: 'test2')
-        fill_in('例文３', with: 'test3')
         click_button '次へ'
         fill_in('メモ（任意）', with: 'note. note is added.')
       end
@@ -251,7 +324,7 @@ RSpec.describe 'Expressions' do
         has_text? '英単語またはフレーズを編集しました'
 
         within '.title div' do
-          expect(page).to have_content 'test3'
+          expect(page).to have_content '3. test3'
           expect(page).not_to have_content 'around the beach'
         end
 
@@ -275,7 +348,7 @@ RSpec.describe 'Expressions' do
         has_text? '英単語またはフレーズを編集しました'
 
         within first('.details div.expression2 p.example') do
-          expect(page).to have_content 'example1 of around the beach test1'
+          expect(page).to have_content 'test1'
         end
 
         within all('.details div.expression2 p.example')[1] do
@@ -283,7 +356,7 @@ RSpec.describe 'Expressions' do
         end
 
         within all('.details div.expression2 p.example')[2] do
-          expect(page).to have_content 'test3'
+          expect(page).to have_content 'example3 of around the beach'
         end
       end
 
