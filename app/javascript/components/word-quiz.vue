@@ -3,6 +3,7 @@
     <div class="w-96">
       <WordQuizResult
         v-if="isResult"
+        :number-of-quiz-resources="numberOfResources"
         :userAnswers="userAnswersList"></WordQuizResult>
       <div v-else>
         <p>{{ $t('quiz.question') }}</p>
@@ -56,6 +57,7 @@ export default {
       userAnswer: '',
       userAnswersList: [],
       quizResources: [],
+      numberOfResources: 0,
       currentIndex: 0,
       correctAnswer: '',
       answered: false,
@@ -92,6 +94,7 @@ export default {
     setupQuiz() {
       this.fetchQuizResources().then((response) => {
         this.quizResources = response
+        this.numberOfResources = this.quizResources.length
       })
     },
     getCorrectAnswer() {
