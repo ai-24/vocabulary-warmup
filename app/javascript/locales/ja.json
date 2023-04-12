@@ -12,8 +12,19 @@
         "completed": "問題が全て出題されました",
         "resultButton": "クイズの結果を確認する",
         "result": {
+            "wellDone": "クイズお疲れ様でした！",
             "showUserAnswers": "自分の解答を表示",
-            "blank": "未入力"
+            "blank": "未入力",
+            "numberOfCorrectAnswers": "{totalQuestions}問中{numberOfCorrectAnswers}問正解です",
+            "bookmark": "不正解だった英単語又はフレーズと、それと一緒に保存されている英単語・フレーズを全てブックマークする",
+            "bookmarkList": "ブックマークする英単語・フレーズ",
+            "moveToMemorisedWordsList": "一緒に保存されている英単語・フレーズの全てが正解したものを覚えたリストに移動する",
+            "memorisedWordsList": "覚えたリストに移動する英単語・フレーズ",
+            "save": "保存する",
+            "recommendNextAction": "ブックマークや覚えたリストに英単語・フレーズを移動させた後は復習しましょう！",
+            "important": "重要: 一度この画面を離れると戻れません。今回の結果をブックマークや覚えたリストに移動させる場合は、下記ボタンをクリックする前に必ず行なってください。",
+            "review": "ブックマークした英単語・フレーズを復習",
+            "tryAgain": "クイズに再挑戦"
         }
     },
     "form": {
