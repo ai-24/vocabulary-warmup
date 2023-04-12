@@ -57,7 +57,7 @@ RSpec.describe 'Quiz' do
       click_button 'クイズの結果を確認する'
 
       expect(page).not_to have_content '問題'
-      expect(page).to have_content '自分の解答を表示'
+      expect(page).to have_content 'クイズお疲れ様でした！'
     end
 
     it 'show user answers list' do
@@ -68,6 +68,7 @@ RSpec.describe 'Quiz' do
       click_button 'クイズに解答する'
       click_button 'クイズの結果を確認する'
 
+      find('summary', text: '自分の解答を表示').click
       expect(page).to have_content '◯ Balcony'
       expect(page).to have_content '× wrong answer'
     end
@@ -80,7 +81,35 @@ RSpec.describe 'Quiz' do
       click_button 'クイズに解答する'
       click_button 'クイズの結果を確認する'
 
+      find('summary', text: '自分の解答を表示').click
       expect(page).to have_content '× 未入力'
+    end
+
+    it 'show important notice with red text color' do
+      fill_in('解答を入力', with: '')
+      click_button 'クイズに解答する'
+      click_button '次へ'
+      fill_in('解答を入力', with: 'veranda')
+      click_button 'クイズに解答する'
+      click_button 'クイズの結果を確認する'
+
+      expect(page).to have_selector(
+        '.text-red-600',
+        text: '重要: 一度この画面を離れると戻れません。今回の結果をブックマークや覚えたリストに移動させる場合は、下記ボタンをクリックする前に必ず行なってください。'
+      )
+    end
+
+    it 'show new quiz' do
+      fill_in('解答を入力', with: '')
+      click_button 'クイズに解答する'
+      click_button '次へ'
+      fill_in('解答を入力', with: 'veranda')
+      click_button 'クイズに解答する'
+      click_button 'クイズの結果を確認する'
+
+      click_button 'クイズに再挑戦'
+      expect(page).not_to have_content '{totalQuestions}問中{numberOfCorrectAnswers}問正解です'
+      expect(page).to have_content '問題'
     end
   end
 end
