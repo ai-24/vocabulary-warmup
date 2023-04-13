@@ -23,10 +23,10 @@
   </div>
   <details>
     <summary>{{ $t('quiz.result.showUserAnswers') }}</summary>
-    <ul>
+    <ul class="user-answer-list">
       <div v-for="userAnswer in userAnswers" :key="userAnswer.id">
-        <li v-if="userAnswer === '× '">× {{ $t('quiz.result.blank') }}</li>
-        <li v-else>{{ userAnswer }}</li>
+        <li v-if="userAnswer.content === '× '">× {{ $t('quiz.result.blank') }}</li>
+        <li v-else>{{ userAnswer.content }}</li>
       </div>
     </ul>
   </details>
@@ -49,26 +49,47 @@ export default {
     numberOfQuizResources: {
       type: Number,
       required: true
+    },
+    quizResources: {
+      type: Array,
+      required: true
     }
   },
   data() {
     return {
-      numberOfCorrectAnswers: 0
+      numberOfCorrectAnswers: 0,
+      expressionGroups: []
     }
   },
   methods: {
     getNumberOfCorrectAnswers() {
       const correctAnswers = this.userAnswers.filter((userAnswer) =>
-        userAnswer.match(/^◯.+/g)
+        userAnswer.content.match(/^◯.+/g)
       )
       this.numberOfCorrectAnswers = correctAnswers.length
     },
     getNewQuiz() {
       location.reload()
+    },
+    classifyUserAnswersByExpressionId() {
+      let copyOfUserAnswers = this.userAnswers.slice()
+
+      this.userAnswers.forEach((userAnswer) => {
+        let groupOfExpression = copyOfUserAnswers.filter((copyOfUserAnswer)=> userAnswer.expressionId === copyOfUserAnswer.expressionId)
+
+        if(groupOfExpression.length) {
+          this.expressionGroups.push(groupOfExpression)
+          groupOfExpression.forEach((expressionItem) => {
+            let i = copyOfUserAnswers.findIndex((element) => element.expressionId === expressionItem.expressionId)
+            copyOfUserAnswers.splice(i, 1)
+          })
+        }
+      })
     }
   },
   mounted() {
     this.getNumberOfCorrectAnswers()
+    this.classifyUserAnswersByExpressionId()
   }
 }
 </script>
