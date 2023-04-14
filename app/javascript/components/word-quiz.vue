@@ -10,7 +10,7 @@
         <p>{{ $t('quiz.question') }}</p>
         <template
           v-for="(quizResource, index) in quizResources"
-          :key="quizResource.id">
+          :key="quizResource">
           <p v-if="currentIndex === index">
             {{ quizResource.explanation }}
           </p>
