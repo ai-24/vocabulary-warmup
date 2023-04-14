@@ -528,7 +528,7 @@
                 @tags-changed="updateTags"
                 :placeholder="$t('form.howToUseTagInput')"></vue-tags-input>
               <ul>
-                <li v-for="(tagValue, index) in tagsValue" :key="tagValue.id">
+                <li v-for="(tagValue, index) in tagsValue" :key="tagValue">
                   <input
                     type="hidden"
                     :name="`expression[tags_attributes][${index}][name]`"

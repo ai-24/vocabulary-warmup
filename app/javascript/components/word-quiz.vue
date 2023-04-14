@@ -4,12 +4,13 @@
       <WordQuizResult
         v-if="isResult"
         :number-of-quiz-resources="numberOfResources"
+        :quiz-resources="quizResources"
         :userAnswers="userAnswersList"></WordQuizResult>
       <div v-else>
         <p>{{ $t('quiz.question') }}</p>
         <template
           v-for="(quizResource, index) in quizResources"
-          :key="quizResource.id">
+          :key="quizResource">
           <p v-if="currentIndex === index">
             {{ quizResource.explanation }}
           </p>
@@ -63,7 +64,8 @@ export default {
       answered: false,
       isCorrect: '',
       isLastQuestion: false,
-      isResult: false
+      isResult: false,
+      expressionId: 0
     }
   },
   methods: {
@@ -100,6 +102,7 @@ export default {
     getCorrectAnswer() {
       const currentQuiz = this.quizResources[this.currentIndex]
       this.correctAnswer = currentQuiz.content
+      this.expressionId = currentQuiz.expressionId
     },
     checkUserAnswer() {
       return this.userAnswer.toLowerCase() === this.correctAnswer.toLowerCase()
@@ -111,9 +114,15 @@ export default {
     },
     createUserAnswersList() {
       if (this.isCorrect) {
-        this.userAnswersList.push(`◯ ${this.userAnswer}`)
+        this.userAnswersList.push({
+          content: `◯ ${this.userAnswer}`,
+          expressionId: this.expressionId
+        })
       } else {
-        this.userAnswersList.push(`× ${this.userAnswer}`)
+        this.userAnswersList.push({
+          content: `× ${this.userAnswer}`,
+          expressionId: this.expressionId
+        })
       }
     }
   },
