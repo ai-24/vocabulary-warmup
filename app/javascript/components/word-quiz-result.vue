@@ -14,20 +14,32 @@
     <input type="checkbox" />{{ $t('quiz.result.bookmark') }}
     <details>
       <summary>{{ $t('quiz.result.bookmarkList') }}</summary>
+      <ul>
+        <li v-for="item in listOfIncorrectItems" :key="item">
+          {{ item.content }}
+        </li>
+      </ul>
     </details>
     <input type="checkbox" />{{ $t('quiz.result.moveToMemorisedWordsList') }}
     <details>
       <summary>{{ $t('quiz.result.memorisedWordsList') }}</summary>
+      <ul>
+        <li v-for="item in listOfCorrectItems" :key="item">
+          {{ item.content }}
+        </li>
+      </ul>
     </details>
     <button>{{ $t('quiz.result.save') }}</button>
   </div>
   <details>
     <summary>{{ $t('quiz.result.showUserAnswers') }}</summary>
     <ul class="user-answer-list">
-      <div v-for="userAnswer in userAnswers" :key="userAnswer.id">
-        <li v-if="userAnswer.content === '× '">× {{ $t('quiz.result.blank') }}</li>
+      <template v-for="userAnswer in userAnswers" :key="userAnswer">
+        <li v-if="userAnswer.content === '× '">
+          × {{ $t('quiz.result.blank') }}
+        </li>
         <li v-else>{{ userAnswer.content }}</li>
-      </div>
+      </template>
     </ul>
   </details>
   <div>
@@ -58,10 +70,20 @@ export default {
   data() {
     return {
       numberOfCorrectAnswers: 0,
-      expressionGroups: []
+      expressionGroups: [],
+      allCorrectExpressionIds: [],
+      incorrectExpressionIds: [],
+      listOfCorrectItems: [],
+      listOfIncorrectItems: []
     }
   },
   methods: {
+    createListOfItems() {
+      this.classifyUserAnswersByExpressionId()
+      this.classifyExpressionGroupsByRightOrWrong()
+      this.convertExpressionIds(this.allCorrectExpressionIds, 'correct')
+      this.convertExpressionIds(this.incorrectExpressionIds, 'incorrect')
+    },
     getNumberOfCorrectAnswers() {
       const correctAnswers = this.userAnswers.filter((userAnswer) =>
         userAnswer.content.match(/^◯.+/g)
@@ -72,16 +94,63 @@ export default {
       location.reload()
     },
     classifyUserAnswersByExpressionId() {
-      let copyOfUserAnswers = this.userAnswers.slice()
+      const copyOfUserAnswers = this.userAnswers.slice()
 
       this.userAnswers.forEach((userAnswer) => {
-        let groupOfExpression = copyOfUserAnswers.filter((copyOfUserAnswer)=> userAnswer.expressionId === copyOfUserAnswer.expressionId)
+        const groupOfExpression = copyOfUserAnswers.filter(
+          (copyOfUserAnswer) =>
+            userAnswer.expressionId === copyOfUserAnswer.expressionId
+        )
 
-        if(groupOfExpression.length) {
+        if (groupOfExpression.length) {
           this.expressionGroups.push(groupOfExpression)
           groupOfExpression.forEach((expressionItem) => {
-            let i = copyOfUserAnswers.findIndex((element) => element.expressionId === expressionItem.expressionId)
+            const i = copyOfUserAnswers.findIndex(
+              (element) => element.expressionId === expressionItem.expressionId
+            )
             copyOfUserAnswers.splice(i, 1)
+          })
+        }
+      })
+    },
+    classifyExpressionGroupsByRightOrWrong() {
+      this.expressionGroups.forEach((expressionGroup) => {
+        const correctAnswers = expressionGroup.filter((element) =>
+          element.content.match(/^◯.+/g)
+        )
+        if (correctAnswers.length === expressionGroup.length) {
+          this.allCorrectExpressionIds.push(expressionGroup[0].expressionId)
+        } else {
+          this.incorrectExpressionIds.push(expressionGroup[0].expressionId)
+        }
+      })
+    },
+    convertExpressionIds(listOfExpressionIds, type) {
+      listOfExpressionIds.forEach((id) => {
+        const contents = []
+
+        const expression = this.quizResources.filter(
+          (quizResource) => quizResource.expressionId === id
+        )
+        const lastIndex = expression.length - 1
+        expression.forEach((expressionItem, index) => {
+          if (index === lastIndex) {
+            contents.push(`and ${expressionItem.content}`)
+          } else if (expression.length > 2 && index !== lastIndex - 1) {
+            contents.push(`${expressionItem.content},`)
+          } else {
+            contents.push(expressionItem.content)
+          }
+        })
+        if (type === 'correct') {
+          this.listOfCorrectItems.push({
+            content: contents.join(' '),
+            expressionId: expression[0].expressionId
+          })
+        } else if (type === 'incorrect') {
+          this.listOfIncorrectItems.push({
+            content: contents.join(' '),
+            expressionId: expression[0].expressionId
           })
         }
       })
@@ -89,7 +158,7 @@ export default {
   },
   mounted() {
     this.getNumberOfCorrectAnswers()
-    this.classifyUserAnswersByExpressionId()
+    this.createListOfItems()
   }
 }
 </script>
