@@ -14,7 +14,7 @@
     <input type="checkbox" />{{ $t('quiz.result.bookmark') }}
     <details>
       <summary>{{ $t('quiz.result.bookmarkList') }}</summary>
-      <ul>
+      <ul class="list-of-incorrect-answers">
         <li v-for="item in listOfIncorrectItems" :key="item">
           {{ item.content }}
         </li>
@@ -23,7 +23,7 @@
     <input type="checkbox" />{{ $t('quiz.result.moveToMemorisedWordsList') }}
     <details>
       <summary>{{ $t('quiz.result.memorisedWordsList') }}</summary>
-      <ul>
+      <ul class="list-of-correct-answers">
         <li v-for="item in listOfCorrectItems" :key="item">
           {{ item.content }}
         </li>
