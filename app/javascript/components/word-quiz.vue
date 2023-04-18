@@ -4,7 +4,7 @@
       <WordQuizResult
         v-if="isResult"
         :number-of-quiz-resources="numberOfResources"
-        :quiz-resources="quizResources"
+        :raw-quiz-resources="rawQuizResources"
         :userAnswers="userAnswersList"></WordQuizResult>
       <div v-else>
         <p>{{ $t('quiz.question') }}</p>
@@ -58,6 +58,7 @@ export default {
       userAnswer: '',
       userAnswersList: [],
       quizResources: [],
+      rawQuizResources: [],
       numberOfResources: 0,
       currentIndex: 0,
       correctAnswer: '',
@@ -96,7 +97,9 @@ export default {
     setupQuiz() {
       this.fetchQuizResources().then((response) => {
         this.quizResources = response
+        this.rawQuizResources = response
         this.numberOfResources = this.quizResources.length
+        this.orderQuestions(this.numberOfResources)
       })
     },
     getCorrectAnswer() {
@@ -124,6 +127,18 @@ export default {
           expressionId: this.expressionId
         })
       }
+    },
+    orderQuestions(quizLength) {
+      const numbers = []
+      while (numbers.length < quizLength) {
+        const randomNumber = Math.floor(Math.random() * (quizLength - 0))
+        if (!numbers.includes(randomNumber)) numbers.push(randomNumber)
+      }
+      const orderedQuizResources = []
+      numbers.forEach((number) =>
+        orderedQuizResources.push(this.quizResources[number])
+      )
+      this.quizResources = orderedQuizResources
     }
   },
   mounted() {

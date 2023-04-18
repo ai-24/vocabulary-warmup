@@ -62,7 +62,7 @@ export default {
       type: Number,
       required: true
     },
-    quizResources: {
+    rawQuizResources: {
       type: Array,
       required: true
     }
@@ -129,7 +129,7 @@ export default {
       listOfExpressionIds.forEach((id) => {
         const contents = []
 
-        const expression = this.quizResources.filter(
+        const expression = this.rawQuizResources.filter(
           (quizResource) => quizResource.expressionId === id
         )
         const lastIndex = expression.length - 1
@@ -154,6 +154,11 @@ export default {
           })
         }
       })
+      this.sortItems(this.listOfCorrectItems)
+      this.sortItems(this.listOfIncorrectItems)
+    },
+    sortItems(items) {
+      items.sort((first, second) => first.expressionId - second.expressionId)
     }
   },
   mounted() {
