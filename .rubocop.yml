@@ -10,7 +10,7 @@ Layout/LineLength:
     - "db/seeds.rb"
 
 RSpec/MultipleExpectations:
-  Max: 5
+  Max: 6
 
 RSpec/ExampleLength:
   Max: 11
