@@ -177,7 +177,7 @@ RSpec.describe 'Quiz' do
       end
     end
 
-    context 'when one expression is in bookmark list and one expression is in memorised words list' do
+    context 'when one expression is in the list that go to bookmark and one expression is in the list that go to memorised words list' do
       let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
       let(:answers) { [] } # クイズの問題がランダムに出題されるため、クイズで入力した値をexampleで取得できるようにbeforeでこの配列に値を代入
 
