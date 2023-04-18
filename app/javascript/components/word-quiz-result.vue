@@ -158,7 +158,7 @@ export default {
       this.sortItems(this.listOfIncorrectItems)
     },
     sortItems(items) {
-      items.sort((first,second) => first.expressionId - second.expressionId)
+      items.sort((first, second) => first.expressionId - second.expressionId)
     }
   },
   mounted() {
