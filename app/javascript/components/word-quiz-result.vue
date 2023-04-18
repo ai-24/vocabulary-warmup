@@ -154,6 +154,11 @@ export default {
           })
         }
       })
+      this.sortItems(this.listOfCorrectItems)
+      this.sortItems(this.listOfIncorrectItems)
+    },
+    sortItems(items) {
+      items.sort((first,second) => first.expressionId - second.expressionId)
     }
   },
   mounted() {
