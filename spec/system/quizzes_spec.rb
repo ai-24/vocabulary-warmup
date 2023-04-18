@@ -261,8 +261,9 @@ RSpec.describe 'Quiz' do
         expect(all('ul.list-of-correct-answers li').count).to eq 0
 
         find('summary', text: '覚えたリストに移動する英単語・フレーズ').click
-        expect(page).to have_content 'balcony and Veranda'
-        expect(page).to have_content "#{first_expression_items[0].content}, #{first_expression_items[1].content} and #{first_expression_items[2].content}"
+
+        expect(first('ul.list-of-correct-answers li')).to have_content 'balcony and Veranda'
+        expect(all('ul.list-of-correct-answers li')[1]).to have_content "#{first_expression_items[0].content}, #{first_expression_items[1].content} and #{first_expression_items[2].content}"
 
         find('summary', text: 'ブックマークする英単語・フレーズ').click
         expect(all('ul.list-of-incorrect-answers li').count).to eq 0
@@ -291,8 +292,8 @@ RSpec.describe 'Quiz' do
         expect(all('ul.list-of-incorrect-answers li').count).to eq 0
 
         find('summary', text: 'ブックマークする英単語・フレーズ').click
-        expect(page).to have_content 'balcony and Veranda'
-        expect(page).to have_content "#{first_expression_items[0].content}, #{first_expression_items[1].content} and #{first_expression_items[2].content}"
+        expect(first('ul.list-of-incorrect-answers li')).to have_content 'balcony and Veranda'
+        expect(all('ul.list-of-incorrect-answers li')[1]).to have_content "#{first_expression_items[0].content}, #{first_expression_items[1].content} and #{first_expression_items[2].content}"
 
         find('summary', text: '覚えたリストに移動する英単語・フレーズ').click
         expect(all('ul.list-of-correct-answers li').count).to eq 0
