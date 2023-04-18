@@ -118,12 +118,15 @@ export default {
     createUserAnswersList() {
       if (this.isCorrect) {
         this.userAnswersList.push({
-          content: `◯ ${this.userAnswer}`,
+          content: [`◯ ${this.userAnswer}`],
           expressionId: this.expressionId
         })
       } else {
         this.userAnswersList.push({
-          content: `× ${this.userAnswer}`,
+          content: [
+            `× ${this.userAnswer}`,
+            `( Answer: ${this.correctAnswer} )`
+          ],
           expressionId: this.expressionId
         })
       }

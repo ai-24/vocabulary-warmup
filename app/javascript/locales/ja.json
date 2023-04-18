@@ -14,7 +14,7 @@
         "result": {
             "wellDone": "クイズお疲れ様でした！",
             "showUserAnswers": "自分の解答を表示",
-            "blank": "未入力",
+            "blank": "無解答",
             "numberOfCorrectAnswers": "{totalQuestions}問中{numberOfCorrectAnswers}問正解です",
             "bookmark": "不正解だった英単語又はフレーズと、それと一緒に保存されている英単語・フレーズを全てブックマークする",
             "bookmarkList": "ブックマークする英単語・フレーズ",
