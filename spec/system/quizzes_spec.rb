@@ -114,9 +114,13 @@ RSpec.describe 'Quiz' do
       it 'check user answers list' do
         find('summary', text: '自分の解答を表示').click
 
-        expect(page).to have_content '× wrong answer'
-        expect(page).to have_content('◯ Balcony') if answers[0] == 'Balcony'
-        expect(page).to have_content('◯ veranda') if answers[0] == 'veranda'
+        if answers[0] == 'Balcony'
+          expect(page).to have_content '× wrong answer ( Answer: Veranda )'
+          expect(page).to have_content('◯ Balcony')
+        elsif answers[0] == 'veranda'
+          expect(page).to have_content '× wrong answer ( Answer: balcony )'
+          expect(page).to have_content('◯ veranda')
+        end
       end
     end
 
@@ -126,14 +130,15 @@ RSpec.describe 'Quiz' do
         fill_in('解答を入力', with: '')
         click_button 'クイズに解答する'
         click_button '次へ'
-        fill_in('解答を入力', with: 'veranda')
+        fill_in('解答を入力', with: '')
         click_button 'クイズに解答する'
         click_button 'クイズの結果を確認する'
       end
 
-      it 'show 未入力 if the user answer is blank' do
+      it 'show 無解答 if the user answer is blank' do
         find('summary', text: '自分の解答を表示').click
-        expect(page).to have_content '× 未入力'
+        expect(page).to have_content '× 無解答 ( Answer: balcony )'
+        expect(page).to have_content '× 無解答 ( Answer: Veranda )'
       end
     end
 

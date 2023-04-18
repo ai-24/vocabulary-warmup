@@ -35,10 +35,16 @@
     <summary>{{ $t('quiz.result.showUserAnswers') }}</summary>
     <ul class="user-answer-list">
       <template v-for="userAnswer in userAnswers" :key="userAnswer">
-        <li v-if="userAnswer.content === '× '">
+        <li v-if="userAnswer.content[0] === '× '">
           × {{ $t('quiz.result.blank') }}
+          {{ userAnswer.content[1] }}
         </li>
-        <li v-else>{{ userAnswer.content }}</li>
+        <li v-else>
+          {{ userAnswer.content[0] }}
+          <div v-if="userAnswer.content[1]" class="inline">
+            {{ userAnswer.content[1] }}
+          </div>
+        </li>
       </template>
     </ul>
   </details>
@@ -86,7 +92,7 @@ export default {
     },
     getNumberOfCorrectAnswers() {
       const correctAnswers = this.userAnswers.filter((userAnswer) =>
-        userAnswer.content.match(/^◯.+/g)
+        userAnswer.content[0].match(/^◯.+/g)
       )
       this.numberOfCorrectAnswers = correctAnswers.length
     },
@@ -116,7 +122,7 @@ export default {
     classifyExpressionGroupsByRightOrWrong() {
       this.expressionGroups.forEach((expressionGroup) => {
         const correctAnswers = expressionGroup.filter((element) =>
-          element.content.match(/^◯.+/g)
+          element.content[0].match(/^◯.+/g)
         )
         if (correctAnswers.length === expressionGroup.length) {
           this.allCorrectExpressionIds.push(expressionGroup[0].expressionId)

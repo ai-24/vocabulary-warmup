@@ -9,6 +9,9 @@ Layout/LineLength:
   Exclude:
     - "db/seeds.rb"
 
+Style/CaseLikeIf:
+  Enabled: false
+
 RSpec/MultipleExpectations:
   Max: 6
 
