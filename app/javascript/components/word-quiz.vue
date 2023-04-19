@@ -25,7 +25,7 @@
           ×{{ $t('quiz.answer', { answer: this.correctAnswer }) }}
         </p>
         <p v-else-if="answered && !isCorrect">
-          ×{{ $t('quiz.incorrect') }}
+          ×{{ $t('quiz.wrong') }}
           {{ $t('quiz.answer', { answer: this.correctAnswer }) }}
         </p>
         <div>

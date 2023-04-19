@@ -10,25 +10,55 @@
       }}
     </p>
   </div>
-  <div>
-    <div v-if="listOfIncorrectItems.length > 0" class="section-of-incorrect-answers">
-      <input type="checkbox" />{{ $t('quiz.result.bookmark') }}
+  <div class="py-8">
+    <div
+      v-if="listOfWrongItems.length > 0"
+      class="section-of-wrong-answers py-2.5">
+      <input
+        type="checkbox"
+        id="move-to-bookmark"
+        v-model="isCheckedAllToBookmark"
+        @change="changeStatus('bookmark')" />
+      <label for="move-to-bookmark">{{ $t('quiz.result.bookmark') }}</label>
       <details>
         <summary>{{ $t('quiz.result.bookmarkList') }}</summary>
-        <ul class="list-of-incorrect-answers">
-          <li v-for="item in listOfIncorrectItems" :key="item">
-            {{ item.content }}
+        <ul class="list-of-wrong-answers">
+          <li v-for="(item, index) in listOfWrongItems" :key="item">
+            <input
+              type="checkbox"
+              :id="`wrong-expression${index}`"
+              :value="item"
+              v-model="checkedContentsToBookmark"
+              @change="isCheckedAll('bookmark')" />
+            <label :for="`wrong-expression${index}`">{{ item.content }}</label>
           </li>
         </ul>
       </details>
     </div>
-    <div v-if="listOfCorrectItems.length > 0" class="section-of-correct-answers">
-      <input type="checkbox" />{{ $t('quiz.result.moveToMemorisedWordsList') }}
+    <div
+      v-if="listOfCorrectItems.length > 0"
+      class="section-of-correct-answers py-2.5">
+      <input
+        type="checkbox"
+        id="move-to-memorised-list"
+        v-model="isCheckedAllToMemorisedList"
+        @change="changeStatus('memorisedList')" />
+      <label for="move-to-memorised-list">{{
+        $t('quiz.result.moveToMemorisedWordsList')
+      }}</label>
       <details>
         <summary>{{ $t('quiz.result.memorisedWordsList') }}</summary>
         <ul class="list-of-correct-answers">
-          <li v-for="item in listOfCorrectItems" :key="item">
-            {{ item.content }}
+          <li v-for="(item, index) in listOfCorrectItems" :key="item">
+            <input
+              type="checkbox"
+              :id="`correct-expression${index}`"
+              :value="item"
+              v-model="checkedContentsToMemorisedList"
+              @change="isCheckedAll('memorisedList')" />
+            <label :for="`correct-expression${index}`">{{
+              item.content
+            }}</label>
           </li>
         </ul>
       </details>
@@ -82,17 +112,51 @@ export default {
       numberOfCorrectAnswers: 0,
       expressionGroups: [],
       allCorrectExpressionIds: [],
-      incorrectExpressionIds: [],
+      wrongExpressionIds: [],
       listOfCorrectItems: [],
-      listOfIncorrectItems: []
+      listOfWrongItems: [],
+      checkedContentsToBookmark: [],
+      checkedContentsToMemorisedList: [],
+      isCheckedAllToBookmark: true,
+      isCheckedAllToMemorisedList: true
     }
   },
   methods: {
+    isCheckedAll(type) {
+      if (type === 'bookmark') {
+        this.isCheckedAllToBookmark =
+          this.checkedContentsToBookmark.length === this.listOfWrongItems.length
+      } else if (type === 'memorisedList') {
+        this.isCheckedAllToMemorisedList =
+          this.checkedContentsToMemorisedList.length ===
+          this.listOfCorrectItems.length
+      }
+    },
+    changeStatus(type) {
+      if (type === 'bookmark') {
+        this.checkedContentsToBookmark.length = 0
+        if (this.isCheckedAllToBookmark)
+          this.defaultCheckbox(
+            this.checkedContentsToBookmark,
+            this.listOfWrongItems
+          )
+      } else if (type === 'memorisedList') {
+        this.checkedContentsToMemorisedList.length = 0
+        if (this.isCheckedAllToMemorisedList)
+          this.defaultCheckbox(
+            this.checkedContentsToMemorisedList,
+            this.listOfCorrectItems
+          )
+      }
+    },
+    defaultCheckbox(checkedContents, items) {
+      items.forEach((item) => checkedContents.push(item))
+    },
     createListOfItems() {
       this.classifyUserAnswersByExpressionId()
       this.classifyExpressionGroupsByRightOrWrong()
       this.convertExpressionIds(this.allCorrectExpressionIds, 'correct')
-      this.convertExpressionIds(this.incorrectExpressionIds, 'incorrect')
+      this.convertExpressionIds(this.wrongExpressionIds, 'wrong')
     },
     getNumberOfCorrectAnswers() {
       const correctAnswers = this.userAnswers.filter((userAnswer) =>
@@ -131,7 +195,7 @@ export default {
         if (correctAnswers.length === expressionGroup.length) {
           this.allCorrectExpressionIds.push(expressionGroup[0].expressionId)
         } else {
-          this.incorrectExpressionIds.push(expressionGroup[0].expressionId)
+          this.wrongExpressionIds.push(expressionGroup[0].expressionId)
         }
       })
     },
@@ -157,15 +221,15 @@ export default {
             content: contents.join(' '),
             expressionId: expression[0].expressionId
           })
-        } else if (type === 'incorrect') {
-          this.listOfIncorrectItems.push({
+        } else if (type === 'wrong') {
+          this.listOfWrongItems.push({
             content: contents.join(' '),
             expressionId: expression[0].expressionId
           })
         }
       })
       this.sortItems(this.listOfCorrectItems)
-      this.sortItems(this.listOfIncorrectItems)
+      this.sortItems(this.listOfWrongItems)
     },
     sortItems(items) {
       items.sort((first, second) => first.expressionId - second.expressionId)
@@ -174,6 +238,11 @@ export default {
   mounted() {
     this.getNumberOfCorrectAnswers()
     this.createListOfItems()
+    this.defaultCheckbox(this.checkedContentsToBookmark, this.listOfWrongItems)
+    this.defaultCheckbox(
+      this.checkedContentsToMemorisedList,
+      this.listOfCorrectItems
+    )
   }
 }
 </script>
