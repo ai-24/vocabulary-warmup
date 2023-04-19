@@ -272,8 +272,8 @@ RSpec.describe 'Quiz' do
           "#{first_expression_items[0].content}, #{first_expression_items[1].content} and #{first_expression_items[2].content}"
         )
 
-        find('summary', text: 'ブックマークする英単語・フレーズ').click
-        expect(all('ul.list-of-incorrect-answers li').count).to eq 0
+        expect(page).not_to have_selector 'div.section-of-incorrect-answers'
+        expect(page).not_to have_content 'ブックマークする英単語・フレーズ'
       end
     end
 
@@ -304,8 +304,8 @@ RSpec.describe 'Quiz' do
           "#{first_expression_items[0].content}, #{first_expression_items[1].content} and #{first_expression_items[2].content}"
         )
 
-        find('summary', text: '覚えたリストに移動する英単語・フレーズ').click
-        expect(all('ul.list-of-correct-answers li').count).to eq 0
+        expect(page).not_to have_selector 'div.section-of-correct-answers'
+        expect(page).not_to have_content '覚えたリストに移動する英単語・フレーズ'
       end
     end
   end

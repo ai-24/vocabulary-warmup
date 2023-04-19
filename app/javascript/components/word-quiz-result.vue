@@ -11,24 +11,28 @@
     </p>
   </div>
   <div>
-    <input type="checkbox" />{{ $t('quiz.result.bookmark') }}
-    <details>
-      <summary>{{ $t('quiz.result.bookmarkList') }}</summary>
-      <ul class="list-of-incorrect-answers">
-        <li v-for="item in listOfIncorrectItems" :key="item">
-          {{ item.content }}
-        </li>
-      </ul>
-    </details>
-    <input type="checkbox" />{{ $t('quiz.result.moveToMemorisedWordsList') }}
-    <details>
-      <summary>{{ $t('quiz.result.memorisedWordsList') }}</summary>
-      <ul class="list-of-correct-answers">
-        <li v-for="item in listOfCorrectItems" :key="item">
-          {{ item.content }}
-        </li>
-      </ul>
-    </details>
+    <div v-if="listOfIncorrectItems.length > 0" class="section-of-incorrect-answers">
+      <input type="checkbox" />{{ $t('quiz.result.bookmark') }}
+      <details>
+        <summary>{{ $t('quiz.result.bookmarkList') }}</summary>
+        <ul class="list-of-incorrect-answers">
+          <li v-for="item in listOfIncorrectItems" :key="item">
+            {{ item.content }}
+          </li>
+        </ul>
+      </details>
+    </div>
+    <div v-if="listOfCorrectItems.length > 0" class="section-of-correct-answers">
+      <input type="checkbox" />{{ $t('quiz.result.moveToMemorisedWordsList') }}
+      <details>
+        <summary>{{ $t('quiz.result.memorisedWordsList') }}</summary>
+        <ul class="list-of-correct-answers">
+          <li v-for="item in listOfCorrectItems" :key="item">
+            {{ item.content }}
+          </li>
+        </ul>
+      </details>
+    </div>
     <button>{{ $t('quiz.result.save') }}</button>
   </div>
   <details>
