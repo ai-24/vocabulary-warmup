@@ -11,5 +11,6 @@ Rails.application.routes.draw do
   namespace :api do
     resources :expressions, only: [:index, :edit]
     resource :quiz, only: [:show]
+    post '/bookmarked_expressions', to: 'bookmarkings#create'
   end
 end

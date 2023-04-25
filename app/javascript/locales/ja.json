@@ -7,7 +7,7 @@
         "submit": "クイズに解答する",
         "next": "次へ",
         "correct": "正解",
-        "incorrect": "不正解",
+        "wrong": "不正解",
         "answer": "正解は{answer}です",
         "completed": "問題が全て出題されました",
         "resultButton": "クイズの結果を確認する",

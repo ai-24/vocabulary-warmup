@@ -225,7 +225,7 @@ RSpec.describe 'Quiz' do
       end
 
       it 'check if one expression is in the list that go to bookmark' do
-        expect(all('ul.list-of-incorrect-answers li').count).to eq 0
+        expect(all('ul.list-of-wrong-answers li').count).to eq 0
 
         find('summary', text: 'ブックマークする英単語・フレーズ').click
         if answers.count == 2
@@ -236,7 +236,7 @@ RSpec.describe 'Quiz' do
           expect(page).not_to have_content "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
         end
 
-        expect(all('ul.list-of-incorrect-answers li').count).to eq 1
+        expect(all('ul.list-of-wrong-answers li').count).to eq 1
       end
     end
 
@@ -272,8 +272,8 @@ RSpec.describe 'Quiz' do
           "#{first_expression_items[0].content}, #{first_expression_items[1].content} and #{first_expression_items[2].content}"
         )
 
-        find('summary', text: 'ブックマークする英単語・フレーズ').click
-        expect(all('ul.list-of-incorrect-answers li').count).to eq 0
+        expect(page).not_to have_selector 'div.section-of-wrong-answers'
+        expect(page).not_to have_content 'ブックマークする英単語・フレーズ'
       end
     end
 
@@ -296,16 +296,202 @@ RSpec.describe 'Quiz' do
       end
 
       it 'check if bookmark list has two expressions' do
-        expect(all('ul.list-of-incorrect-answers li').count).to eq 0
+        expect(all('ul.list-of-wrong-answers li').count).to eq 0
 
         find('summary', text: 'ブックマークする英単語・フレーズ').click
-        expect(first('ul.list-of-incorrect-answers li')).to have_content 'balcony and Veranda'
-        expect(all('ul.list-of-incorrect-answers li')[1]).to have_content(
+        expect(first('ul.list-of-wrong-answers li')).to have_content 'balcony and Veranda'
+        expect(all('ul.list-of-wrong-answers li')[1]).to have_content(
           "#{first_expression_items[0].content}, #{first_expression_items[1].content} and #{first_expression_items[2].content}"
         )
 
+        expect(page).not_to have_selector 'div.section-of-correct-answers'
+        expect(page).not_to have_content '覚えたリストに移動する英単語・フレーズ'
+      end
+    end
+
+    describe 'checkbox for memorised words list' do
+      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
+
+      before do
+        visit '/quiz'
+        4.times do |n|
+          if has_text?('A platform on the side of a building, accessible from inside the building.')
+            fill_in('解答を入力', with: 'balcony')
+          elsif has_text?('A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.')
+            fill_in('解答を入力', with: 'veranda')
+          elsif has_text?(first_expression_items[0].explanation)
+            fill_in('解答を入力', with: first_expression_items[0].content)
+          elsif has_text?(first_expression_items[1].explanation)
+            fill_in('解答を入力', with: first_expression_items[1].content)
+          end
+          click_button 'クイズに解答する'
+          n < 3 ? click_button('次へ') : click_button('クイズの結果を確認する')
+        end
+      end
+
+      it 'check if all checkbox is checked' do
+        expect(page).to have_checked_field 'move-to-memorised-list'
         find('summary', text: '覚えたリストに移動する英単語・フレーズ').click
-        expect(all('ul.list-of-correct-answers li').count).to eq 0
+        expect(page).to have_checked_field 'balcony and Veranda'
+        expect(page).to have_checked_field "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+      end
+
+      it 'check if the parents checkbox is unchecked when one expression is unchecked' do
+        expect(page).to have_checked_field 'move-to-memorised-list'
+        find('summary', text: '覚えたリストに移動する英単語・フレーズ').click
+        find('label', text: 'balcony and Veranda').click
+        expect(page).to have_unchecked_field 'balcony and Veranda'
+        expect(page).to have_unchecked_field 'move-to-memorised-list'
+        expect(page).to have_checked_field "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+      end
+
+      it 'check if parents checkbox is checked after one child checkbox is unchecked and then it is checked again' do
+        find('summary', text: '覚えたリストに移動する英単語・フレーズ').click
+        find('label', text: 'balcony and Veranda').click
+        expect(page).to have_unchecked_field 'balcony and Veranda'
+        expect(page).to have_unchecked_field 'move-to-memorised-list'
+        find('label', text: 'balcony and Veranda').click
+        expect(page).to have_checked_field 'balcony and Veranda'
+        expect(page).to have_checked_field 'move-to-memorised-list'
+      end
+
+      it 'check if all the child checkbox is unchecked when parents checkbox is clicked to uncheck' do
+        find('input#move-to-memorised-list').click
+        expect(page).to have_unchecked_field 'move-to-memorised-list'
+        find('summary', text: '覚えたリストに移動する英単語・フレーズ').click
+        expect(page).to have_unchecked_field 'balcony and Veranda'
+        expect(page).to have_unchecked_field "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+      end
+    end
+
+    describe 'checkbox for bookmark' do
+      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
+
+      before do
+        visit '/quiz'
+        4.times do |n|
+          fill_in('解答を入力', with: '')
+          click_button 'クイズに解答する'
+          n < 3 ? click_button('次へ') : click_button('クイズの結果を確認する')
+        end
+      end
+
+      it 'check if all checkbox is checked' do
+        expect(page).to have_checked_field 'move-to-bookmark'
+        find('summary', text: 'ブックマークする英単語・フレーズ').click
+        expect(page).to have_checked_field 'balcony and Veranda'
+        expect(page).to have_checked_field "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+      end
+
+      it 'check if the parents checkbox is unchecked when one expression is unchecked' do
+        expect(page).to have_checked_field 'move-to-bookmark'
+        find('summary', text: 'ブックマークする英単語・フレーズ').click
+        find('label', text: 'balcony and Veranda').click
+        expect(page).to have_unchecked_field 'balcony and Veranda'
+        expect(page).to have_unchecked_field 'move-to-bookmark'
+        expect(page).to have_checked_field "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+      end
+
+      it 'check if parents checkbox is checked after one child checkbox is unchecked and then it is checked again' do
+        find('summary', text: 'ブックマークする英単語・フレーズ').click
+        find('label', text: 'balcony and Veranda').click
+        expect(page).to have_unchecked_field 'balcony and Veranda'
+        expect(page).to have_unchecked_field 'move-to-bookmark'
+        find('label', text: 'balcony and Veranda').click
+        expect(page).to have_checked_field 'balcony and Veranda'
+        expect(page).to have_checked_field 'move-to-bookmark'
+      end
+
+      it 'check if all the child checkbox is unchecked when parents checkbox is clicked to uncheck' do
+        find('input#move-to-bookmark').click
+        expect(page).to have_unchecked_field 'move-to-bookmark'
+        find('summary', text: 'ブックマークする英単語・フレーズ').click
+        expect(page).to have_unchecked_field 'balcony and Veranda'
+        expect(page).to have_unchecked_field "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+      end
+    end
+
+    describe 'checkbox for bookmark and memorised words list' do
+      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
+
+      before do
+        visit '/quiz'
+        4.times do |n|
+          if has_text?('A platform on the side of a building, accessible from inside the building.')
+            fill_in('解答を入力', with: 'balcony')
+          elsif has_text?('A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.')
+            fill_in('解答を入力', with: 'veranda')
+          elsif has_text?(first_expression_items[0].explanation)
+            fill_in('解答を入力', with: first_expression_items[0].content)
+          else
+            fill_in('解答を入力', with: '')
+          end
+          click_button 'クイズに解答する'
+          n < 3 ? click_button('次へ') : click_button('クイズの結果を確認する')
+        end
+      end
+
+      it 'check if checkbox for bookmark does not affect memorised words list' do
+        expect(page).to have_checked_field 'move-to-bookmark'
+        expect(page).to have_checked_field 'move-to-memorised-list'
+        find('summary', text: 'ブックマークする英単語・フレーズ').click
+        find('label', text: "#{first_expression_items[0].content} and #{first_expression_items[1].content}").click
+        expect(page).to have_unchecked_field 'move-to-bookmark'
+        expect(page).to have_checked_field 'move-to-memorised-list'
+        find('summary', text: '覚えたリストに移動する英単語・フレーズ').click
+        expect(page).to have_checked_field 'balcony and Veranda'
+      end
+
+      it 'check if checkbox for memorised words list does not affect bookmark' do
+        find('summary', text: '覚えたリストに移動する英単語・フレーズ').click
+        find('label', text: 'balcony and Veranda').click
+        expect(page).to have_unchecked_field 'move-to-memorised-list'
+        expect(page).to have_checked_field 'move-to-bookmark'
+        find('summary', text: 'ブックマークする英単語・フレーズ').click
+        expect(page).to have_checked_field "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+      end
+    end
+
+    describe 'Bookmark' do
+      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
+      let(:user) { FactoryBot.create(:user) }
+
+      before do
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+
+        visit '/quiz'
+
+        4.times do |n|
+          fill_in('解答を入力', with: '')
+          click_button 'クイズに解答する'
+          n < 3 ? click_button('次へ') : click_button('クイズの結果を確認する')
+        end
+      end
+
+      it 'check if all expressions in the list that goes to bookmark are bookmarked' do
+        expect(page).to have_checked_field 'move-to-bookmark'
+        expect(page).to have_content user.name
+        expect do
+          click_button '保存する'
+          expect(page).not_to have_selector 'div.move-to-bookmark-or-memorised-list'
+          expect(page).to have_content 'ブックマークしました！'
+        end.to change(Bookmarking, :count).by(2)
+      end
+
+      it 'check if selected expression is bookmarked' do
+        find('summary', text: 'ブックマークする英単語・フレーズ').click
+        find('label', text: 'balcony and Veranda').click
+        expect(page).to have_unchecked_field 'balcony and Veranda'
+        expect(page).to have_checked_field "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+        expect do
+          click_button '保存する'
+          expect(page).not_to have_selector 'div.move-to-bookmark-or-memorised-list'
+          expect(page).to have_content 'ブックマークしました！'
+        end.to change(Bookmarking, :count).by(1)
       end
     end
   end

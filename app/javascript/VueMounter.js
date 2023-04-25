@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
 import { createI18n } from 'vue-i18n'
 import ja from './locales/ja.json'
+import Toast from 'vue-toastification'
+import 'vue-toastification/dist/index.css'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {
@@ -34,6 +36,7 @@ export default class VueMounter {
           })
           const app = createApp(component, this._convertProps(attribute))
           app.use(i18n)
+          app.use(Toast)
           app.component('font-awesome-icon', FontAwesomeIcon)
           app.mount(`[data-vue=${name}]`)
         })
