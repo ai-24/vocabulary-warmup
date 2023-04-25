@@ -451,5 +451,48 @@ RSpec.describe 'Quiz' do
         expect(page).to have_checked_field "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
       end
     end
+
+    describe 'Bookmark' do
+      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
+      let(:user) { FactoryBot.create(:user) }
+
+      before do
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+
+        visit '/quiz'
+
+        4.times do |n|
+          fill_in('解答を入力', with: '')
+          click_button 'クイズに解答する'
+          n < 3 ? click_button('次へ') : click_button('クイズの結果を確認する')
+        end
+      end
+
+      it 'check if all expressions in the list that goes to bookmark are bookmarked' do
+        expect(page).to have_checked_field 'move-to-bookmark'
+        expect(page).to have_content user.name
+        expect do
+          click_button '保存する'
+          expect(page).not_to have_selector 'div.move-to-bookmark-or-memorised-list'
+          expect(page).to have_content 'ブックマークしました！'
+        end.to change(Bookmarking, :count).by(2)
+      end
+
+      it 'check if selected expression is bookmarked' do
+        find('summary', text: 'ブックマークする英単語・フレーズ').click
+        find('label', text: 'balcony and Veranda').click
+        expect(page).to have_unchecked_field 'balcony and Veranda'
+        expect(page).to have_checked_field "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+        expect do
+          click_button '保存する'
+          expect(page).not_to have_selector 'div.move-to-bookmark-or-memorised-list'
+          expect(page).to have_content 'ブックマークしました！'
+        end.to change(Bookmarking, :count).by(1)
+      end
+    end
   end
 end

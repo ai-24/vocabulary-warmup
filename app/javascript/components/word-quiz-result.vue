@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="pb-8">
     <p>{{ $t('quiz.result.wellDone') }}</p>
     <p>
       {{
@@ -10,7 +10,7 @@
       }}
     </p>
   </div>
-  <div class="py-8">
+  <div v-if="!isSaved" class="move-to-bookmark-or-memorised-list pb-8">
     <div
       v-if="listOfWrongItems.length > 0"
       class="section-of-wrong-answers py-2.5">
@@ -27,7 +27,7 @@
             <input
               type="checkbox"
               :id="`wrong-expression${index}`"
-              :value="item"
+              :value="item.expressionId"
               v-model="checkedContentsToBookmark"
               @change="isCheckedAll('bookmark')" />
             <label :for="`wrong-expression${index}`">{{ item.content }}</label>
@@ -53,7 +53,7 @@
             <input
               type="checkbox"
               :id="`correct-expression${index}`"
-              :value="item"
+              :value="item.expressionId"
               v-model="checkedContentsToMemorisedList"
               @change="isCheckedAll('memorisedList')" />
             <label :for="`correct-expression${index}`">{{
@@ -63,7 +63,7 @@
         </ul>
       </details>
     </div>
-    <button>{{ $t('quiz.result.save') }}</button>
+    <button @click="save">{{ $t('quiz.result.save') }}</button>
   </div>
   <details>
     <summary>{{ $t('quiz.result.showUserAnswers') }}</summary>
@@ -91,6 +91,8 @@
 </template>
 
 <script>
+import { useToast } from 'vue-toastification'
+
 export default {
   name: 'WordQuizResult',
   props: {
@@ -118,10 +120,45 @@ export default {
       checkedContentsToBookmark: [],
       checkedContentsToMemorisedList: [],
       isCheckedAllToBookmark: true,
-      isCheckedAllToMemorisedList: true
+      isCheckedAllToMemorisedList: true,
+      isSaved: false,
+      toast: useToast()
     }
   },
   methods: {
+    xCsrfToken() {
+      const meta = document.querySelector('meta[name="csrf-token"]')
+      return meta ? meta.getAttribute('content') : ''
+    },
+    createBookmarks() {
+      fetch('/api/bookmarked_expressions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRF-Token': this.xCsrfToken()
+        },
+        credentials: 'same-origin',
+        redirect: 'manual',
+        body: JSON.stringify({ expression_id: this.checkedContentsToBookmark })
+      })
+        .then((response) => {
+          if (response.status === 204) {
+            this.isSaved = true
+            this.toast.success('ブックマークしました！')
+          } else if (response.status === 401) {
+            //  ログインしていないためブックマークできない時の処理をここに書く
+          } else {
+            this.toast.error('ブックマークできませんでした')
+          }
+        })
+        .catch((e) => {
+          console.warn(e)
+        })
+    },
+    save() {
+      this.createBookmarks()
+    },
     isCheckedAll(type) {
       if (type === 'bookmark') {
         this.isCheckedAllToBookmark =
@@ -150,7 +187,7 @@ export default {
       }
     },
     defaultCheckbox(checkedContents, items) {
-      items.forEach((item) => checkedContents.push(item))
+      items.forEach((item) => checkedContents.push(item.expressionId))
     },
     createListOfItems() {
       this.classifyUserAnswersByExpressionId()
