@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_20_034851) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_25_142334) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -46,6 +46,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_20_034851) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "memorisings", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "expression_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["expression_id"], name: "index_memorisings_on_expression_id"
+    t.index ["user_id"], name: "index_memorisings_on_user_id"
+  end
+
   create_table "taggings", force: :cascade do |t|
     t.bigint "expression_id", null: false
     t.bigint "tag_id", null: false
@@ -72,6 +81,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_20_034851) do
   add_foreign_key "bookmarkings", "users"
   add_foreign_key "examples", "expression_items"
   add_foreign_key "expression_items", "expressions"
+  add_foreign_key "memorisings", "expressions"
+  add_foreign_key "memorisings", "users"
   add_foreign_key "taggings", "expressions"
   add_foreign_key "taggings", "tags"
 end
