@@ -677,6 +677,7 @@ RSpec.describe 'Quiz' do
           click_button '保存する'
           expect(page).to have_selector 'div.move-to-bookmark-or-memorised-list'
           expect(page).to have_content '覚えた語彙リストに英単語・フレーズを保存しましたがブックマークは出来ませんでした'
+          expect(page).not_to have_selector 'div.section-of-correct-answers'
         end.to change(Memorising, :count).by(1).and change(Bookmarking, :count).by(0)
       end
 
@@ -736,7 +737,7 @@ RSpec.describe 'Quiz' do
         end.to change(Memorising, :count).by(2).and change(Bookmarking, :count).by(1)
       end
 
-      it 'check if expressions are saved to memorised words list and bookmark when one expression is failed to save to memorised words list' do
+      it 'check if expressions are saved to memorised words list and bookmarked when one expression is failed to save to memorised words list' do
         first_expression_items[0].expression.destroy
 
         expect do

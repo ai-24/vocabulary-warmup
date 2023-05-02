@@ -191,7 +191,7 @@ export default {
         ? '\n(存在が確認できなかった英単語・フレーズを除く)'
         : ''
     },
-    async save() {
+    save() {
       if (
         this.checkedContentsToBookmark.length > 0 &&
         this.checkedContentsToMemorisedList.length > 0
