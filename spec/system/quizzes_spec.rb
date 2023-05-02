@@ -493,6 +493,43 @@ RSpec.describe 'Quiz' do
           expect(page).to have_content 'ブックマークしました！'
         end.to change(Bookmarking, :count).by(1)
       end
+
+      it 'check if one expression is bookmarked even if another one is failed to bookmark' do
+        first_expression_items[0].expression.destroy
+        expect do
+          click_button '保存する'
+          expect(page).not_to have_selector 'div.move-to-bookmark-or-memorised-list'
+          expect(page).to have_content "ブックマークしました！\n(存在が確認できなかった英単語・フレーズを除く)"
+        end.to change(Bookmarking, :count).by(1)
+      end
+
+      it 'check notification when expressions are failed to bookmark' do
+        expression_item = ExpressionItem.find_by(content: 'balcony')
+        expression_item.expression.destroy
+        first_expression_items[0].expression.destroy
+        expect do
+          click_button '保存する'
+          expect(page).to have_selector 'div.move-to-bookmark-or-memorised-list'
+          expect(page).to have_content 'ブックマークできませんでした'
+        end.to change(Bookmarking, :count).by(0)
+      end
+
+      it 'check if expression is bookmarked after failing to save another one' do
+        first_expression_items[0].expression.destroy
+        find('summary', text: 'ブックマークする英単語・フレーズ').click
+        find('label', text: 'balcony and Veranda').click
+        expect(page).to have_unchecked_field 'balcony and Veranda'
+        click_button '保存する'
+        expect(page).to have_content 'ブックマークできませんでした'
+
+        find('label', text: 'balcony and Veranda').click
+        expect(page).to have_checked_field 'balcony and Veranda'
+        expect do
+          click_button '保存する'
+          expect(page).not_to have_selector 'div.move-to-bookmark-or-memorised-list'
+          expect(page).to have_content "ブックマークしました！\n(存在が確認できなかった英単語・フレーズを除く)"
+        end.to change(Bookmarking, :count).by(1)
+      end
     end
 
     describe 'save to memorised words list' do
