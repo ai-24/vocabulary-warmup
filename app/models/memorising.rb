@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Bookmarking < ApplicationRecord
+class Memorising < ApplicationRecord
   extend Recordable
 
   belongs_to :user

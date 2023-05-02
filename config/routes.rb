@@ -12,5 +12,6 @@ Rails.application.routes.draw do
     resources :expressions, only: [:index, :edit]
     resource :quiz, only: [:show]
     post '/bookmarked_expressions', to: 'bookmarkings#create'
+    post '/memorised_expressions', to: 'memorisings#create'
   end
 end

@@ -12,7 +12,7 @@
   </div>
   <div v-if="!isSaved" class="move-to-bookmark-or-memorised-list pb-8">
     <div
-      v-if="listOfWrongItems.length > 0"
+      v-if="listOfWrongItems.length > 0 && !isSavedBookmark"
       class="section-of-wrong-answers py-2.5">
       <input
         type="checkbox"
@@ -36,7 +36,7 @@
       </details>
     </div>
     <div
-      v-if="listOfCorrectItems.length > 0"
+      v-if="listOfCorrectItems.length > 0 && !isSavedMemorisedList"
       class="section-of-correct-answers py-2.5">
       <input
         type="checkbox"
@@ -122,7 +122,12 @@ export default {
       isCheckedAllToBookmark: true,
       isCheckedAllToMemorisedList: true,
       isSaved: false,
-      toast: useToast()
+      isSavedBookmark: false,
+      isSavedMemorisedList: false,
+      toast: useToast(),
+      success: [],
+      warning: false,
+      failure: []
     }
   },
   methods: {
@@ -130,8 +135,9 @@ export default {
       const meta = document.querySelector('meta[name="csrf-token"]')
       return meta ? meta.getAttribute('content') : ''
     },
-    createBookmarks() {
-      fetch('/api/bookmarked_expressions', {
+    async createBookmarksOrMemorisedList(path, expressionIds) {
+      const url = `/api/${path}_expressions`
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
@@ -140,24 +146,121 @@ export default {
         },
         credentials: 'same-origin',
         redirect: 'manual',
-        body: JSON.stringify({ expression_id: this.checkedContentsToBookmark })
+        body: JSON.stringify({ expression_id: expressionIds })
       })
-        .then((response) => {
-          if (response.status === 204) {
-            this.isSaved = true
-            this.toast.success('ブックマークしました！')
-          } else if (response.status === 401) {
-            //  ログインしていないためブックマークできない時の処理をここに書く
-          } else {
-            this.toast.error('ブックマークできませんでした')
-          }
-        })
-        .catch((e) => {
-          console.warn(e)
-        })
+      return response
+    },
+    showToast() {
+      const warning = this.createWarning()
+      if (this.success[0] === 'bookmarked_expressions') {
+        this.toast.success(`ブックマークしました！${warning}`)
+      } else if (this.success[0] === 'memorised_expressions') {
+        this.toast.success(
+          `英単語・フレーズを覚えた語彙リストに保存しました！${warning}`
+        )
+      } else if (this.failure[0] === 'bookmarked_expressions') {
+        this.toast.error('ブックマークできませんでした')
+      } else if (this.failure[0] === 'memorised_expressions') {
+        this.toast.error(
+          '覚えた語彙リストに英単語・フレーズを保存できませんでした'
+        )
+      }
+    },
+    checkResponse(response) {
+      const bookmark = response.url.match(/bookmarked_expressions$/g)
+      const memorisedList = response.url.match(/memorised_expressions$/g)
+      const bookmarkOrMemorisedList = bookmark || memorisedList
+      if (response.status === 204) {
+        this.success.push(...bookmarkOrMemorisedList)
+      } else if (response.status === 201) {
+        this.success.push(...bookmarkOrMemorisedList)
+        this.warning = true
+      } else if (response.status === 401) {
+        //  ログインしていないためブックマークできない時の処理をここに書く
+      } else {
+        this.failure.push(...bookmarkOrMemorisedList)
+      }
+    },
+    resetCheckResponse() {
+      this.success = []
+      this.failure = []
+      this.warning = false
+    },
+    createWarning() {
+      return this.warning
+        ? '\n(存在が確認できなかった英単語・フレーズを除く)'
+        : ''
     },
     save() {
-      this.createBookmarks()
+      if (
+        this.checkedContentsToBookmark.length > 0 &&
+        this.checkedContentsToMemorisedList.length > 0
+      ) {
+        Promise.all([
+          this.createBookmarksOrMemorisedList(
+            'bookmarked',
+            this.checkedContentsToBookmark
+          ),
+          this.createBookmarksOrMemorisedList(
+            'memorised',
+            this.checkedContentsToMemorisedList
+          )
+        ]).then((responses) => {
+          responses.forEach((response) => {
+            this.checkResponse(response)
+          })
+          const warning = this.createWarning()
+          if (this.failure.length === 2) {
+            this.toast.error(
+              'ブックマーク・覚えた語彙リストに英単語・フレーズを保存できませんでした'
+            )
+          } else if (this.success.length === 2) {
+            this.isSaved = true
+            this.toast.success(
+              `ブックマーク・覚えた語彙リストに英単語・フレーズを保存しました！${warning}`
+            )
+          } else if (
+            this.failure[0] === 'bookmarked_expressions' &&
+            this.success[0] === 'memorised_expressions'
+          ) {
+            this.isSavedMemorisedList = true
+            this.checkedContentsToMemorisedList = []
+            this.toast.warning(
+              `覚えた語彙リストに英単語・フレーズを保存しました${warning}がブックマークは出来ませんでした`
+            )
+          } else if (
+            this.failure[0] === 'memorised_expressions' &&
+            this.success[0] === 'bookmarked_expressions'
+          ) {
+            this.isSavedBookmark = true
+            this.checkedContentsToBookmark = []
+            this.toast.warning(
+              `英単語・フレーズをブックマークしました${warning}が覚えた語彙リストには保存できませんでした`
+            )
+          }
+          this.resetCheckResponse()
+        })
+      } else if (this.checkedContentsToBookmark.length > 0) {
+        this.createBookmarksOrMemorisedList(
+          'bookmarked',
+          this.checkedContentsToBookmark
+        ).then((response) => {
+          this.checkResponse(response)
+          if (this.success.length > 0) this.isSaved = true
+          this.showToast()
+          this.resetCheckResponse()
+        })
+      } else if (this.checkedContentsToMemorisedList.length > 0) {
+        this.createBookmarksOrMemorisedList(
+          'memorised',
+          this.checkedContentsToMemorisedList
+        ).then((response) => {
+          this.checkResponse(response)
+          if (this.success.length > 0) this.isSaved = true
+          this.showToast()
+          this.resetCheckResponse()
+        })
+      }
     },
     isCheckedAll(type) {
       if (type === 'bookmark') {
