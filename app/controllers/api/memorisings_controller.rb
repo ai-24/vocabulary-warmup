@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-class Api::BookmarkingsController < ApplicationController
+class Api::MemorisingsController < ApplicationController
   def create
     if logged_in?
-      result = Bookmarking.create_bookmarkings_or_memorisings!(current_user.id, bookmarking_params[:expression_id])
+      result = Memorising.create_bookmarkings_or_memorisings!(current_user.id, memorising_params[:expression_id])
 
       if result == 'failure'
         head :unprocessable_entity
@@ -19,7 +19,7 @@ class Api::BookmarkingsController < ApplicationController
 
   private
 
-  def bookmarking_params
-    params.require(:bookmarking).permit(expression_id: [])
+  def memorising_params
+    params.require(:memorising).permit(expression_id: [])
   end
 end
