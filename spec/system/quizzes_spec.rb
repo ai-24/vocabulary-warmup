@@ -747,5 +747,95 @@ RSpec.describe 'Quiz' do
         end.to change(Memorising, :count).by(1).and change(Bookmarking, :count).by(2)
       end
     end
+
+    describe 'show a message when user has not logged in and there are checkbox for bookmarks and saving to memorised words list' do
+      before do
+        FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note))
+
+        visit '/quiz'
+
+        4.times do |n|
+          if has_text?('A platform on the side of a building, accessible from inside the building.')
+            fill_in('解答を入力', with: 'balcony')
+          elsif has_text?('A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.')
+            fill_in('解答を入力', with: 'veranda')
+          else
+            fill_in('解答を入力', with: '')
+          end
+          click_button 'クイズに解答する'
+          n < 3 ? click_button('次へ') : click_button('クイズの結果を確認する')
+        end
+      end
+
+      it 'check a message' do
+        expect(page).to have_checked_field 'move-to-bookmark'
+        expect(page).to have_checked_field 'move-to-memorised-list'
+
+        expect do
+          click_button '保存する'
+          expect(page).to have_selector 'div.move-to-bookmark-or-memorised-list'
+          expect(page).not_to have_content 'ブックマーク・覚えた語彙リストに英単語・フレーズを保存できませんでした'
+          expect(page).to have_content "ログインしていないためブックマークまたは覚えた語彙リストに英単語・フレーズを保存できません。\n保存するにはサインアップ / ログインしてください。"
+        end.to change(Memorising, :count).by(0).and change(Bookmarking, :count).by(0)
+      end
+    end
+
+    describe 'show a message when user has not logged in and  there is checkbox for bookmarks' do
+      before do
+        FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note))
+
+        visit '/quiz'
+
+        4.times do |n|
+          fill_in('解答を入力', with: '')
+          click_button 'クイズに解答する'
+          n < 3 ? click_button('次へ') : click_button('クイズの結果を確認する')
+        end
+      end
+
+      it 'check a message' do
+        expect(page).to have_checked_field 'move-to-bookmark'
+
+        expect do
+          click_button '保存する'
+          expect(page).to have_selector 'div.move-to-bookmark-or-memorised-list'
+          expect(page).not_to have_content 'ブックマーク・覚えた語彙リストに英単語・フレーズを保存できませんでした'
+          expect(page).to have_content "ログインしていないためブックマークまたは覚えた語彙リストに英単語・フレーズを保存できません。\n保存するにはサインアップ / ログインしてください。"
+        end.to change(Bookmarking, :count).by(0)
+      end
+    end
+
+    describe 'show a message when user has not logged in and  there is checkbox for saving to memorised words list' do
+      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
+
+      before do
+        visit '/quiz'
+
+        4.times do |n|
+          if has_text?('A platform on the side of a building, accessible from inside the building.')
+            fill_in('解答を入力', with: 'balcony')
+          elsif has_text?('A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.')
+            fill_in('解答を入力', with: 'veranda')
+          elsif has_text?(first_expression_items[0].explanation)
+            fill_in('解答を入力', with: first_expression_items[0].content)
+          elsif has_text?(first_expression_items[1].explanation)
+            fill_in('解答を入力', with: first_expression_items[1].content)
+          end
+          click_button 'クイズに解答する'
+          n < 3 ? click_button('次へ') : click_button('クイズの結果を確認する')
+        end
+      end
+
+      it 'check a message' do
+        expect(page).to have_checked_field 'move-to-memorised-list'
+
+        expect do
+          click_button '保存する'
+          expect(page).to have_selector 'div.move-to-bookmark-or-memorised-list'
+          expect(page).not_to have_content 'ブックマーク・覚えた語彙リストに英単語・フレーズを保存できませんでした'
+          expect(page).to have_content "ログインしていないためブックマークまたは覚えた語彙リストに英単語・フレーズを保存できません。\n保存するにはサインアップ / ログインしてください。"
+        end.to change(Memorising, :count).by(0)
+      end
+    end
   end
 end

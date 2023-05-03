@@ -37,7 +37,7 @@
     </div>
     <div
       v-if="listOfCorrectItems.length > 0 && !isSavedMemorisedList"
-      class="section-of-correct-answers py-2.5">
+      class="section-of-correct-answers pt-2.5">
       <input
         type="checkbox"
         id="move-to-memorised-list"
@@ -63,7 +63,16 @@
         </ul>
       </details>
     </div>
-    <button @click="save">{{ $t('quiz.result.save') }}</button>
+    <div v-if="unauthorized" class="mt-5 p-4 text-sm bg-rose-100">
+      <p>
+        <font-awesome-icon
+          icon="fa-solid fa-triangle-exclamation"
+          size="lg"
+          class="mr-1" />{{ $t('quiz.result.unauthorizedTitle') }}
+      </p>
+      <p class="mt-1">{{ $t('quiz.result.unauthorizedSolution') }}</p>
+    </div>
+    <button class="pt-2.5" @click="save">{{ $t('quiz.result.save') }}</button>
   </div>
   <details>
     <summary>{{ $t('quiz.result.showUserAnswers') }}</summary>
@@ -127,7 +136,8 @@ export default {
       toast: useToast(),
       success: [],
       warning: false,
-      failure: []
+      failure: [],
+      unauthorized: false
     }
   },
   methods: {
@@ -176,7 +186,7 @@ export default {
         this.success.push(...bookmarkOrMemorisedList)
         this.warning = true
       } else if (response.status === 401) {
-        //  ログインしていないためブックマークできない時の処理をここに書く
+        this.unauthorized = true
       } else {
         this.failure.push(...bookmarkOrMemorisedList)
       }
