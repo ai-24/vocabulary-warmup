@@ -9,8 +9,9 @@ import {
   faCircleCheck,
   faPenToSquare
 } from '@fortawesome/free-regular-svg-icons'
+import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faCircleCheck, faPenToSquare)
+library.add(faCircleCheck, faPenToSquare, faTriangleExclamation)
 
 export default class VueMounter {
   constructor() {
