@@ -1,0 +1,9 @@
+- if @bookmarkings.blank?
+  - if logged_in?
+    p
+      = t('.no_data')
+  -else
+    p
+      = t('.unauthorized')
+- else
+  div(data-vue='ExpressionsList' data-vue-path='api/bookmarked_expressions')

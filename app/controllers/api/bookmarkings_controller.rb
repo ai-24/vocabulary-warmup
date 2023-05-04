@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Api::BookmarkingsController < ApplicationController
+  def index
+    @bookmarkings = current_user.bookmarkings
+  end
+
   def create
     if logged_in?
       result = Bookmarking.create_bookmarkings_or_memorisings!(current_user.id, bookmarking_params[:expression_id])

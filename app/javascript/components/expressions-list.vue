@@ -14,6 +14,11 @@
 <script>
 export default {
   name: 'ExpressionsList',
+  props: {
+    path: {
+      type: String
+    }
+  },
   data() {
     return {
       expressionsResources: [],
@@ -22,7 +27,7 @@ export default {
   },
   methods: {
     async fetchExpressionsResources() {
-      const expressionsResources = await fetch('api/expressions', {
+      const expressionsResources = await fetch(this.path, {
         method: 'GET',
         headers: { 'X-Requested-With': 'XMLHttpRequest' },
         credentials: 'same-origin'
