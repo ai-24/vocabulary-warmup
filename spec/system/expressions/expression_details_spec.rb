@@ -27,7 +27,8 @@ RSpec.describe 'Expressions' do
       within '.expression0' do
         expect(page).to have_content 'balcony'
         expect(page).to have_content 'A platform on the side of a building, accessible from inside the building.'
-        expect(page).not_to have_content '例文'
+        expect(page).to have_content '例文'
+        expect(page).to have_content "I'm drying my clothes on the balcony."
       end
     end
 
@@ -37,7 +38,8 @@ RSpec.describe 'Expressions' do
       within '.expression1' do
         expect(page).to have_content 'Veranda'
         expect(page).to have_content 'A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to si'
-        expect(page).not_to have_content '例文'
+        expect(page).to have_content '例文'
+        expect(page).to have_content 'The postman left my parcel on the veranda.'
       end
     end
 

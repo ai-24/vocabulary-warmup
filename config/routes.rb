@@ -7,10 +7,12 @@ Rails.application.routes.draw do
   delete '/logout', to: 'sessions#destroy'
   delete '/me', to: 'users#destroy'
   resources :expressions
+  resources :bookmarked_expressions, only: [:index]
   resource :quiz, only: [:show]
   namespace :api do
     resources :expressions, only: [:index, :edit]
     resource :quiz, only: [:show]
+    get '/bookmarked_expressions', to: 'bookmarkings#index'
     post '/bookmarked_expressions', to: 'bookmarkings#create'
     post '/memorised_expressions', to: 'memorisings#create'
   end

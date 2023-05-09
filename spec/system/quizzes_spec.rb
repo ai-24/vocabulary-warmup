@@ -454,7 +454,7 @@ RSpec.describe 'Quiz' do
 
     describe 'bookmark' do
       let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
-      let(:user) { FactoryBot.create(:user) }
+      let(:user) { FactoryBot.build(:user) }
 
       before do
         OmniAuth.config.test_mode = true
@@ -495,7 +495,8 @@ RSpec.describe 'Quiz' do
       end
 
       it 'check if one expression is bookmarked even if another one is failed to bookmark' do
-        first_expression_items[0].expression.destroy
+        expression_item = ExpressionItem.where(content: first_expression_items[0].content).last
+        expression_item.expression.destroy
         expect do
           click_button '保存する'
           expect(page).not_to have_selector 'div.move-to-bookmark-or-memorised-list'
@@ -504,9 +505,10 @@ RSpec.describe 'Quiz' do
       end
 
       it 'check notification when expressions are failed to bookmark' do
-        expression_item = ExpressionItem.find_by(content: 'balcony')
+        expression_item = ExpressionItem.where(content: 'balcony').last
         expression_item.expression.destroy
-        first_expression_items[0].expression.destroy
+        expression_item = ExpressionItem.where(content: first_expression_items[0].content).last
+        expression_item.expression.destroy
         expect do
           click_button '保存する'
           expect(page).to have_selector 'div.move-to-bookmark-or-memorised-list'
@@ -515,7 +517,7 @@ RSpec.describe 'Quiz' do
       end
 
       it 'check if expression is bookmarked after failing to save another one' do
-        first_expression_items[0].expression.destroy
+        ExpressionItem.where(content: first_expression_items[0].content).last.expression.destroy
         find('summary', text: 'ブックマークする英単語・フレーズ').click
         find('label', text: 'balcony and Veranda').click
         expect(page).to have_unchecked_field 'balcony and Veranda'
@@ -530,11 +532,29 @@ RSpec.describe 'Quiz' do
           expect(page).to have_content "ブックマークしました！\n(存在が確認できなかった英単語・フレーズを除く)"
         end.to change(Bookmarking, :count).by(1)
       end
+
+      it 'check quiz questions after bookmarking' do
+        find('summary', text: 'ブックマークする英単語・フレーズ').click
+        find('label', text: 'balcony and Veranda').click
+
+        click_button '保存する'
+        click_button 'クイズに再挑戦'
+
+        2.times do |n|
+          fill_in('解答を入力', with: '')
+          click_button 'クイズに解答する'
+          n < 1 ? click_button('次へ') : click_button('クイズの結果を確認する')
+        end
+
+        find('summary', text: 'ブックマークする英単語・フレーズ').click
+        expect(page).to have_content 'balcony and Veranda'
+        expect(page).not_to have_content "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+      end
     end
 
     describe 'save to memorised words list' do
       let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
-      let(:user) { FactoryBot.create(:user) }
+      let(:user) { FactoryBot.build(:user) }
 
       before do
         OmniAuth.config.test_mode = true
@@ -583,8 +603,9 @@ RSpec.describe 'Quiz' do
       end
 
       it 'check if one expression is saved to memorised words list even if another one is failed to save' do
-        expression_id = first_expression_items[0].expression.id
-        first_expression_items[0].expression.destroy
+        expression_item = ExpressionItem.where(content: first_expression_items[0].content).last
+        expression_id = expression_item.expression.id
+        expression_item.expression.destroy
         expect(Expression.exists?(id: expression_id)).to be false
         expect do
           click_button '保存する'
@@ -594,9 +615,10 @@ RSpec.describe 'Quiz' do
       end
 
       it 'check notification when expressions are failed to saved in memorised words list' do
-        expression_item = ExpressionItem.find_by(content: 'balcony')
+        expression_item = ExpressionItem.where(content: 'balcony').last
         expression_item.expression.destroy
-        first_expression_items[0].expression.destroy
+        expression_item2 = ExpressionItem.where(content: first_expression_items[0].content).last
+        expression_item2.expression.destroy
         expect do
           click_button '保存する'
           expect(page).to have_selector 'div.move-to-bookmark-or-memorised-list'
@@ -605,7 +627,7 @@ RSpec.describe 'Quiz' do
       end
 
       it 'check if expression is saved to memorised words list after failing to save another one' do
-        first_expression_items[0].expression.destroy
+        ExpressionItem.where(content: first_expression_items[0].content).last.expression.destroy
         find('summary', text: '覚えたリストに移動する英単語・フレーズ').click
         find('label', text: 'balcony and Veranda').click
         expect(page).to have_unchecked_field 'balcony and Veranda'
@@ -624,7 +646,7 @@ RSpec.describe 'Quiz' do
 
     describe 'one expression is bookmarked and one expression is saved to memorised words list' do
       let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
-      let(:user) { FactoryBot.create(:user) }
+      let(:user) { FactoryBot.build(:user) }
 
       before do
         OmniAuth.config.test_mode = true
@@ -659,7 +681,7 @@ RSpec.describe 'Quiz' do
       end
 
       it 'check if one expression is bookmarked when failing to save memorised words list' do
-        expression_item = ExpressionItem.find_by(content: 'balcony')
+        expression_item = ExpressionItem.where(content: 'balcony').last
         expression_item.expression.destroy
 
         expect do
@@ -671,7 +693,8 @@ RSpec.describe 'Quiz' do
       end
 
       it 'check if one expression is saved to memorised words list when failing to bookmark' do
-        first_expression_items[0].expression.destroy
+        expression_item = ExpressionItem.where(content: first_expression_items[0].content).last
+        expression_item.expression.destroy
 
         expect do
           click_button '保存する'
@@ -682,9 +705,10 @@ RSpec.describe 'Quiz' do
       end
 
       it 'check notification when failing to bookmark and save to memorised words list' do
-        expression_item = ExpressionItem.find_by(content: 'balcony')
+        expression_item = ExpressionItem.where(content: 'balcony').last
         expression_item.expression.destroy
-        first_expression_items[0].expression.destroy
+        expression_item2 = ExpressionItem.where(content: first_expression_items[0].content).last
+        expression_item2.expression.destroy
 
         expect do
           click_button '保存する'
@@ -697,7 +721,7 @@ RSpec.describe 'Quiz' do
     describe 'two expressions are bookmarked and two expressions are saved to memorised words list' do
       let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
       let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
-      let(:user) { FactoryBot.create(:user) }
+      let(:user) { FactoryBot.build(:user) }
 
       before do
         FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note))
@@ -728,7 +752,8 @@ RSpec.describe 'Quiz' do
       end
 
       it 'check if expressions are saved to memorised words list and bookmark when one expression is failed to bookmark' do
-        second_expression_items[0].expression.destroy
+        expression_item = ExpressionItem.where(content: second_expression_items[0].content).last
+        expression_item.expression.destroy
 
         expect do
           click_button '保存する'
@@ -738,7 +763,8 @@ RSpec.describe 'Quiz' do
       end
 
       it 'check if expressions are saved to memorised words list and bookmarked when one expression is failed to save to memorised words list' do
-        first_expression_items[0].expression.destroy
+        expression_item = ExpressionItem.where(content: first_expression_items[0].content).last
+        expression_item.expression.destroy
 
         expect do
           click_button '保存する'

@@ -2,6 +2,10 @@ ja:
   home:
     index:
       no_data: このリストに登録されている英単語またはフレーズはありません
+  bookmarked_expressions:
+    index:
+      no_data: ブックマークしている英単語またはフレーズはありません
+      unauthorized: ログインしていないため閲覧できません
   users:
     confirm_deletion_of_account: "アカウントを削除しますか？\n \n重要:アカウントを削除すると、このアプリに登録した全てのデータは削除されます。"
     destroy:
