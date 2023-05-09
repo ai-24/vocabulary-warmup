@@ -63,12 +63,14 @@ RSpec.describe Expression, type: :model do
     let!(:user) { FactoryBot.create(:user) }
     let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
     let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+    let!(:third_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
 
     before do
       FactoryBot.create(:bookmarking, user:, expression: first_expression_items[0].expression)
+      FactoryBot.create(:memorising, user:, expression: third_expression_items[0].expression)
     end
 
-    it 'return expressions that belongs to the user but does not belong to bookmarking' do
+    it 'return expressions that belongs to the user but does not belong to bookmarking and memorising' do
       expect(described_class.find_expressions_of_users_main_list(user.id).count).to eq 1
       expect(described_class.find_expressions_of_users_main_list(user.id)[0].expression_items[0].content).to eq second_expression_items[0].content
     end

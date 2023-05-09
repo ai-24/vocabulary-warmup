@@ -42,8 +42,9 @@ class Expression < ApplicationRecord
 
     Expression.where('user_id = ?', user_id).order(:created_at).each do |expression|
       bookmarked_expression = Bookmarking.find_by(expression_id: expression.id)
+      memorised_expression = Memorising.find_by(expression_id: expression.id)
 
-      unless bookmarked_expression
+      if !bookmarked_expression && !memorised_expression
         expression = Expression.find expression.id
         expressions.push expression
       end
