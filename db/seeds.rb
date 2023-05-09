@@ -24,6 +24,19 @@ ExpressionItem.create!(
   ]
 )
 
+Example.create!(
+  [
+    {
+      content: "I'm drying my clothes on the balcony.",
+      expression_item_id: 1
+    },
+    {
+      content: 'The postman left my parcel on the veranda.',
+      expression_item_id: 2
+    }
+  ]
+)
+
 unless Rails.env.test?
   4.times { Expression.create!(note: '') }
 

@@ -4,7 +4,11 @@ class Api::ExpressionsController < ApplicationController
   before_action :set_expression, only: %i[edit]
 
   def index
-    @expressions = Expression.order(:created_at)
+    @expressions = if logged_in?
+                     Expression.find_expressions_of_users_main_list(current_user.id)
+                   else
+                     Expression.where(user_id: nil)
+                   end
   end
 
   def edit; end

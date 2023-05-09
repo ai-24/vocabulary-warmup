@@ -188,7 +188,7 @@ RSpec.describe 'Expressions' do
         expect do
           click_button '編集する'
           expect(page).to have_content '英単語またはフレーズを編集しました'
-        end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(0).and change(Example, :count).by(1)
+        end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(0).and change(Example, :count).by(0)
       end
 
       it 'check if the word which already saved change to another one' do
@@ -243,7 +243,7 @@ RSpec.describe 'Expressions' do
         expect do
           click_button '編集する'
           expect(page).to have_content '英単語またはフレーズを編集しました'
-        end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(0).and change(Example, :count).by(3)
+        end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(0).and change(Example, :count).by(2)
       end
 
       it 'check if the word which already saved change to another one' do

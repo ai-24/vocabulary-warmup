@@ -7,7 +7,7 @@ RSpec.describe 'Bookmarked expressions' do
     let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
     let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
     let!(:third_expression_items) { FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note)) }
-    let(:user) { FactoryBot.create(:user) }
+    let(:user) { FactoryBot.build(:user) }
 
     before do
       OmniAuth.config.test_mode = true
@@ -50,12 +50,16 @@ RSpec.describe 'Bookmarked expressions' do
       end
 
       it 'check titles and links' do
+        expression_item_of_first_expression = ExpressionItem.where(content: first_expression_items[0].content).last
+        expression_item_of_second_expression = ExpressionItem.where(content: second_expression_items[0].content).last
+        expression_item_of_third_expression = ExpressionItem.where(content: third_expression_items[0].content).last
+
         expect(first('li')).to have_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}",
-                                         href: expression_path(first_expression_items[0].expression)
+                                         href: expression_path(expression_item_of_first_expression.expression)
         expect(all('li')[1]).to have_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}",
-                                          href: expression_path(second_expression_items[0].expression)
+                                          href: expression_path(expression_item_of_second_expression.expression)
         expect(all('li')[2]).to have_link "#{third_expression_items[0].content}, #{third_expression_items[1].content} and #{third_expression_items[2].content}",
-                                          href: expression_path(third_expression_items[0].expression)
+                                          href: expression_path(expression_item_of_third_expression.expression)
         expect(page).not_to have_link 'balcony and Veranda'
       end
     end
@@ -74,34 +78,34 @@ RSpec.describe 'Bookmarked expressions' do
         click_button '保存する'
 
         visit '/quiz'
-        9.times do |n|
+        2.times do |n|
           fill_in('解答を入力', with: '')
           click_button 'クイズに解答する'
-          n < 8 ? click_button('次へ') : click_button('クイズの結果を確認する')
+          n < 1 ? click_button('次へ') : click_button('クイズの結果を確認する')
         end
-        find('label', text: '不正解だった英単語又はフレーズと、それと一緒に保存されている英単語・フレーズを全てブックマークする').click
-        find('summary', text: 'ブックマークする英単語・フレーズ').click
-        find('label', text: 'balcony and Veranda').click
         click_button '保存する'
 
         visit '/bookmarked_expressions'
       end
 
       it 'check order' do
-        balcony = ExpressionItem.find_by content: 'balcony'
+        expression_item_of_first_expression = ExpressionItem.where(content: first_expression_items[0].content).last
+        expression_item_of_second_expression = ExpressionItem.where(content: second_expression_items[0].content).last
+        expression_item_of_third_expression = ExpressionItem.where(content: third_expression_items[0].content).last
+        balcony = ExpressionItem.where(content: 'balcony').last
         expect(first('li')).to have_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}",
-                                         href: expression_path(first_expression_items[0].expression)
+                                         href: expression_path(expression_item_of_first_expression.expression)
         expect(all('li')[1]).to have_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}",
-                                          href: expression_path(second_expression_items[0].expression)
+                                          href: expression_path(expression_item_of_second_expression.expression)
         expect(all('li')[2]).to have_link "#{third_expression_items[0].content}, #{third_expression_items[1].content} and #{third_expression_items[2].content}",
-                                          href: expression_path(third_expression_items[0].expression)
+                                          href: expression_path(expression_item_of_third_expression.expression)
         expect(all('li').last).to have_link 'balcony and Veranda', href: expression_path(balcony.expression)
       end
     end
   end
 
   context 'when user is not logged in' do
-    let(:user) { FactoryBot.create(:user) }
+    let(:user) { FactoryBot.build(:user) }
 
     before do
       OmniAuth.config.test_mode = true
