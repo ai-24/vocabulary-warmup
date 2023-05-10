@@ -642,6 +642,22 @@ RSpec.describe 'Quiz' do
           expect(page).to have_content "英単語・フレーズを覚えた語彙リストに保存しました！\n(存在が確認できなかった英単語・フレーズを除く)"
         end.to change(Memorising, :count).by(1)
       end
+
+      it 'check quiz questions after saving expressions to memorised words list' do
+        find('summary', text: '覚えたリストに移動する英単語・フレーズ').click
+        find('label', text: 'balcony and Veranda').click
+        click_button '保存する'
+        click_button 'クイズに再挑戦'
+
+        2.times do |n|
+          click_button 'クイズに解答する'
+          n < 1 ? click_button('次へ') : click_button('クイズの結果を確認する')
+        end
+
+        find('summary', text: 'ブックマークする英単語・フレーズ').click
+        expect(page).to have_content 'balcony and Veranda'
+        expect(page).not_to have_content "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+      end
     end
 
     describe 'one expression is bookmarked and one expression is saved to memorised words list' do
@@ -771,6 +787,56 @@ RSpec.describe 'Quiz' do
           expect(page).not_to have_selector 'div.move-to-bookmark-or-memorised-list'
           expect(page).to have_content "ブックマーク・覚えた語彙リストに英単語・フレーズを保存しました！\n(存在が確認できなかった英単語・フレーズを除く)"
         end.to change(Memorising, :count).by(1).and change(Bookmarking, :count).by(2)
+      end
+    end
+
+    describe 'After bookmarking and saving expressions to memorised words list' do
+      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
+      let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
+      let(:user) { FactoryBot.build(:user) }
+
+      before do
+        FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note))
+
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+
+        visit '/quiz'
+
+        8.times do |n|
+          if has_text?('A platform on the side of a building, accessible from inside the building.')
+            fill_in('解答を入力', with: 'balcony')
+          elsif has_text?('A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.')
+            fill_in('解答を入力', with: 'veranda')
+          elsif has_text?(first_expression_items[0].explanation)
+            fill_in('解答を入力', with: first_expression_items[0].content)
+          elsif has_text?(first_expression_items[1].explanation)
+            fill_in('解答を入力', with: first_expression_items[1].content)
+          end
+          click_button 'クイズに解答する'
+          n < 7 ? click_button('次へ') : click_button('クイズの結果を確認する')
+        end
+        find('summary', text: '覚えたリストに移動する英単語・フレーズ').click
+        find('label', text: 'balcony and Veranda').click
+
+        find('summary', text: 'ブックマークする英単語・フレーズ').click
+        find('label', text: "#{second_expression_items[0].content} and #{second_expression_items[1].content}").click
+        click_button '保存する'
+        click_button 'クイズに再挑戦'
+
+        4.times do |n|
+          click_button 'クイズに解答する'
+          n < 3 ? click_button('次へ') : click_button('クイズの結果を確認する')
+        end
+      end
+
+      it 'check what questions were in the last quiz' do
+        find('summary', text: 'ブックマークする英単語・フレーズ').click
+        expect(page).to have_content 'balcony and Veranda'
+        expect(page).to have_content "#{second_expression_items[0].content} and #{second_expression_items[1].content}"
       end
     end
 

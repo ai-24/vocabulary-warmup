@@ -3,13 +3,13 @@
 require 'rails_helper'
 
 RSpec.describe 'Expressions' do
-  let(:new_user) { FactoryBot.build(:user) }
-  let!(:two_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
-  let!(:three_expression_items) { FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note)) }
-  let!(:four_expression_items) { FactoryBot.create_list(:expression_item, 4, expression: FactoryBot.create(:empty_note)) }
-  let!(:five_expression_items) { FactoryBot.create_list(:expression_item, 5, expression: FactoryBot.create(:empty_note)) }
-
   context 'when user has not logged in' do
+    let(:new_user) { FactoryBot.build(:user) }
+    let!(:two_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
+    let!(:three_expression_items) { FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note)) }
+    let!(:four_expression_items) { FactoryBot.create_list(:expression_item, 4, expression: FactoryBot.create(:empty_note)) }
+    let!(:five_expression_items) { FactoryBot.create_list(:expression_item, 5, expression: FactoryBot.create(:empty_note)) }
+
     before do
       16.times do
         FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
@@ -52,8 +52,10 @@ RSpec.describe 'Expressions' do
   end
 
   context 'when new user logged in' do
+    let(:new_user) { FactoryBot.build(:user) }
+
     before do
-      8.times do
+      10.times do
         FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
         FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note))
       end
@@ -92,6 +94,12 @@ RSpec.describe 'Expressions' do
   end
 
   context 'when a user who has bookmarks has logged in' do
+    let(:new_user) { FactoryBot.build(:user) }
+    let!(:two_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
+    let!(:three_expression_items) { FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note)) }
+    let!(:four_expression_items) { FactoryBot.create_list(:expression_item, 4, expression: FactoryBot.create(:empty_note)) }
+    let!(:five_expression_items) { FactoryBot.create_list(:expression_item, 5, expression: FactoryBot.create(:empty_note)) }
+
     before do
       OmniAuth.config.test_mode = true
       OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
@@ -135,6 +143,48 @@ RSpec.describe 'Expressions' do
         fill_in('解答を入力', with: '')
         click_button 'クイズに解答する'
         n < 11 ? click_button('次へ') : click_button('クイズの結果を確認する')
+      end
+      click_button '保存する'
+
+      visit '/'
+      expect(all('li').count).to eq 0
+      expect(page).to have_content 'このリストに登録されている英単語またはフレーズはありません'
+    end
+  end
+
+  context 'when a user who has memorised words logged in' do
+    let!(:user) { FactoryBot.create(:user) }
+    let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+    let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+    let!(:third_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+
+    before do
+      FactoryBot.create(:memorising, user:, expression: first_expression_items[0].expression)
+      FactoryBot.create(:memorising, user:, expression: second_expression_items[0].expression)
+
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+      visit '/'
+      click_button 'Sign up/Log in with Google'
+    end
+
+    it 'check list of expressions' do
+      expect(all('li').count).to eq 1
+      expect(page).to have_link "#{third_expression_items[0].content} and #{third_expression_items[1].content}",
+                                href: expression_path(ExpressionItem.where(content: third_expression_items[0].content).last.expression)
+    end
+
+    it 'check if list of expressions has no data after adding all expressions to memorised words list' do
+      visit '/quiz'
+      2.times do |n|
+        if has_text?(third_expression_items[0].explanation)
+          fill_in('解答を入力', with: third_expression_items[0].content)
+        elsif has_text?(third_expression_items[1].explanation)
+          fill_in('解答を入力', with: third_expression_items[1].content)
+        end
+        click_button 'クイズに解答する'
+        n < 1 ? click_button('次へ') : click_button('クイズの結果を確認する')
       end
       click_button '保存する'
 
