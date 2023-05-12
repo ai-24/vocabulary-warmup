@@ -4,8 +4,9 @@ require 'rails_helper'
 
 RSpec.describe 'Expressions' do
   describe 'delete first expression' do
+    let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note)) }
+
     before do
-      FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
       visit '/'
       click_link 'balcony and Veranda'
     end
@@ -35,42 +36,34 @@ RSpec.describe 'Expressions' do
     end
 
     it 'check if the next expression is on the page after deleting expression' do
-      delete_expression_item = ExpressionItem.find_by content: 'balcony'
-      next_expression = delete_expression_item.expression.next
       accept_confirm do
         click_button '削除'
       end
       expect(page).to have_content '英単語又はフレーズを削除しました'
 
-      next_expression.expression_items.each do |expression_item|
-        within '.title' do
-          expect(page).to have_content expression_item.content
-        end
+      within '.title' do
+        expect(page).to have_content "1. #{first_expression_items[0].content}"
+        expect(page).to have_content "2. #{first_expression_items[1].content}"
       end
     end
   end
 
   describe 'delete another expression' do
-    let(:expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note)) }
+    let!(:expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note)) }
 
     before do
-      expression_items
       visit "/expressions/#{expression_items[0].expression.id}"
     end
 
     it 'check if the previous expression is on the page after deleting expression which is last id' do
-      delete_expression = Expression.find expression_items[0].expression.id
-      previous_expression = delete_expression.previous
-
       accept_confirm do
         click_button '削除'
       end
       expect(page).to have_content '英単語又はフレーズを削除しました'
 
-      previous_expression.expression_items.each do |expression_item|
-        within '.title' do
-          expect(page).to have_content expression_item.content
-        end
+      within '.title' do
+        expect(page).to have_content '1. balcony'
+        expect(page).to have_content '2. Veranda'
       end
     end
   end
