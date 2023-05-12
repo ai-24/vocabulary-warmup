@@ -128,6 +128,8 @@ RSpec.describe 'Bookmarked expressions' do
     end
 
     it 'show message that is not logged in' do
+      expect(page).to have_content 'ログアウトしました'
+
       visit '/bookmarked_expressions'
       expect(page).to have_button 'Sign up/Log in with Google'
       expect(all('li').count).to eq 0

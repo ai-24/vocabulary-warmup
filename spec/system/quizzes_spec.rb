@@ -737,11 +737,10 @@ RSpec.describe 'Quiz' do
     describe 'two expressions are bookmarked and two expressions are saved to memorised words list' do
       let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
       let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
+      let!(:third_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
       let(:user) { FactoryBot.build(:user) }
 
       before do
-        FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note))
-
         OmniAuth.config.test_mode = true
         OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
@@ -759,7 +758,13 @@ RSpec.describe 'Quiz' do
             fill_in('解答を入力', with: first_expression_items[0].content)
           elsif has_text?(first_expression_items[1].explanation)
             fill_in('解答を入力', with: first_expression_items[1].content)
-          else
+          elsif has_text?(second_expression_items[0].explanation)
+            fill_in('解答を入力', with: '')
+          elsif has_text?(second_expression_items[1].explanation)
+            fill_in('解答を入力', with: '')
+          elsif has_text?(third_expression_items[0].explanation)
+            fill_in('解答を入力', with: '')
+          elsif has_text?(third_expression_items[1].explanation)
             fill_in('解答を入力', with: '')
           end
           click_button 'クイズに解答する'

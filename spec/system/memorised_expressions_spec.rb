@@ -37,6 +37,7 @@ RSpec.describe 'Memorised expressions' do
 
         visit '/'
         click_button 'Sign up/Log in with Google'
+        has_text? 'ログインしました'
 
         visit '/quiz'
 
@@ -60,17 +61,21 @@ RSpec.describe 'Memorised expressions' do
           n < 6 ? click_button('次へ') : click_button('クイズの結果を確認する')
         end
         click_button '保存する'
-
-        visit '/memorised_expressions'
       end
 
       it 'show a list of memorised expressions' do
+        expect(page).to have_content '英単語・フレーズを覚えた語彙リストに保存しました！'
+        visit '/memorised_expressions'
+
         expect(all('li').count).to eq 3
         expect(page).not_to have_content '覚えた語彙リストに登録している英単語またはフレーズはありません'
         expect(page).not_to have_content 'ログインしていないため閲覧できません'
       end
 
       it 'check titles and links' do
+        expect(page).to have_content '英単語・フレーズを覚えた語彙リストに保存しました！'
+        visit '/memorised_expressions'
+
         expect(first('li')).to have_link 'balcony and Veranda', href: expression_path(ExpressionItem.where(content: 'balcony').last.expression)
         expect(all('li')[1]).to have_link "#{first_expression_items[0].content}, #{first_expression_items[1].content} and #{first_expression_items[2].content}",
                                           href: expression_path(ExpressionItem.where(content: first_expression_items[0].content).last.expression)
@@ -150,6 +155,8 @@ RSpec.describe 'Memorised expressions' do
     end
 
     it 'show message that is not logged in' do
+      expect(page).to have_content 'ログアウトしました'
+
       visit '/memorised_expressions'
       expect(page).to have_button 'Sign up/Log in with Google'
       expect(all('li').count).to eq 0

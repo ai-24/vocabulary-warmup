@@ -117,10 +117,12 @@ RSpec.describe 'Expressions' do
       find('summary', text: 'ブックマークする英単語・フレーズ').click
       find('label', text: 'balcony and Veranda').click
       find('label', text: "#{two_expression_items[0].content} and #{two_expression_items[1].content}").click
-      click_button '保存する'
     end
 
     it 'check list of expressions' do
+      click_button '保存する'
+      expect(page).to have_content 'ブックマークしました！'
+
       visit '/'
       expect(all('li').count).to eq 3
 
@@ -138,13 +140,17 @@ RSpec.describe 'Expressions' do
     end
 
     it 'check if list of expressions has no data after adding all expressions to bookmarks' do
-      visit 'quiz'
+      click_button '保存する'
+      expect(page).to have_content 'ブックマークしました！'
+
+      visit '/quiz'
       12.times do |n|
         fill_in('解答を入力', with: '')
         click_button 'クイズに解答する'
         n < 11 ? click_button('次へ') : click_button('クイズの結果を確認する')
       end
       click_button '保存する'
+      expect(page).to have_content 'ブックマークしました！'
 
       visit '/'
       expect(all('li').count).to eq 0
