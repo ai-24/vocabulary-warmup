@@ -130,6 +130,7 @@ RSpec.describe Expression, type: :model do
       let!(:third_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note)) }
 
       it 'get next expression' do
+        expect(described_class.find_by(user_id: user.id)).to eq second_expression_items[0].expression
         expect(first_expression_items[0].expression.next(nil, nil)).to eq third_expression_items[0].expression
       end
 
@@ -262,6 +263,7 @@ RSpec.describe Expression, type: :model do
       let!(:third_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note)) }
 
       it 'get previous expression' do
+        expect(described_class.find_by(user_id: user.id)).to eq second_expression_items[0].expression
         expect(third_expression_items[0].expression.previous(nil, nil)).to eq first_expression_items[0].expression
       end
 
