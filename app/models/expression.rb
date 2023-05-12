@@ -58,6 +58,12 @@ class Expression < ApplicationRecord
     previous_bookmarking.expression if previous_bookmarking
   end
 
+  def previous_memorising(expression_id, user)
+    memorising = Memorising.find_by(expression_id:, user_id: user.id)
+    previous_memorising = user.memorisings.order(created_at: :desc, id: :desc).find_by('created_at <= ? AND id < ?', memorising.created_at, memorising.id)
+    previous_memorising.expression if previous_memorising
+  end
+
   def previous_expression(user)
     if !!user
       previous_expressions = []
@@ -75,6 +81,8 @@ class Expression < ApplicationRecord
     if list
       if list.match?(/bookmarked_expressions$/)
         previous_bookmarking(id, user)
+      elsif list.match?(/memorised_expressions$/)
+        previous_memorising(id, user)
       else
         previous_expression(user)
       end
@@ -87,6 +95,12 @@ class Expression < ApplicationRecord
     bookmarking = Bookmarking.find_by(expression_id:, user_id: user.id)
     next_bookmarking = user.bookmarkings.order(:created_at, :id).find_by('created_at >= ? AND id > ?', bookmarking.created_at, bookmarking.id)
     next_bookmarking.expression if next_bookmarking
+  end
+
+  def next_memorising(expression_id, user)
+    memorising = Memorising.find_by(expression_id:, user_id: user.id)
+    next_memorising = user.memorisings.order(:created_at, :id).find_by('created_at >= ? AND id > ?', memorising.created_at, memorising.id)
+    next_memorising.expression if next_memorising
   end
 
   def next_expression(user)
@@ -106,6 +120,8 @@ class Expression < ApplicationRecord
     if list
       if list.match?(/bookmarked_expressions$/)
         next_bookmarking(id, user)
+      elsif list.match?(/memorised_expressions$/)
+        next_memorising(id, user)
       else
         next_expression(user)
       end

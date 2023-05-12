@@ -278,5 +278,83 @@ RSpec.describe 'Expressions' do
         expect(page).not_to have_link '次の英単語・フレーズへ'
       end
     end
+
+    context 'when the expression page is visited through memorised expression list' do
+      let!(:user) { FactoryBot.create(:user) }
+      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+      let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+      let!(:third_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+
+      before do
+        FactoryBot.create(:memorising, user:, expression: first_expression_items[0].expression)
+        FactoryBot.create(:memorising, user:, expression: second_expression_items[0].expression)
+        FactoryBot.create(:memorising, user:, expression: third_expression_items[0].expression)
+
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+      end
+
+      it 'check next button' do
+        visit '/memorised_expressions'
+        click_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}"
+
+        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true
+        expect(page).to have_link '１つ前の英単語・フレーズへ'
+        expect(page).to have_link '次の英単語・フレーズへ'
+        click_link '次の英単語・フレーズへ'
+
+        expect(page).to have_content "1. #{third_expression_items[0].content}"
+        expect(page).to have_current_path "/expressions/#{third_expression_items[0].expression.id}", ignore_query: true
+      end
+
+      it 'check back button' do
+        visit '/memorised_expressions'
+        click_link "#{third_expression_items[0].content} and #{third_expression_items[1].content}"
+
+        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        expect(page).to have_current_path "/expressions/#{third_expression_items[0].expression.id}", ignore_query: true
+        expect(page).to have_link '１つ前の英単語・フレーズへ'
+        click_link '１つ前の英単語・フレーズへ'
+
+        expect(page).to have_content "1. #{second_expression_items[0].content}"
+        expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true
+      end
+
+      it 'check if there is no next button when the expression is the last one' do
+        visit '/memorised_expressions'
+        click_link "#{third_expression_items[0].content} and #{third_expression_items[1].content}"
+
+        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        expect(page).to have_current_path "/expressions/#{third_expression_items[0].expression.id}", ignore_query: true
+        expect(page).not_to have_link '次の英単語・フレーズへ'
+      end
+
+      it 'check if there is no back button if the expression is the first one' do
+        visit '/memorised_expressions'
+        click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+
+        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        expect(page).to have_current_path "/expressions/#{first_expression_items[0].expression.id}", ignore_query: true
+        expect(page).not_to have_link '１つ前の英単語・フレーズへ'
+      end
+
+      it 'check if there is no back and next button when expression is one in a list' do
+        first_expression_items[0].expression.destroy
+        third_expression_items[0].expression.destroy
+        expect(User.find(user.id).memorisings.count).to eq 1
+
+        visit '/memorised_expressions'
+        click_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}"
+
+        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true
+        expect(page).not_to have_link '１つ前の英単語・フレーズへ'
+        expect(page).not_to have_link '次の英単語・フレーズへ'
+      end
+    end
   end
 end

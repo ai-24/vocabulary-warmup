@@ -76,6 +76,39 @@ RSpec.describe Expression, type: :model do
       end
     end
 
+    context 'when user has logged in and first argument is memorised_expressions' do
+      let!(:user) { FactoryBot.create(:user) }
+      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+      let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+      let!(:third_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+      let!(:fourth_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+
+      it 'get next expression' do
+        FactoryBot.create(:memorising, user:, expression: first_expression_items[0].expression)
+        FactoryBot.create(:memorising, user:, expression: third_expression_items[0].expression)
+        FactoryBot.create(:memorising, user:, expression: fourth_expression_items[0].expression)
+
+        expect(first_expression_items[0].expression.next('/memorised_expressions', user)).to eq third_expression_items[0].expression
+        expect(third_expression_items[0].expression.next('/memorised_expressions', user)).to eq fourth_expression_items[0].expression
+      end
+
+      it 'get next expression when the memorised expression is created different order to expression' do
+        FactoryBot.create(:memorising, user:, expression: second_expression_items[0].expression)
+        FactoryBot.create(:memorising, user:, expression: fourth_expression_items[0].expression)
+        FactoryBot.create(:memorising, user:, expression: third_expression_items[0].expression)
+        FactoryBot.create(:memorising, user:, expression: first_expression_items[0].expression)
+
+        expect(fourth_expression_items[0].expression.next('/memorised_expressions', user)).to eq third_expression_items[0].expression
+        expect(third_expression_items[0].expression.next('/memorised_expressions', user)).to eq first_expression_items[0].expression
+      end
+
+      it 'return nil if no record is found' do
+        FactoryBot.create(:memorising, user:, expression: first_expression_items[0].expression)
+
+        expect(first_expression_items[0].expression.next('/memorised_expressions', user)).to eq nil
+      end
+    end
+
     context 'when first argument is nil and second argument is record of user' do
       let!(:user) { FactoryBot.create(:user) }
       let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
@@ -172,6 +205,39 @@ RSpec.describe Expression, type: :model do
         FactoryBot.create(:bookmarking, user:, expression: second_expression_items[0].expression)
 
         expect(second_expression_items[0].expression.previous('/bookmarked_expressions', user)).to eq nil
+      end
+    end
+
+    context 'when user has logged in and first argument is memorised_expressions' do
+      let!(:user) { FactoryBot.create(:user) }
+      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+      let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+      let!(:third_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+      let!(:fourth_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+
+      it 'get previous expression' do
+        FactoryBot.create(:memorising, user:, expression: first_expression_items[0].expression)
+        FactoryBot.create(:memorising, user:, expression: third_expression_items[0].expression)
+        FactoryBot.create(:memorising, user:, expression: fourth_expression_items[0].expression)
+
+        expect(fourth_expression_items[0].expression.previous('/memorised_expressions', user)).to eq third_expression_items[0].expression
+        expect(third_expression_items[0].expression.previous('/memorised_expressions', user)).to eq first_expression_items[0].expression
+      end
+
+      it 'get previous expression when the bookmark is created different order to expression' do
+        FactoryBot.create(:memorising, user:, expression: second_expression_items[0].expression)
+        FactoryBot.create(:memorising, user:, expression: fourth_expression_items[0].expression)
+        FactoryBot.create(:memorising, user:, expression: third_expression_items[0].expression)
+        FactoryBot.create(:memorising, user:, expression: first_expression_items[0].expression)
+
+        expect(first_expression_items[0].expression.previous('/memorised_expressions', user)).to eq third_expression_items[0].expression
+        expect(third_expression_items[0].expression.previous('/memorised_expressions', user)).to eq fourth_expression_items[0].expression
+      end
+
+      it 'return nil if no record is found' do
+        FactoryBot.create(:memorising, user:, expression: second_expression_items[0].expression)
+
+        expect(second_expression_items[0].expression.previous('/memorised_expressions', user)).to eq nil
       end
     end
 
