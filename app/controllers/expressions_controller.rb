@@ -9,7 +9,10 @@ class ExpressionsController < ApplicationController
   # end
 
   # GET /expressions/1 or /expressions/1.json
-  def show; end
+  def show
+    @list = session[:forwarding_url]
+    @user = current_user
+  end
 
   # GET /expressions/new
   def new; end
@@ -40,7 +43,7 @@ class ExpressionsController < ApplicationController
 
   # DELETE /expressions/1 or /expressions/1.json
   def destroy
-    expression = @expression.next || @expression.previous
+    expression = @expression.next(session[:forwarding_url], current_user) || @expression.previous(session[:forwarding_url], current_user)
 
     @expression.destroy
 

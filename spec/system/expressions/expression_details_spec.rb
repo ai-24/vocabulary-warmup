@@ -140,44 +140,221 @@ RSpec.describe 'Expressions' do
   end
 
   describe 'next and back button' do
-    it 'check if there is no next button if the expression is the last one' do
-      first_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
+    context 'when the expressions page is visited through root' do
+      it 'check if there is no next button when the expression is the last one' do
+        first_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
 
-      visit "/expressions/#{first_expression_items[0].expression.id}"
-      expect(page).to have_link '１つ前の英単語・フレーズへ', href: '/expressions/1'
-      expect(page).not_to have_link '次の英単語・フレーズへ'
+        visit '/'
+        click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+
+        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        expect(page).to have_current_path "/expressions/#{first_expression_items[0].expression.id}", ignore_query: true
+        expect(page).to have_link '１つ前の英単語・フレーズへ', href: '/expressions/1'
+        expect(page).not_to have_link '次の英単語・フレーズへ'
+      end
+
+      it 'check if there is no back button when the expression is the first one' do
+        expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
+
+        visit '/'
+        click_link 'balcony and Veranda'
+        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        expect(page).to have_current_path '/expressions/1'
+        expect(page).to have_link '次の英単語・フレーズへ', href: "/expressions/#{expression_items[0].expression.id}"
+        expect(page).not_to have_link '１つ前の英単語・フレーズへ'
+      end
+
+      it 'check if there is no back and next button when expression is one in a list' do
+        visit '/'
+        click_link 'balcony and Veranda'
+        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        expect(page).to have_current_path '/expressions/1'
+        expect(page).not_to have_link '１つ前の英単語・フレーズへ'
+        expect(page).not_to have_link '次の英単語・フレーズへ'
+      end
+
+      it 'check next button' do
+        first_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
+        second_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
+
+        visit '/'
+        click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        expect(page).to have_current_path "/expressions/#{first_expression_items[0].expression.id}", ignore_query: true
+
+        click_link '次の英単語・フレーズへ'
+        expect(page).to have_content "1. #{second_expression_items[0].content}"
+        expect(page).to have_current_path expression_path(second_expression_items[0].expression), ignore_query: true
+      end
+
+      it 'check back button' do
+        first_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
+        second_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
+
+        visit '/'
+        click_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}"
+        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true
+        click_link '１つ前の英単語・フレーズへ'
+        expect(page).to have_content "1. #{first_expression_items[0].content}"
+        expect(page).to have_current_path expression_path(first_expression_items[0].expression), ignore_query: true
+      end
     end
 
-    it 'check if there is no back button if the expression is the first one' do
-      expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
+    context 'when the expressions page is visited through bookmarked expressions list' do
+      let!(:user) { FactoryBot.create(:user) }
+      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+      let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+      let!(:third_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
 
-      visit '/expressions/1'
-      expect(page).to have_link '次の英単語・フレーズへ', href: "/expressions/#{expression_items[0].expression.id}"
-      expect(page).not_to have_link '１つ前の英単語・フレーズへ'
+      before do
+        FactoryBot.create(:bookmarking, user:, expression: first_expression_items[0].expression)
+        FactoryBot.create(:bookmarking, user:, expression: second_expression_items[0].expression)
+        FactoryBot.create(:bookmarking, user:, expression: third_expression_items[0].expression)
+
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+      end
+
+      it 'check next button' do
+        visit '/bookmarked_expressions'
+        click_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}"
+
+        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true
+        expect(page).to have_link '１つ前の英単語・フレーズへ'
+        expect(page).to have_link '次の英単語・フレーズへ'
+        click_link '次の英単語・フレーズへ'
+
+        expect(page).to have_content "1. #{third_expression_items[0].content}"
+        expect(page).to have_current_path "/expressions/#{third_expression_items[0].expression.id}", ignore_query: true
+      end
+
+      it 'check back button' do
+        visit '/bookmarked_expressions'
+        click_link "#{third_expression_items[0].content} and #{third_expression_items[1].content}"
+
+        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        expect(page).to have_current_path "/expressions/#{third_expression_items[0].expression.id}", ignore_query: true
+        expect(page).to have_link '１つ前の英単語・フレーズへ'
+        click_link '１つ前の英単語・フレーズへ'
+
+        expect(page).to have_content "1. #{second_expression_items[0].content}"
+        expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true
+      end
+
+      it 'check if there is no next button when the expression is the last one' do
+        visit '/bookmarked_expressions'
+        click_link "#{third_expression_items[0].content} and #{third_expression_items[1].content}"
+
+        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        expect(page).to have_current_path "/expressions/#{third_expression_items[0].expression.id}", ignore_query: true
+        expect(page).not_to have_link '次の英単語・フレーズへ'
+      end
+
+      it 'check if there is no back button if the expression is the first one' do
+        visit '/bookmarked_expressions'
+        click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+
+        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        expect(page).to have_current_path "/expressions/#{first_expression_items[0].expression.id}", ignore_query: true
+        expect(page).not_to have_link '１つ前の英単語・フレーズへ'
+      end
+
+      it 'check if there is no back and next button when expression is one in a list' do
+        first_expression_items[0].expression.destroy
+        third_expression_items[0].expression.destroy
+        expect(User.find(user.id).bookmarkings.count).to eq 1
+
+        visit '/bookmarked_expressions'
+        click_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}"
+
+        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true
+        expect(page).not_to have_link '１つ前の英単語・フレーズへ'
+        expect(page).not_to have_link '次の英単語・フレーズへ'
+      end
     end
 
-    it 'check if there is no back and next button when expression is one in a list' do
-      visit '/expressions/1'
-      expect(page).not_to have_link '１つ前の英単語・フレーズへ'
-      expect(page).not_to have_link '次の英単語・フレーズへ'
-    end
+    context 'when the expression page is visited through memorised expression list' do
+      let!(:user) { FactoryBot.create(:user) }
+      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+      let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+      let!(:third_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
 
-    it 'check next button' do
-      first_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
-      second_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
+      before do
+        FactoryBot.create(:memorising, user:, expression: first_expression_items[0].expression)
+        FactoryBot.create(:memorising, user:, expression: second_expression_items[0].expression)
+        FactoryBot.create(:memorising, user:, expression: third_expression_items[0].expression)
 
-      visit "/expressions/#{first_expression_items[0].expression.id}"
-      click_link '次の英単語・フレーズへ'
-      expect(page).to have_current_path expression_path(second_expression_items[0].expression), ignore_query: true
-    end
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
-    it 'check back button' do
-      first_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
-      second_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+      end
 
-      visit "/expressions/#{second_expression_items[0].expression.id}"
-      click_link '１つ前の英単語・フレーズへ'
-      expect(page).to have_current_path expression_path(first_expression_items[0].expression), ignore_query: true
+      it 'check next button' do
+        visit '/memorised_expressions'
+        click_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}"
+
+        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true
+        expect(page).to have_link '１つ前の英単語・フレーズへ'
+        expect(page).to have_link '次の英単語・フレーズへ'
+        click_link '次の英単語・フレーズへ'
+
+        expect(page).to have_content "1. #{third_expression_items[0].content}"
+        expect(page).to have_current_path "/expressions/#{third_expression_items[0].expression.id}", ignore_query: true
+      end
+
+      it 'check back button' do
+        visit '/memorised_expressions'
+        click_link "#{third_expression_items[0].content} and #{third_expression_items[1].content}"
+
+        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        expect(page).to have_current_path "/expressions/#{third_expression_items[0].expression.id}", ignore_query: true
+        expect(page).to have_link '１つ前の英単語・フレーズへ'
+        click_link '１つ前の英単語・フレーズへ'
+
+        expect(page).to have_content "1. #{second_expression_items[0].content}"
+        expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true
+      end
+
+      it 'check if there is no next button when the expression is the last one' do
+        visit '/memorised_expressions'
+        click_link "#{third_expression_items[0].content} and #{third_expression_items[1].content}"
+
+        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        expect(page).to have_current_path "/expressions/#{third_expression_items[0].expression.id}", ignore_query: true
+        expect(page).not_to have_link '次の英単語・フレーズへ'
+      end
+
+      it 'check if there is no back button if the expression is the first one' do
+        visit '/memorised_expressions'
+        click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+
+        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        expect(page).to have_current_path "/expressions/#{first_expression_items[0].expression.id}", ignore_query: true
+        expect(page).not_to have_link '１つ前の英単語・フレーズへ'
+      end
+
+      it 'check if there is no back and next button when expression is one in a list' do
+        first_expression_items[0].expression.destroy
+        third_expression_items[0].expression.destroy
+        expect(User.find(user.id).memorisings.count).to eq 1
+
+        visit '/memorised_expressions'
+        click_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}"
+
+        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true
+        expect(page).not_to have_link '１つ前の英単語・フレーズへ'
+        expect(page).not_to have_link '次の英単語・フレーズへ'
+      end
     end
   end
 end
