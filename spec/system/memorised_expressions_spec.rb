@@ -27,60 +27,46 @@ RSpec.describe 'Memorised expressions' do
     end
 
     context 'when there are data of memorisings' do
-      let!(:user) { FactoryBot.build(:user) }
-      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note)) }
-      let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
+      let!(:user) { FactoryBot.create(:user) }
+      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+      let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
 
       before do
+        expressions = []
+        10.times do
+          expressions.push(FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)))
+        end
+
+        FactoryBot.create(:memorising, user:, expression: first_expression_items[0].expression)
+        FactoryBot.create(:memorising, user:, expression: second_expression_items[0].expression)
+        10.times do |n|
+          FactoryBot.create(:memorising, user:, expression: expressions[n][0].expression)
+        end
+
         OmniAuth.config.test_mode = true
         OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
         visit '/'
         click_button 'Sign up/Log in with Google'
-        has_text? 'ログインしました'
-
-        visit '/quiz'
-
-        7.times do |n|
-          if has_text?('A platform on the side of a building, accessible from inside the building.')
-            fill_in('解答を入力', with: 'balcony')
-          elsif has_text?('A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.')
-            fill_in('解答を入力', with: 'veranda')
-          elsif has_text?(first_expression_items[0].explanation)
-            fill_in('解答を入力', with: first_expression_items[0].content)
-          elsif has_text?(first_expression_items[1].explanation)
-            fill_in('解答を入力', with: first_expression_items[1].content)
-          elsif has_text?(first_expression_items[2].explanation)
-            fill_in('解答を入力', with: first_expression_items[2].content)
-          elsif has_text?(second_expression_items[0].explanation)
-            fill_in('解答を入力', with: second_expression_items[0].content)
-          elsif has_text?(second_expression_items[1].explanation)
-            fill_in('解答を入力', with: second_expression_items[1].content)
-          end
-          click_button 'クイズに解答する'
-          n < 6 ? click_button('次へ') : click_button('クイズの結果を確認する')
-        end
-        click_button '保存する'
       end
 
       it 'show a list of memorised expressions' do
-        expect(page).to have_content '英単語・フレーズを覚えた語彙リストに保存しました！'
+        expect(page).to have_content 'ログインしました'
         visit '/memorised_expressions'
 
-        expect(all('li').count).to eq 3
+        expect(all('li').count).to eq 12
         expect(page).not_to have_content '覚えた語彙リストに登録している英単語またはフレーズはありません'
         expect(page).not_to have_content 'ログインしていないため閲覧できません'
       end
 
       it 'check titles and links' do
-        expect(page).to have_content '英単語・フレーズを覚えた語彙リストに保存しました！'
+        expect(page).to have_content 'ログインしました'
         visit '/memorised_expressions'
 
-        expect(first('li')).to have_link 'balcony and Veranda', href: expression_path(ExpressionItem.where(content: 'balcony').last.expression)
-        expect(all('li')[1]).to have_link "#{first_expression_items[0].content}, #{first_expression_items[1].content} and #{first_expression_items[2].content}",
-                                          href: expression_path(ExpressionItem.where(content: first_expression_items[0].content).last.expression)
-        expect(all('li').last).to have_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}",
-                                            href: expression_path(ExpressionItem.where(content: second_expression_items[0].content).last.expression)
+        expect(first('li')).to have_link "#{first_expression_items[0].content}, #{first_expression_items[1].content} and #{first_expression_items[2].content}",
+                                         href: expression_path(first_expression_items[0].expression)
+        expect(all('li')[1]).to have_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}",
+                                          href: expression_path(second_expression_items[0].expression)
       end
     end
 
