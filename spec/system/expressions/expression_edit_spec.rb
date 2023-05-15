@@ -3,6 +3,30 @@
 require 'rails_helper'
 
 RSpec.describe 'Expressions' do
+  describe 'links' do
+    let!(:user) { FactoryBot.create(:user) }
+    let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+
+    before do
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+      visit '/'
+      click_button 'Sign up/Log in with Google'
+
+      click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+      click_link '編集'
+    end
+
+    it 'check links' do
+      expect(page).to have_current_path edit_expression_path(first_expression_items[0].expression)
+      click_link '英単語・フレーズ一覧に戻る'
+      expect(page).to have_current_path root_path
+      expect(page).to have_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}",
+                                href: expression_path(first_expression_items[0].expression)
+    end
+  end
+
   describe 'get the right data that has not been edited yet to edit' do
     before do
       visit '/expressions/new'

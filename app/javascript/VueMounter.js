@@ -24,7 +24,7 @@ export default class VueMounter {
   }
 
   mount() {
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('turbo:load', () => {
       const elements = document.querySelectorAll('div[data-vue]')
       if (elements.length > 0) {
         elements.forEach((element) => {
