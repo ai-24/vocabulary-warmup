@@ -2,7 +2,7 @@
 
 class HomeController < ApplicationController
   def index
-    session.delete(:forwarding_url)
+    store_list
     store_location
     @expressions = if logged_in?
                      Expression.find_expressions_of_users_main_list(current_user.id)

@@ -2,6 +2,8 @@
 
 class ExpressionsController < ApplicationController
   before_action :set_expression, only: %i[show edit update destroy]
+  before_action :require_login, only: %i[new create]
+  before_action :require_authority, only: %i[edit update destroy]
 
   # GET /expressions or /expressions.json
   # def index
@@ -10,8 +12,23 @@ class ExpressionsController < ApplicationController
 
   # GET /expressions/1 or /expressions/1.json
   def show
-    @list = session[:forwarding_url]
-    @user = current_user
+    if @expression.user_id.nil?
+      @list = session[:list_url]
+      @user = current_user
+      store_location
+    elsif logged_in?
+      if @expression.user_id == current_user.id
+        @list = session[:list_url]
+        @user = current_user
+        store_location
+      else
+        flash[:error] = '権限がないため閲覧できません'
+        redirect_back_or_default
+      end
+    else
+      flash[:error] = 'ログインが必要です'
+      redirect_back_or_default
+    end
   end
 
   # GET /expressions/new
@@ -23,6 +40,7 @@ class ExpressionsController < ApplicationController
   # POST /expressions or /expressions.json
   def create
     @expression = Expression.new(expression_params)
+    @expression.user_id = current_user.id
     @expression.tags = Tag.find_tags_object(@expression.tags)
 
     if @expression.save
@@ -43,7 +61,7 @@ class ExpressionsController < ApplicationController
 
   # DELETE /expressions/1 or /expressions/1.json
   def destroy
-    expression = @expression.next(session[:forwarding_url], current_user) || @expression.previous(session[:forwarding_url], current_user)
+    expression = @expression.next(session[:list_url], current_user) || @expression.previous(session[:list_url], current_user)
 
     @expression.destroy
 
@@ -55,6 +73,27 @@ class ExpressionsController < ApplicationController
   end
 
   private
+
+  def require_login
+    return if logged_in?
+
+    previous_page = session[:forwarding_url]
+    store_location
+    flash[:error] = 'ログインが必要です'
+    redirect_to(previous_page || root_path)
+  end
+
+  def require_authority
+    if logged_in?
+      unless @expression.user_id == current_user.id
+        flash[:error] = '権限がありません'
+        redirect_back_or_default
+      end
+    else
+      flash[:error] = 'ログインが必要です'
+      redirect_back_or_default
+    end
+  end
 
   # Use callbacks to share common setup or constraints between actions.
   def set_expression

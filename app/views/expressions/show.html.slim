@@ -1,4 +1,7 @@
 p style="color: green" = notice
+p = flash[:error]
+- if flash[:error] == 'ログインが必要です'
+  = button_to 'Sign up/Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }
 
 .title
   h1
@@ -37,12 +40,11 @@ p style="color: green" = notice
 
 div
   = link_to t('.edit'), edit_expression_path(@expression)
-  '|
-  = link_to t('.go_to_index'), root_path
-
-  = button_to t('.delete'), @expression, method: :delete, data: { turbo_confirm: t('.confirm_deletion_of_expression') }
+  - if logged_in? && @expression.user_id == current_user.id
+    = button_to t('.delete'), @expression, method: :delete, data: { turbo_confirm: t('.confirm_deletion_of_expression') }
 
 - if @expression.previous(@list, @user)
   = link_to t('.back'), expression_path(@expression.previous(@list, @user))
 - if @expression.next(@list, @user)
   = link_to t('.next'), expression_path(@expression.next(@list, @user))
+= link_to t('.go_to_index'), root_path

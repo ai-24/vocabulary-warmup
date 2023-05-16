@@ -3,7 +3,6 @@
 class MemorisedExpressionsController < ApplicationController
   def index
     @memorisings = current_user.memorisings if logged_in?
-    session.delete(:forwarding_url)
-    store_location
+    store_list
   end
 end

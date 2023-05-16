@@ -2,6 +2,7 @@ ja:
   home:
     index:
       no_data: このリストに登録されている英単語またはフレーズはありません
+      create: 新規作成
   bookmarked_expressions:
     index:
       no_data: ブックマークしている英単語またはフレーズはありません

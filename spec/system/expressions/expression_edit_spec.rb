@@ -27,8 +27,52 @@ RSpec.describe 'Expressions' do
     end
   end
 
+  describe 'authority' do
+    let(:new_user) { FactoryBot.build(:user) }
+
+    it 'check error message when user has not logged in' do
+      visit '/'
+      click_link 'balcony and Veranda'
+      click_link '編集'
+      expect(page).to have_content 'ログインが必要です'
+    end
+
+    it 'check error message when user try to edit expression which user_id is nil' do
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
+
+      visit '/'
+      click_button 'Sign up/Log in with Google'
+      visit '/expressions/1'
+      click_link '編集'
+      expect(page).to have_content '権限がありません'
+    end
+
+    it 'check error message when user try to edit expression which the user does not own' do
+      user = FactoryBot.create(:user)
+      first_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id))
+
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
+
+      visit '/'
+      click_button 'Sign up/Log in with Google'
+      visit edit_expression_path(first_expression_items[0].expression)
+      expect(page).to have_current_path root_path
+      expect(page).to have_content '権限がありません'
+    end
+  end
+
   describe 'get the right data that has not been edited yet to edit' do
+    let!(:user) { FactoryBot.create(:user) }
+
     before do
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+      visit '/'
+      click_button 'Sign up/Log in with Google'
+
       visit '/expressions/new'
       fill_in('１つ目の英単語 / フレーズ', with: 'on the beach')
       fill_in('２つ目の英単語 / フレーズ', with: 'at the beach')
@@ -124,8 +168,17 @@ RSpec.describe 'Expressions' do
 
   describe 'get the right data which are already edited with right order to edit' do
     describe 'content and explanation of expression_items' do
+      let!(:user) { FactoryBot.build(:user) }
+
       before do
-        visit '/expressions/1'
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+
+        expression_item = ExpressionItem.where('content = ?', 'balcony').last
+        visit "/expressions/#{expression_item.expression.id}"
         click_link '編集'
         fill_in('１つ目の英単語 / フレーズ', with: 'journey')
         click_button '次へ'
@@ -160,8 +213,16 @@ RSpec.describe 'Expressions' do
     end
 
     describe 'examples' do
+      let!(:user) { FactoryBot.create(:user) }
+
       before do
-        visit '/expressions/new'
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+
+        click_link '新規作成'
         fill_in('１つ目の英単語 / フレーズ', with: 'on the beach')
         fill_in('２つ目の英単語 / フレーズ', with: 'at the beach')
         click_button '次へ'
@@ -174,8 +235,6 @@ RSpec.describe 'Expressions' do
         click_button '次へ'
         click_button '登録'
 
-        visit '/'
-        click_link 'on the beach'
         click_link '編集'
         click_button '次へ'
         fill_in('例文１', with: 'test1')
@@ -198,8 +257,16 @@ RSpec.describe 'Expressions' do
 
   describe 'edit expressions' do
     context 'when first expression is edited and example is added' do
+      let(:user) { FactoryBot.build(:user) }
+
       before do
-        visit '/expressions/1'
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+
+        click_link 'balcony and Veranda'
         click_link '編集'
         fill_in('１つ目の英単語 / フレーズ', with: 'journey')
         click_button '次へ'
@@ -250,8 +317,16 @@ RSpec.describe 'Expressions' do
     end
 
     context 'when second word is edited and examples are added' do
+      let(:user) { FactoryBot.build(:user) }
+
       before do
-        visit '/expressions/1'
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+
+        click_link 'balcony and Veranda'
         click_link '編集'
         fill_in('２つ目の英単語 / フレーズ', with: 'veranda')
         2.times { click_button '次へ' }
@@ -306,8 +381,16 @@ RSpec.describe 'Expressions' do
     end
 
     context 'when the third word, explanation, examples and note are edited' do
+      let!(:user) { FactoryBot.create(:user) }
+
       before do
-        visit '/expressions/new'
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+        click_link '新規作成'
+
         fill_in('１つ目の英単語 / フレーズ', with: 'on the beach')
         fill_in('２つ目の英単語 / フレーズ', with: 'at the beach')
         fill_in('３つ目の英単語 / フレーズ', with: 'around the beach')
@@ -324,8 +407,6 @@ RSpec.describe 'Expressions' do
         fill_in('メモ（任意）', with: 'note')
         click_button '登録'
 
-        visit '/'
-        click_link 'on the beach'
         click_link '編集'
         fill_in('３つ目の英単語 / フレーズ', with: 'test3')
         3.times { click_button '次へ' }
@@ -395,8 +476,16 @@ RSpec.describe 'Expressions' do
     end
 
     context 'when expressions are added' do
+      let(:user) { FactoryBot.build(:user) }
+
       before do
-        visit '/expressions/1'
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+
+        click_link 'balcony and Veranda'
         click_link '編集'
         fill_in('３つ目の英単語 / フレーズ', with: 'test3')
         fill_in('４つ目の英単語 / フレーズ', with: 'test4')
