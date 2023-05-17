@@ -39,8 +39,8 @@ p = flash[:error]
         = tag.name
 
 div
-  = link_to t('.edit'), edit_expression_path(@expression)
   - if logged_in? && @expression.user_id == current_user.id
+    = link_to t('.edit'), edit_expression_path(@expression)
     = button_to t('.delete'), @expression, method: :delete, data: { turbo_confirm: t('.confirm_deletion_of_expression') }
 
 - if @expression.previous(@list, @user)

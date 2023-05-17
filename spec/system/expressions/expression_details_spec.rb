@@ -372,6 +372,9 @@ RSpec.describe 'Expressions' do
       visit "/expressions/#{first_expression_items[0].expression.id}"
       expect(page).to have_current_path root_path
       expect(page).to have_content '権限がないため閲覧できません'
+      within '.error' do
+        expect(page).not_to have_button 'Sign up/Log in with Google'
+      end
 
       visit "/expressions/#{second_expression_items[0].expression.id}"
       expect(page).to have_current_path root_path
@@ -396,6 +399,9 @@ RSpec.describe 'Expressions' do
       visit "/expressions/#{first_expression_items[0].expression.id}"
       expect(page).to have_content 'ログインが必要です'
       expect(page).to have_current_path root_path
+      within '.error' do
+        expect(page).to have_button 'Sign up/Log in with Google'
+      end
     end
   end
 end

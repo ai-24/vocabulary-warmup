@@ -15,19 +15,17 @@ class ExpressionsController < ApplicationController
     if @expression.user_id.nil?
       @list = session[:list_url]
       @user = current_user
-      store_location
+      session.delete(:forwarding_url)
+      session[:forwarding_url] = root_path
     elsif logged_in?
       if @expression.user_id == current_user.id
         @list = session[:list_url]
         @user = current_user
-        store_location
       else
-        flash[:error] = '権限がないため閲覧できません'
-        redirect_back_or_default
+        redirect_to root_path, alert: '権限がないため閲覧できません'
       end
     else
-      flash[:error] = 'ログインが必要です'
-      redirect_back_or_default
+      redirect_to root_path, alert: 'ログインが必要です'
     end
   end
 
@@ -77,21 +75,15 @@ class ExpressionsController < ApplicationController
   def require_login
     return if logged_in?
 
-    previous_page = session[:forwarding_url]
     store_location
-    flash[:error] = 'ログインが必要です'
-    redirect_to(previous_page || root_path)
+    redirect_to root_path, alert: 'ログインが必要です'
   end
 
   def require_authority
     if logged_in?
-      unless @expression.user_id == current_user.id
-        flash[:error] = '権限がありません'
-        redirect_back_or_default
-      end
+      redirect_to root_path, alert: '権限がありません' unless @expression.user_id == current_user.id
     else
-      flash[:error] = 'ログインが必要です'
-      redirect_back_or_default
+      redirect_to root_path, alert: 'ログインが必要です'
     end
   end
 

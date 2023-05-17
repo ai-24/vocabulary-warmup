@@ -8,18 +8,82 @@ RSpec.describe 'Expressions' do
       FactoryBot.create(:tag)
     end
 
-    context 'when user has not logged in' do
-      it 'check if error message is shown' do
+    describe 'authority' do
+      it 'check if error message is shown when user has not logged in' do
         visit '/'
         click_link '新規作成'
         expect(page).to have_current_path root_path
         expect(page).to have_content 'ログインが必要です'
       end
 
-      it 'check if the form is not shown' do
+      it 'check if the form is not shown when user has not logged in' do
         visit '/expressions/new'
         expect(page).to have_current_path root_path
         expect(page).to have_content 'ログインが必要です'
+      end
+    end
+
+    describe 'redirect' do
+      let!(:user) { FactoryBot.create(:user) }
+      let(:new_user) { FactoryBot.build(:user) }
+
+      it 'check if a form is on the page when user logged in' do
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_link '新規作成'
+        expect(page).to have_content 'ログインが必要です'
+        within '.error' do
+          click_button 'Sign up/Log in with Google'
+        end
+        expect(page).to have_current_path '/expressions/new'
+        expect(page).to have_content '意味の違いや使い分けを学習したい英単語又はフレーズを入力してください'
+      end
+
+      it 'check if a form is on the page when new user logged in' do
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
+
+        visit '/'
+        click_link '新規作成'
+        expect(page).to have_content 'ログインが必要です'
+        within '.error' do
+          click_button 'Sign up/Log in with Google'
+        end
+        expect(page).to have_current_path '/expressions/new'
+        expect(page).to have_content '意味の違いや使い分けを学習したい英単語又はフレーズを入力してください'
+      end
+
+      it 'check if a form is on the page when user logged in from login button on header' do
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_link '新規作成'
+        expect(page).to have_content 'ログインが必要です'
+        within '.button-on-header' do
+          click_button 'Sign up/Log in with Google'
+        end
+        expect(page).to have_current_path '/expressions/new'
+        expect(page).to have_content '意味の違いや使い分けを学習したい英単語又はフレーズを入力してください'
+      end
+
+      it 'check if there is not infinite loop when user click 新規作成 button more than once' do
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        3.times do
+          click_link '新規作成'
+          expect(page).to have_content 'ログインが必要です'
+          expect(page).to have_current_path root_path
+        end
+
+        within '.button-on-header' do
+          click_button 'Sign up/Log in with Google'
+        end
+        expect(page).to have_current_path '/expressions/new'
       end
     end
 

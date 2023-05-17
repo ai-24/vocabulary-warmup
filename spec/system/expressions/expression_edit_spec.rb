@@ -29,29 +29,67 @@ RSpec.describe 'Expressions' do
 
   describe 'authority' do
     let(:new_user) { FactoryBot.build(:user) }
+    let!(:user) { FactoryBot.create(:user) }
+    let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
 
-    it 'check error message when user has not logged in' do
+    it 'check if edit button is not on the page when user has not logged in' do
       visit '/'
       click_link 'balcony and Veranda'
-      click_link '編集'
-      expect(page).to have_content 'ログインが必要です'
+      expect(page).not_to have_link '編集'
     end
 
-    it 'check error message when user try to edit expression which user_id is nil' do
+    it "check if edit button is not on the page that expression's user_id is nil when user logged in" do
       OmniAuth.config.test_mode = true
       OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
 
       visit '/'
       click_button 'Sign up/Log in with Google'
       visit '/expressions/1'
-      click_link '編集'
-      expect(page).to have_content '権限がありません'
+      expect(page).not_to have_link '編集'
     end
 
-    it 'check error message when user try to edit expression which the user does not own' do
-      user = FactoryBot.create(:user)
-      first_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id))
+    it 'check if edit button is on the page that expression is owned by user who logged in' do
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
+      visit '/'
+      click_button 'Sign up/Log in with Google'
+
+      click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+      expect(page).to have_link '編集'
+    end
+  end
+
+  describe 'redirect' do
+    let(:new_user) { FactoryBot.build(:user) }
+    let!(:user) { FactoryBot.create(:user) }
+    let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+
+    it 'check if it is root_path when user access to edit url without login' do
+      visit "/expressions/#{first_expression_items[0].expression.id}/edit"
+      expect(page).to have_current_path root_path
+      expect(page).to have_content 'ログインが必要です'
+      within '.error' do
+        expect(page).to have_button 'Sign up/Log in with Google'
+      end
+    end
+
+    it 'check if it is root_path when user access to edit url of expression that user_id is nil when the user logged in' do
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
+
+      visit '/'
+      click_button 'Sign up/Log in with Google'
+
+      visit '/expressions/1/edit'
+      expect(page).to have_current_path root_path
+      expect(page).to have_content '権限がありません'
+      within '.error' do
+        expect(page).not_to have_button 'Sign up/Log in with Google'
+      end
+    end
+
+    it 'check if it is root_path when user access to edit url of expression that is owned by another user' do
       OmniAuth.config.test_mode = true
       OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
 
@@ -104,8 +142,6 @@ RSpec.describe 'Expressions' do
       find('input#tags').send_keys :return
       click_button '登録'
 
-      visit '/'
-      click_link 'on the beach'
       click_link '編集'
     end
 
