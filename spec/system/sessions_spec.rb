@@ -23,6 +23,24 @@ RSpec.describe 'Sessions' do
       click_button 'Sign up/Log in with Google'
       expect(page).to have_content 'ログインしました'
     end
+
+    it 'check if current path is bookmarked_expressions after login' do
+      visit '/bookmarked_expressions'
+      within '.button-on-header' do
+        click_button 'Sign up/Log in with Google'
+      end
+      expect(page).to have_content 'ログインしました'
+      expect(page).to have_current_path '/bookmarked_expressions'
+    end
+
+    it 'check if current path is memorised_expressions after login' do
+      visit '/memorised_expressions'
+      within '.button-on-header' do
+        click_button 'Sign up/Log in with Google'
+      end
+      expect(page).to have_content 'ログインしました'
+      expect(page).to have_current_path '/memorised_expressions'
+    end
   end
 
   describe 'log out' do
