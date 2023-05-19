@@ -3,8 +3,114 @@
 require 'rails_helper'
 
 RSpec.describe 'Expressions' do
-  describe 'get the right data that has not been edited yet to edit' do
+  describe 'links' do
+    let!(:user) { FactoryBot.create(:user) }
+    let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+
     before do
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+      visit '/'
+      click_button 'Sign up/Log in with Google'
+
+      click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+      click_link '編集'
+    end
+
+    it 'check links' do
+      expect(page).to have_current_path edit_expression_path(first_expression_items[0].expression)
+      click_link '英単語・フレーズ一覧に戻る'
+      expect(page).to have_current_path root_path
+      expect(page).to have_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}",
+                                href: expression_path(first_expression_items[0].expression)
+    end
+  end
+
+  describe 'authority' do
+    let(:new_user) { FactoryBot.build(:user) }
+    let!(:user) { FactoryBot.create(:user) }
+    let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+
+    it 'check if edit button is not on the page when user has not logged in' do
+      visit '/'
+      click_link 'balcony and Veranda'
+      expect(page).not_to have_link '編集'
+    end
+
+    it "check if edit button is not on the page that expression's user_id is nil when user logged in" do
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
+
+      visit '/'
+      click_button 'Sign up/Log in with Google'
+      visit '/expressions/1'
+      expect(page).not_to have_link '編集'
+    end
+
+    it 'check if edit button is on the page that expression is owned by user who logged in' do
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+      visit '/'
+      click_button 'Sign up/Log in with Google'
+
+      click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+      expect(page).to have_link '編集'
+    end
+  end
+
+  describe 'redirect' do
+    let(:new_user) { FactoryBot.build(:user) }
+    let!(:user) { FactoryBot.create(:user) }
+    let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+
+    it 'check if it is root_path when user access to edit url without login' do
+      visit "/expressions/#{first_expression_items[0].expression.id}/edit"
+      expect(page).to have_current_path root_path
+      expect(page).to have_content 'ログインが必要です'
+      within '.error' do
+        expect(page).to have_button 'Sign up/Log in with Google'
+      end
+    end
+
+    it 'check if it is root_path when user access to edit url of expression that user_id is nil when the user logged in' do
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
+
+      visit '/'
+      click_button 'Sign up/Log in with Google'
+
+      visit '/expressions/1/edit'
+      expect(page).to have_current_path root_path
+      expect(page).to have_content '権限がありません'
+      within '.error' do
+        expect(page).not_to have_button 'Sign up/Log in with Google'
+      end
+    end
+
+    it 'check if it is root_path when user access to edit url of expression that is owned by another user' do
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
+
+      visit '/'
+      click_button 'Sign up/Log in with Google'
+      visit edit_expression_path(first_expression_items[0].expression)
+      expect(page).to have_current_path root_path
+      expect(page).to have_content '権限がありません'
+    end
+  end
+
+  describe 'get the right data that has not been edited yet to edit' do
+    let!(:user) { FactoryBot.create(:user) }
+
+    before do
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+      visit '/'
+      click_button 'Sign up/Log in with Google'
+
       visit '/expressions/new'
       fill_in('１つ目の英単語 / フレーズ', with: 'on the beach')
       fill_in('２つ目の英単語 / フレーズ', with: 'at the beach')
@@ -36,8 +142,6 @@ RSpec.describe 'Expressions' do
       find('input#tags').send_keys :return
       click_button '登録'
 
-      visit '/'
-      click_link 'on the beach'
       click_link '編集'
     end
 
@@ -100,8 +204,17 @@ RSpec.describe 'Expressions' do
 
   describe 'get the right data which are already edited with right order to edit' do
     describe 'content and explanation of expression_items' do
+      let(:user) { FactoryBot.build(:user) }
+
       before do
-        visit '/expressions/1'
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+
+        expression_item = ExpressionItem.where('content = ?', 'balcony').last
+        visit "/expressions/#{expression_item.expression.id}"
         click_link '編集'
         fill_in('１つ目の英単語 / フレーズ', with: 'journey')
         click_button '次へ'
@@ -136,8 +249,16 @@ RSpec.describe 'Expressions' do
     end
 
     describe 'examples' do
+      let!(:user) { FactoryBot.create(:user) }
+
       before do
-        visit '/expressions/new'
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+
+        click_link '新規作成'
         fill_in('１つ目の英単語 / フレーズ', with: 'on the beach')
         fill_in('２つ目の英単語 / フレーズ', with: 'at the beach')
         click_button '次へ'
@@ -150,8 +271,6 @@ RSpec.describe 'Expressions' do
         click_button '次へ'
         click_button '登録'
 
-        visit '/'
-        click_link 'on the beach'
         click_link '編集'
         click_button '次へ'
         fill_in('例文１', with: 'test1')
@@ -174,8 +293,16 @@ RSpec.describe 'Expressions' do
 
   describe 'edit expressions' do
     context 'when first expression is edited and example is added' do
+      let(:user) { FactoryBot.build(:user) }
+
       before do
-        visit '/expressions/1'
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+
+        click_link 'balcony and Veranda'
         click_link '編集'
         fill_in('１つ目の英単語 / フレーズ', with: 'journey')
         click_button '次へ'
@@ -226,8 +353,16 @@ RSpec.describe 'Expressions' do
     end
 
     context 'when second word is edited and examples are added' do
+      let(:user) { FactoryBot.build(:user) }
+
       before do
-        visit '/expressions/1'
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+
+        click_link 'balcony and Veranda'
         click_link '編集'
         fill_in('２つ目の英単語 / フレーズ', with: 'veranda')
         2.times { click_button '次へ' }
@@ -282,8 +417,16 @@ RSpec.describe 'Expressions' do
     end
 
     context 'when the third word, explanation, examples and note are edited' do
+      let!(:user) { FactoryBot.create(:user) }
+
       before do
-        visit '/expressions/new'
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+        click_link '新規作成'
+
         fill_in('１つ目の英単語 / フレーズ', with: 'on the beach')
         fill_in('２つ目の英単語 / フレーズ', with: 'at the beach')
         fill_in('３つ目の英単語 / フレーズ', with: 'around the beach')
@@ -300,8 +443,6 @@ RSpec.describe 'Expressions' do
         fill_in('メモ（任意）', with: 'note')
         click_button '登録'
 
-        visit '/'
-        click_link 'on the beach'
         click_link '編集'
         fill_in('３つ目の英単語 / フレーズ', with: 'test3')
         3.times { click_button '次へ' }
@@ -371,8 +512,17 @@ RSpec.describe 'Expressions' do
     end
 
     context 'when expressions are added' do
+      let(:user) { FactoryBot.build(:user) }
+
       before do
-        visit '/expressions/1'
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+        has_text? 'ログインしました'
+
+        click_link 'balcony and Veranda'
         click_link '編集'
         fill_in('３つ目の英単語 / フレーズ', with: 'test3')
         fill_in('４つ目の英単語 / フレーズ', with: 'test4')

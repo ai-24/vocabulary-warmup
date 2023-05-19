@@ -3,17 +3,109 @@
 require 'rails_helper'
 
 RSpec.describe 'Expressions' do
-  before do
-    visit '/expressions/new'
-  end
-
   describe 'create expressions' do
     before do
       FactoryBot.create(:tag)
     end
 
+    describe 'authority' do
+      it 'check if error message is shown when user has not logged in' do
+        visit '/'
+        click_link '新規作成'
+        expect(page).to have_current_path root_path
+        within '.unauthorized_access_to_create' do
+          expect(page).to have_content 'ログインが必要です'
+          expect(page).to have_button 'Sign up/Log in with Google'
+        end
+        expect(find('.error', visible: false)).not_to be_visible
+      end
+
+      it 'check if the form is not shown when user has not logged in' do
+        visit '/expressions/new'
+        expect(page).to have_current_path root_path
+        within '.unauthorized_access_to_create' do
+          expect(page).to have_content 'ログインが必要です'
+          expect(page).to have_button 'Sign up/Log in with Google'
+        end
+        expect(find('.error', visible: false)).not_to be_visible
+      end
+    end
+
+    describe 'redirect' do
+      let!(:user) { FactoryBot.create(:user) }
+      let(:new_user) { FactoryBot.build(:user) }
+
+      it 'check if a form is on the page when user logged in' do
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_link '新規作成'
+        expect(page).to have_content 'ログインが必要です'
+        within '.unauthorized_access_to_create' do
+          click_button 'Sign up/Log in with Google'
+        end
+        expect(page).to have_current_path '/expressions/new'
+        expect(page).to have_content '意味の違いや使い分けを学習したい英単語又はフレーズを入力してください'
+      end
+
+      it 'check if a form is on the page when new user logged in' do
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
+
+        visit '/'
+        click_link '新規作成'
+        expect(page).to have_content 'ログインが必要です'
+        within '.unauthorized_access_to_create' do
+          click_button 'Sign up/Log in with Google'
+        end
+        expect(page).to have_current_path '/expressions/new'
+        expect(page).to have_content '意味の違いや使い分けを学習したい英単語又はフレーズを入力してください'
+      end
+
+      it 'check if a form is on the page when user logged in from login button on header' do
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_link '新規作成'
+        expect(page).to have_content 'ログインが必要です'
+        within '.button-on-header' do
+          click_button 'Sign up/Log in with Google'
+        end
+        expect(page).to have_current_path '/expressions/new'
+        expect(page).to have_content '意味の違いや使い分けを学習したい英単語又はフレーズを入力してください'
+      end
+
+      it 'check if there is not infinite loop when user click 新規作成 button more than once' do
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        3.times do
+          click_link '新規作成'
+          expect(page).to have_content 'ログインが必要です'
+          expect(page).to have_current_path root_path
+        end
+
+        within '.button-on-header' do
+          click_button 'Sign up/Log in with Google'
+        end
+        expect(page).to have_current_path '/expressions/new'
+      end
+    end
+
     context 'when two phrases, the explanations, one example for each, the note and one tag are given' do
+      let!(:user) { FactoryBot.create(:user) }
+
       before do
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+        click_link '新規作成'
+
         fill_in('１つ目の英単語 / フレーズ', with: 'on the beach')
         fill_in('２つ目の英単語 / フレーズ', with: 'at the beach')
         click_button '次へ'
@@ -37,7 +129,16 @@ RSpec.describe 'Expressions' do
     end
 
     context 'when three words, the explanations, one example for one word and tags without the note are given' do
+      let!(:user) { FactoryBot.create(:user) }
+
       before do
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+        visit '/expressions/new'
+
         fill_in('１つ目の英単語 / フレーズ', with: 'word1')
         fill_in('２つ目の英単語 / フレーズ', with: 'word2')
         fill_in('３つ目の英単語 / フレーズ', with: 'word3')
@@ -64,7 +165,16 @@ RSpec.describe 'Expressions' do
     end
 
     context 'when four words, the explanations, two examples for each and tags without the note are given' do
+      let!(:user) { FactoryBot.create(:user) }
+
       before do
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+        click_link '新規作成'
+
         fill_in('１つ目の英単語 / フレーズ', with: 'word1')
         fill_in('２つ目の英単語 / フレーズ', with: 'word2')
         fill_in('３つ目の英単語 / フレーズ', with: 'word3')
@@ -103,7 +213,16 @@ RSpec.describe 'Expressions' do
     end
 
     context 'when five words, the explanations, three example for two words and one tag without the note are given' do
+      let!(:user) { FactoryBot.create(:user) }
+
       before do
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+        click_link '新規作成'
+
         fill_in('１つ目の英単語 / フレーズ', with: 'word1')
         fill_in('２つ目の英単語 / フレーズ', with: 'word2')
         fill_in('３つ目の英単語 / フレーズ', with: 'word3')
@@ -140,6 +259,17 @@ RSpec.describe 'Expressions' do
   end
 
   describe 'validation error' do
+    let!(:user) { FactoryBot.create(:user) }
+
+    before do
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+      visit '/'
+      click_button 'Sign up/Log in with Google'
+      click_link '新規作成'
+    end
+
     describe 'words and phrases' do
       it 'show validation error if only one word is given' do
         fill_in('１つ目の英単語 / フレーズ', with: 'word')
@@ -305,6 +435,17 @@ RSpec.describe 'Expressions' do
   end
 
   describe 'the back button on the last page' do
+    let!(:user) { FactoryBot.create(:user) }
+
+    before do
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+      visit '/'
+      click_button 'Sign up/Log in with Google'
+      click_link '新規作成'
+    end
+
     context 'when two expressions are given' do
       before do
         fill_in('１つ目の英単語 / フレーズ', with: 'word1')
@@ -397,6 +538,17 @@ RSpec.describe 'Expressions' do
   end
 
   describe 'step navigation' do
+    let(:user) { FactoryBot.build(:user) }
+
+    before do
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+      visit '/'
+      click_button 'Sign up/Log in with Google'
+      click_link '新規作成'
+    end
+
     describe 'on the first page' do
       it 'check step1' do
         within('.bg-yellow-200') do

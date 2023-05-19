@@ -63,7 +63,15 @@ RSpec.describe 'Expressions' do
   end
 
   describe 'new expression with examples, a note and a tag' do
+    let!(:user) { FactoryBot.create(:user) }
+
     before do
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+      visit '/'
+      click_button 'Sign up/Log in with Google'
+
       visit '/expressions/new'
       fill_in('１つ目の英単語 / フレーズ', with: 'on the beach')
       fill_in('２つ目の英単語 / フレーズ', with: 'at the beach')
@@ -94,8 +102,6 @@ RSpec.describe 'Expressions' do
     end
 
     it 'show details of the third expression' do
-      visit '/'
-      click_link 'on the beach, at the beach and around the beach'
       within '.expression2' do
         expect(page).to have_content 'around the beach'
         expect(page).to have_content 'explanation of around the beach'
@@ -103,8 +109,6 @@ RSpec.describe 'Expressions' do
     end
 
     it 'check if examples of first expression are on the page' do
-      visit '/'
-      click_link 'on the beach, at the beach and around the beach'
       within '.expression0' do
         expect(page).to have_content '例文'
         expect(page).to have_content 'example of on the beach'
@@ -112,8 +116,6 @@ RSpec.describe 'Expressions' do
     end
 
     it 'check if examples of second expression are on the page' do
-      visit '/'
-      click_link 'on the beach, at the beach and around the beach'
       within '.expression1' do
         expect(page).to have_content '例文'
         expect(page).to have_content 'example of at the beach'
@@ -121,8 +123,6 @@ RSpec.describe 'Expressions' do
     end
 
     it 'check if a note is on the page' do
-      visit '/'
-      click_link 'on the beach, at the beach and around the beach'
       within '.note' do
         expect(page).to have_content 'メモ'
         expect(page).to have_content 'note'
@@ -130,8 +130,6 @@ RSpec.describe 'Expressions' do
     end
 
     it 'check if a tag is on the page' do
-      visit '/'
-      click_link 'on the beach, at the beach and around the beach'
       within '.tag' do
         expect(page).to have_content 'タグ'
         expect(page).to have_content 'preposition'
@@ -354,6 +352,55 @@ RSpec.describe 'Expressions' do
         expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true
         expect(page).not_to have_link '１つ前の英単語・フレーズへ'
         expect(page).not_to have_link '次の英単語・フレーズへ'
+      end
+    end
+  end
+
+  describe 'authority' do
+    let!(:user) { FactoryBot.create(:user) }
+    let(:new_user) { FactoryBot.build(:user) }
+    let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+    let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+
+    it 'check if user who does not own the expressions can not see it' do
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
+
+      visit '/'
+      click_button 'Sign up/Log in with Google'
+
+      visit "/expressions/#{first_expression_items[0].expression.id}"
+      expect(page).to have_current_path root_path
+      expect(page).to have_content '権限がないため閲覧できません'
+      within '.error' do
+        expect(page).not_to have_button 'Sign up/Log in with Google'
+      end
+
+      visit "/expressions/#{second_expression_items[0].expression.id}"
+      expect(page).to have_current_path root_path
+      expect(page).to have_content '権限がないため閲覧できません'
+    end
+
+    it 'check if the user who owns the expressions can see it' do
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+      visit '/'
+      click_button 'Sign up/Log in with Google'
+      visit "/expressions/#{first_expression_items[0].expression.id}"
+
+      within '.title' do
+        expect(page).to have_content "1. #{first_expression_items[0].content}"
+        expect(page).to have_content "2. #{first_expression_items[1].content}"
+      end
+    end
+
+    it 'check if the user can not see their expression without login' do
+      visit "/expressions/#{first_expression_items[0].expression.id}"
+      expect(page).to have_content 'ログインが必要です'
+      expect(page).to have_current_path root_path
+      within '.error' do
+        expect(page).to have_button 'Sign up/Log in with Google'
       end
     end
   end

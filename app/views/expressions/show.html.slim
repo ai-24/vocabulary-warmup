@@ -36,13 +36,12 @@ p style="color: green" = notice
         = tag.name
 
 div
-  = link_to t('.edit'), edit_expression_path(@expression), data: { turbo: false }
-  '|
-  = link_to t('.go_to_index'), root_path, data: { turbo: false }
-
-  = button_to t('.delete'), @expression, method: :delete, data: { turbo_confirm: t('.confirm_deletion_of_expression') }
+  - if logged_in? && @expression.user_id == current_user.id
+    = link_to t('.edit'), edit_expression_path(@expression)
+    = button_to t('.delete'), @expression, method: :delete, data: { turbo_confirm: t('.confirm_deletion_of_expression') }
 
 - if @expression.previous(@list, @user)
-  = link_to t('.back'), expression_path(@expression.previous(@list, @user)), data: { turbo: false }
+  = link_to t('.back'), expression_path(@expression.previous(@list, @user))
 - if @expression.next(@list, @user)
-  = link_to t('.next'), expression_path(@expression.next(@list, @user)), data: { turbo: false }
+  = link_to t('.next'), expression_path(@expression.next(@list, @user))
+= link_to t('.go_to_index'), root_path

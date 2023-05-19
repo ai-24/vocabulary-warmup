@@ -1,7 +1,17 @@
 p style="color: green" = notice
+.error
+  p = alert
+  - if alert == 'ログインが必要です'
+    = button_to 'Sign up/Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }
 
 - if @expressions.blank?
   p
     = t('.no_data')
 - else
     div(data-vue='ExpressionsList' data-vue-path='api/expressions')
+
+.unauthorized_access_to_create
+  p = flash[:unauthorized_access_to_create]
+  - if flash[:unauthorized_access_to_create]
+    = button_to 'Sign up/Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }
+= link_to "+ #{t('.create')}", new_expression_path

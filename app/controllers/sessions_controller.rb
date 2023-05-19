@@ -7,7 +7,8 @@ class SessionsController < ApplicationController
     session[:user_id] = user.id
     Expression.copy_initial_expressions!(user.id) unless user_or_nil
 
-    redirect_to root_path, notice: t('.success')
+    flash[:notice] = t('.success')
+    redirect_back_or_default
   end
 
   def destroy
