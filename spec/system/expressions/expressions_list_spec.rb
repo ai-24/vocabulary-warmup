@@ -106,10 +106,10 @@ RSpec.describe 'Expressions' do
 
       visit '/'
       click_button 'Sign up/Log in with Google'
+      has_text? 'ログインしました'
 
       visit '/quiz'
       16.times do |n|
-        fill_in('解答を入力', with: '')
         click_button 'クイズに解答する'
         n < 15 ? click_button('次へ') : click_button('クイズの結果を確認する')
       end

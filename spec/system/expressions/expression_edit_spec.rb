@@ -520,6 +520,7 @@ RSpec.describe 'Expressions' do
 
         visit '/'
         click_button 'Sign up/Log in with Google'
+        has_text? 'ログインしました'
 
         click_link 'balcony and Veranda'
         click_link '編集'

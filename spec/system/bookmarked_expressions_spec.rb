@@ -69,21 +69,21 @@ RSpec.describe 'Bookmarked expressions' do
         visit '/quiz'
 
         9.times do |n|
-          fill_in('解答を入力', with: '')
           click_button 'クイズに解答する'
           n < 8 ? click_button('次へ') : click_button('クイズの結果を確認する')
         end
         find('summary', text: 'ブックマークする英単語・フレーズ').click
         find('label', text: 'balcony and Veranda').click
         click_button '保存する'
+        has_text? 'ブックマークしました！'
 
         visit '/quiz'
         2.times do |n|
-          fill_in('解答を入力', with: '')
           click_button 'クイズに解答する'
           n < 1 ? click_button('次へ') : click_button('クイズの結果を確認する')
         end
         click_button '保存する'
+        has_text? 'ブックマークしました！'
 
         visit '/bookmarked_expressions'
       end
