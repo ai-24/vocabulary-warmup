@@ -204,7 +204,7 @@ RSpec.describe 'Expressions' do
 
   describe 'get the right data which are already edited with right order to edit' do
     describe 'content and explanation of expression_items' do
-      let!(:user) { FactoryBot.build(:user) }
+      let(:user) { FactoryBot.build(:user) }
 
       before do
         OmniAuth.config.test_mode = true

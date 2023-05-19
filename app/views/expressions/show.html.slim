@@ -1,7 +1,4 @@
 p style="color: green" = notice
-p = flash[:error]
-- if flash[:error] == 'ログインが必要です'
-  = button_to 'Sign up/Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }
 
 .title
   h1
