@@ -13,13 +13,21 @@ RSpec.describe 'Expressions' do
         visit '/'
         click_link '新規作成'
         expect(page).to have_current_path root_path
-        expect(page).to have_content 'ログインが必要です'
+        within '.unauthorized_access_to_create' do
+          expect(page).to have_content 'ログインが必要です'
+          expect(page).to have_button 'Sign up/Log in with Google'
+        end
+        expect(find('.error', visible: false)).not_to be_visible
       end
 
       it 'check if the form is not shown when user has not logged in' do
         visit '/expressions/new'
         expect(page).to have_current_path root_path
-        expect(page).to have_content 'ログインが必要です'
+        within '.unauthorized_access_to_create' do
+          expect(page).to have_content 'ログインが必要です'
+          expect(page).to have_button 'Sign up/Log in with Google'
+        end
+        expect(find('.error', visible: false)).not_to be_visible
       end
     end
 
@@ -34,7 +42,7 @@ RSpec.describe 'Expressions' do
         visit '/'
         click_link '新規作成'
         expect(page).to have_content 'ログインが必要です'
-        within '.error' do
+        within '.unauthorized_access_to_create' do
           click_button 'Sign up/Log in with Google'
         end
         expect(page).to have_current_path '/expressions/new'
@@ -48,7 +56,7 @@ RSpec.describe 'Expressions' do
         visit '/'
         click_link '新規作成'
         expect(page).to have_content 'ログインが必要です'
-        within '.error' do
+        within '.unauthorized_access_to_create' do
           click_button 'Sign up/Log in with Google'
         end
         expect(page).to have_current_path '/expressions/new'

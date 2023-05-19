@@ -76,7 +76,7 @@ class ExpressionsController < ApplicationController
     return if logged_in?
 
     store_location
-    redirect_to root_path, alert: 'ログインが必要です'
+    redirect_to root_path, flash: { unauthorized_access_to_create: 'ログインが必要です' }
   end
 
   def require_authority

@@ -10,4 +10,8 @@ p style="color: green" = notice
 - else
     div(data-vue='ExpressionsList' data-vue-path='api/expressions')
 
+.unauthorized_access_to_create
+  p = flash[:unauthorized_access_to_create]
+  - if flash[:unauthorized_access_to_create]
+    = button_to 'Sign up/Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }
 = link_to "+ #{t('.create')}", new_expression_path
