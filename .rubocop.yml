@@ -12,6 +12,9 @@ Layout/LineLength:
 Style/CaseLikeIf:
   Enabled: false
 
+Metrics/ClassLength:
+  Max: 120
+
 RSpec/MultipleExpectations:
   Max: 6
 

@@ -125,6 +125,9 @@ RSpec.describe 'Expressions' do
           click_button '登録'
           expect(page).to have_content '英単語またはフレーズを新規作成しました'
         end.to change(Expression, :count).by(1).and change(ExpressionItem, :count).by(2).and change(Example, :count).by(2).and change(Tag, :count).by(1)
+
+        click_link '英単語・フレーズ一覧に戻る'
+        expect(page).to have_link 'on the beach and at the beach'
       end
     end
 

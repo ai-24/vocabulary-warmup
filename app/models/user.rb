@@ -5,6 +5,7 @@ class User < ApplicationRecord
   has_many :expressions, through: :bookmarkings
   has_many :memorisings, dependent: :destroy
   has_many :expressions, through: :memorisings
+  has_many :expressions, dependent: :destroy
 
   def self.find_or_create_from_auth_hash!(auth_hash)
     uid = auth_hash[:uid]
