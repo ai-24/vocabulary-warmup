@@ -8,6 +8,8 @@ class Expression < ApplicationRecord
   has_many :users, through: :bookmarkings
   has_many :memorisings, dependent: :destroy
   has_many :users, through: :memorisings
+  belongs_to :user, optional: true
+
   accepts_nested_attributes_for :expression_items, reject_if: lambda { |attributes|
     attributes['content'].blank?
   }
