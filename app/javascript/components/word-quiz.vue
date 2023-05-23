@@ -11,7 +11,7 @@
         <template
           v-for="(quizResource, index) in quizResources"
           :key="quizResource">
-          <p v-if="currentIndex === index">
+          <p v-if="currentIndex === index" class="content-of-question">
             {{ quizResource.explanation }}
           </p>
         </template>

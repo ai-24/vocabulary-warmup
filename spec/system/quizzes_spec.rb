@@ -934,5 +934,40 @@ RSpec.describe 'Quiz' do
         end.to change(Memorising, :count).by(0)
       end
     end
+
+    describe 'button of クイズに再挑戦' do
+      let(:user) { FactoryBot.build(:user) }
+
+      before do
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+        has_text? 'ログインしました'
+
+        visit '/quiz'
+        2.times do |n|
+          click_button 'クイズに解答する'
+          n < 1 ? click_button('次へ') : click_button('クイズの結果を確認する')
+        end
+      end
+
+      it 'check if the quiz does not start when question is none' do
+        click_button '保存する'
+        expect(page).to have_content 'ブックマークしました！'
+        expect(Expression.find_expressions_of_users_main_list(user.id).count).to eq 0
+
+        click_button 'クイズに再挑戦'
+        expect(page).to have_current_path '/'
+        expect(page).to have_content 'このリストのクイズに問題が存在しません'
+      end
+
+      it 'check if new quiz starts when questions exist' do
+        click_button 'クイズに再挑戦'
+        expect(page).to have_current_path '/quiz'
+        expect(page).to have_css 'p.content-of-question'
+      end
+    end
   end
 end
