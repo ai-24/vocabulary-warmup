@@ -13,6 +13,7 @@ RSpec.describe 'Expressions' do
 
       visit '/'
       click_button 'Sign up/Log in with Google'
+      has_text? 'ログインしました'
 
       click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
       click_link '編集'
@@ -44,6 +45,7 @@ RSpec.describe 'Expressions' do
 
       visit '/'
       click_button 'Sign up/Log in with Google'
+      expect(page).to have_content 'ログインしました'
       visit '/expressions/1'
       expect(page).not_to have_link '編集'
     end
@@ -54,6 +56,7 @@ RSpec.describe 'Expressions' do
 
       visit '/'
       click_button 'Sign up/Log in with Google'
+      expect(page).to have_content 'ログインしました'
 
       click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
       expect(page).to have_link '編集'
@@ -96,6 +99,7 @@ RSpec.describe 'Expressions' do
 
       visit '/'
       click_button 'Sign up/Log in with Google'
+      expect(page).to have_content 'ログインしました'
       visit edit_expression_path(first_expression_items[0].expression)
       expect(page).to have_current_path root_path
       expect(page).to have_content '権限がありません'
@@ -111,6 +115,7 @@ RSpec.describe 'Expressions' do
 
       visit '/'
       click_button 'Sign up/Log in with Google'
+      has_text? 'ログインしました'
 
       visit '/expressions/new'
       fill_in('１つ目の英単語 / フレーズ', with: 'on the beach')
@@ -213,6 +218,7 @@ RSpec.describe 'Expressions' do
 
         visit '/'
         click_button 'Sign up/Log in with Google'
+        has_text? 'ログインしました'
 
         expression_item = ExpressionItem.where('content = ?', 'balcony').last
         visit "/expressions/#{expression_item.expression.id}"
@@ -258,6 +264,7 @@ RSpec.describe 'Expressions' do
 
         visit '/'
         click_button 'Sign up/Log in with Google'
+        has_text? 'ログインしました'
 
         click_link '新規作成'
         fill_in('１つ目の英単語 / フレーズ', with: 'on the beach')
@@ -302,6 +309,7 @@ RSpec.describe 'Expressions' do
 
         visit '/'
         click_button 'Sign up/Log in with Google'
+        has_text? 'ログインしました'
 
         click_link 'balcony and Veranda'
         click_link '編集'
@@ -362,6 +370,7 @@ RSpec.describe 'Expressions' do
 
         visit '/'
         click_button 'Sign up/Log in with Google'
+        has_text? 'ログインしました'
 
         click_link 'balcony and Veranda'
         click_link '編集'
@@ -426,6 +435,7 @@ RSpec.describe 'Expressions' do
 
         visit '/'
         click_button 'Sign up/Log in with Google'
+        has_text? 'ログインしました'
         click_link '新規作成'
 
         fill_in('１つ目の英単語 / フレーズ', with: 'on the beach')

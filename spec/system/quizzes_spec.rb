@@ -462,6 +462,7 @@ RSpec.describe 'Quiz' do
 
         visit '/'
         click_button 'Sign up/Log in with Google'
+        has_text? 'ログインしました'
 
         visit '/quiz'
 
@@ -538,6 +539,7 @@ RSpec.describe 'Quiz' do
         find('label', text: 'balcony and Veranda').click
 
         click_button '保存する'
+        expect(page).to have_content 'ブックマークしました！'
         click_button 'クイズに再挑戦'
 
         2.times do |n|
@@ -562,6 +564,7 @@ RSpec.describe 'Quiz' do
 
         visit '/'
         click_button 'Sign up/Log in with Google'
+        has_text? 'ログインしました'
 
         visit '/quiz'
 
@@ -647,6 +650,7 @@ RSpec.describe 'Quiz' do
         find('summary', text: '覚えたリストに移動する英単語・フレーズ').click
         find('label', text: 'balcony and Veranda').click
         click_button '保存する'
+        expect(page).to have_content '英単語・フレーズを覚えた語彙リストに保存しました！'
         click_button 'クイズに再挑戦'
 
         2.times do |n|
@@ -670,6 +674,7 @@ RSpec.describe 'Quiz' do
 
         visit '/'
         click_button 'Sign up/Log in with Google'
+        has_text? 'ログインしました'
 
         visit '/quiz'
 
@@ -746,6 +751,7 @@ RSpec.describe 'Quiz' do
 
         visit '/'
         click_button 'Sign up/Log in with Google'
+        has_text? 'ログインしました'
 
         visit '/quiz'
 
@@ -808,6 +814,7 @@ RSpec.describe 'Quiz' do
 
         visit '/'
         click_button 'Sign up/Log in with Google'
+        has_text? 'ログインしました'
 
         visit '/quiz'
 
@@ -830,6 +837,7 @@ RSpec.describe 'Quiz' do
         find('summary', text: 'ブックマークする英単語・フレーズ').click
         find('label', text: "#{second_expression_items[0].content} and #{second_expression_items[1].content}").click
         click_button '保存する'
+        has_text? 'ブックマーク・覚えた語彙リストに英単語・フレーズを保存しました！'
         click_button 'クイズに再挑戦'
 
         4.times do |n|
