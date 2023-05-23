@@ -80,6 +80,7 @@ RSpec.describe 'Expressions' do
 
       visit '/'
       click_button 'Sign up/Log in with Google'
+      expect(page).to have_content 'ログインしました'
 
       visit '/expressions/1/edit'
       expect(page).to have_current_path root_path
