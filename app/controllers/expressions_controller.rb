@@ -20,10 +20,10 @@ class ExpressionsController < ApplicationController
       if @expression.user_id == current_user.id
         @user = current_user
       else
-        redirect_to root_path, alert: '権限がないため閲覧できません'
+        redirect_to root_path, alert: t('.no_authority')
       end
     else
-      redirect_to root_path, alert: 'ログインが必要です'
+      redirect_to root_path, alert: t('not_logged_in')
     end
   end
 
@@ -74,14 +74,14 @@ class ExpressionsController < ApplicationController
     return if logged_in?
 
     store_location
-    redirect_to root_path, flash: { unauthorized_access_to_create: 'ログインが必要です' }
+    redirect_to root_path, flash: { unauthorized_access_to_create: t('not_logged_in') }
   end
 
   def require_authority
     if logged_in?
-      redirect_to root_path, alert: '権限がありません' unless @expression.user_id == current_user.id
+      redirect_to root_path, alert: t('no_authority') unless @expression.user_id == current_user.id
     else
-      redirect_to root_path, alert: 'ログインが必要です'
+      redirect_to root_path, alert: t('not_logged_in')
     end
   end
 

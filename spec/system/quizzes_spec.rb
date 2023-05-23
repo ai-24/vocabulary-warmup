@@ -462,6 +462,7 @@ RSpec.describe 'Quiz' do
 
         visit '/'
         click_button 'Sign up/Log in with Google'
+        has_text? 'ログインしました'
 
         visit '/quiz'
 
@@ -538,6 +539,7 @@ RSpec.describe 'Quiz' do
         find('label', text: 'balcony and Veranda').click
 
         click_button '保存する'
+        expect(page).to have_content 'ブックマークしました！'
         click_button 'クイズに再挑戦'
 
         2.times do |n|
@@ -562,6 +564,7 @@ RSpec.describe 'Quiz' do
 
         visit '/'
         click_button 'Sign up/Log in with Google'
+        has_text? 'ログインしました'
 
         visit '/quiz'
 
@@ -647,6 +650,7 @@ RSpec.describe 'Quiz' do
         find('summary', text: '覚えたリストに移動する英単語・フレーズ').click
         find('label', text: 'balcony and Veranda').click
         click_button '保存する'
+        expect(page).to have_content '英単語・フレーズを覚えた語彙リストに保存しました！'
         click_button 'クイズに再挑戦'
 
         2.times do |n|
@@ -670,6 +674,7 @@ RSpec.describe 'Quiz' do
 
         visit '/'
         click_button 'Sign up/Log in with Google'
+        has_text? 'ログインしました'
 
         visit '/quiz'
 
@@ -746,6 +751,7 @@ RSpec.describe 'Quiz' do
 
         visit '/'
         click_button 'Sign up/Log in with Google'
+        has_text? 'ログインしました'
 
         visit '/quiz'
 
@@ -808,6 +814,7 @@ RSpec.describe 'Quiz' do
 
         visit '/'
         click_button 'Sign up/Log in with Google'
+        has_text? 'ログインしました'
 
         visit '/quiz'
 
@@ -830,6 +837,7 @@ RSpec.describe 'Quiz' do
         find('summary', text: 'ブックマークする英単語・フレーズ').click
         find('label', text: "#{second_expression_items[0].content} and #{second_expression_items[1].content}").click
         click_button '保存する'
+        has_text? 'ブックマーク・覚えた語彙リストに英単語・フレーズを保存しました！'
         click_button 'クイズに再挑戦'
 
         4.times do |n|
@@ -932,6 +940,41 @@ RSpec.describe 'Quiz' do
           expect(page).not_to have_content 'ブックマーク・覚えた語彙リストに英単語・フレーズを保存できませんでした'
           expect(page).to have_content "ログインしていないためブックマークまたは覚えた語彙リストに英単語・フレーズを保存できません。\n保存するにはサインアップ / ログインしてください。"
         end.to change(Memorising, :count).by(0)
+      end
+    end
+
+    describe 'button of クイズに再挑戦' do
+      let(:user) { FactoryBot.build(:user) }
+
+      before do
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+        has_text? 'ログインしました'
+
+        visit '/quiz'
+        2.times do |n|
+          click_button 'クイズに解答する'
+          n < 1 ? click_button('次へ') : click_button('クイズの結果を確認する')
+        end
+      end
+
+      it 'check if the quiz does not start when question is none' do
+        click_button '保存する'
+        expect(page).to have_content 'ブックマークしました！'
+        expect(Expression.find_expressions_of_users_main_list(user.id).count).to eq 0
+
+        click_button 'クイズに再挑戦'
+        expect(page).to have_current_path '/'
+        expect(page).to have_content 'このリストのクイズに問題が存在しません'
+      end
+
+      it 'check if new quiz starts when questions exist' do
+        click_button 'クイズに再挑戦'
+        expect(page).to have_current_path '/quiz'
+        expect(page).to have_css 'p.content-of-question'
       end
     end
   end
