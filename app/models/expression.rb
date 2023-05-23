@@ -15,6 +15,14 @@ class Expression < ApplicationRecord
   }
   accepts_nested_attributes_for :tags
 
+  def bookmarking?
+    !!Bookmarking.find_by(expression_id: id, user_id:)
+  end
+
+  def memorising?
+    !!Memorising.find_by(expression_id: id, user_id:)
+  end
+
   def self.copy_initial_expressions!(user_id)
     Expression.where(user_id: nil).find_each do |expression|
       new_expression = Expression.new
@@ -30,10 +38,7 @@ class Expression < ApplicationRecord
     expressions = []
 
     Expression.where('user_id = ?', user_id).order(:created_at, :id).each do |expression|
-      bookmarked_expression = Bookmarking.find_by(expression_id: expression.id)
-      memorised_expression = Memorising.find_by(expression_id: expression.id)
-
-      next unless !bookmarked_expression && !memorised_expression
+      next unless !expression.bookmarking? && !expression.memorising?
 
       expressions.push(Expression.find(expression.id))
     end
@@ -65,15 +70,11 @@ class Expression < ApplicationRecord
     end
   end
 
-  def previous(list, user)
-    if list
-      if list.match?(/bookmarked_expressions$/)
-        previous_bookmarking(id, user)
-      elsif list.match?(/memorised_expressions$/)
-        previous_memorising(id, user)
-      else
-        previous_expression(user)
-      end
+  def previous(user)
+    if bookmarking?
+      previous_bookmarking(id, user)
+    elsif memorising?
+      previous_memorising(id, user)
     else
       previous_expression(user)
     end
@@ -104,15 +105,11 @@ class Expression < ApplicationRecord
     end
   end
 
-  def next(list, user)
-    if list
-      if list.match?(/bookmarked_expressions$/)
-        next_bookmarking(id, user)
-      elsif list.match?(/memorised_expressions$/)
-        next_memorising(id, user)
-      else
-        next_expression(user)
-      end
+  def next(user)
+    if bookmarking?
+      next_bookmarking(id, user)
+    elsif memorising?
+      next_memorising(id, user)
     else
       next_expression(user)
     end

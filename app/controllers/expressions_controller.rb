@@ -13,13 +13,11 @@ class ExpressionsController < ApplicationController
   # GET /expressions/1 or /expressions/1.json
   def show
     if @expression.user_id.nil?
-      @list = session[:list_url]
       @user = current_user
       session.delete(:forwarding_url)
       session[:forwarding_url] = root_path
     elsif logged_in?
       if @expression.user_id == current_user.id
-        @list = session[:list_url]
         @user = current_user
       else
         redirect_to root_path, alert: '権限がないため閲覧できません'
@@ -59,7 +57,7 @@ class ExpressionsController < ApplicationController
 
   # DELETE /expressions/1 or /expressions/1.json
   def destroy
-    expression = @expression.next(session[:list_url], current_user) || @expression.previous(session[:list_url], current_user)
+    expression = @expression.next(current_user) || @expression.previous(current_user)
 
     @expression.destroy
 
