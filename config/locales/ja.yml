@@ -28,6 +28,7 @@ ja:
     destroy:
       success: 英単語又はフレーズを削除しました
     show:
+      no_authority: 権限がないため閲覧できません
       title: 下記の英単語・フレーズの違いについて
       explanation: 意味
       example: 例文
@@ -45,3 +46,5 @@ ja:
   quizzes:
     show:
       no_data: このリストのクイズに問題が存在しません
+  no_authority: 権限がありません
+  not_logged_in: ログインが必要です
