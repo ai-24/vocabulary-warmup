@@ -2,7 +2,6 @@
 
 class HomeController < ApplicationController
   def index
-    store_list
     @expressions = if logged_in?
                      Expression.find_expressions_of_users_main_list(current_user.id)
                    else

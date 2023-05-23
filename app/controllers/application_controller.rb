@@ -14,11 +14,6 @@ class ApplicationController < ActionController::Base
     !!current_user
   end
 
-  def store_list
-    session.delete(:list_url)
-    session[:list_url] = request.original_url if request.get?
-  end
-
   def store_location
     session.delete(:forwarding_url)
     session[:forwarding_url] = request.original_url if request.get?

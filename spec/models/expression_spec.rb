@@ -10,21 +10,21 @@ RSpec.describe Expression, type: :model do
       let!(:third_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note)) }
 
       it 'get next expression' do
-        expect(first_expression_items[0].expression.next('/', nil)).to eq second_expression_items[0].expression
+        expect(first_expression_items[0].expression.next(nil)).to eq second_expression_items[0].expression
       end
 
       it 'get next expression even though the next id is missing' do
         second_expression_items[0].expression.destroy
 
-        expect(first_expression_items[0].expression.next('/', nil)).to eq third_expression_items[0].expression
+        expect(first_expression_items[0].expression.next(nil)).to eq third_expression_items[0].expression
       end
 
       it 'return nil if no record is found' do
-        expect(third_expression_items[0].expression.next('/', nil)).to eq nil
+        expect(third_expression_items[0].expression.next(nil)).to eq nil
       end
     end
 
-    context 'when user has logged in and first argument is root' do
+    context 'when user has logged in and url is root' do
       let!(:user) { FactoryBot.create(:user) }
       let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
       let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
@@ -35,15 +35,15 @@ RSpec.describe Expression, type: :model do
         FactoryBot.create(:bookmarking, user:, expression: second_expression_items[0].expression)
         FactoryBot.create(:memorising, user:, expression: third_expression_items[0].expression)
 
-        expect(first_expression_items[0].expression.next('/', user)).to eq fourth_expression_items[0].expression
+        expect(first_expression_items[0].expression.next(user)).to eq fourth_expression_items[0].expression
       end
 
       it 'return nil if no record is found' do
-        expect(fourth_expression_items[0].expression.next('/', user)).to eq nil
+        expect(fourth_expression_items[0].expression.next(user)).to eq nil
       end
     end
 
-    context 'when user has logged in and first argument is bookmarked_expressions' do
+    context 'when user has logged in and url is bookmarked_expressions' do
       let!(:user) { FactoryBot.create(:user) }
       let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
       let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
@@ -55,8 +55,8 @@ RSpec.describe Expression, type: :model do
         FactoryBot.create(:bookmarking, user:, expression: third_expression_items[0].expression)
         FactoryBot.create(:bookmarking, user:, expression: fourth_expression_items[0].expression)
 
-        expect(first_expression_items[0].expression.next('/bookmarked_expressions', user)).to eq third_expression_items[0].expression
-        expect(third_expression_items[0].expression.next('/bookmarked_expressions', user)).to eq fourth_expression_items[0].expression
+        expect(first_expression_items[0].expression.next(user)).to eq third_expression_items[0].expression
+        expect(third_expression_items[0].expression.next(user)).to eq fourth_expression_items[0].expression
       end
 
       it 'get next expression when the bookmark is created different order to expression' do
@@ -65,18 +65,18 @@ RSpec.describe Expression, type: :model do
         FactoryBot.create(:bookmarking, user:, expression: third_expression_items[0].expression)
         FactoryBot.create(:bookmarking, user:, expression: first_expression_items[0].expression)
 
-        expect(fourth_expression_items[0].expression.next('/bookmarked_expressions', user)).to eq third_expression_items[0].expression
-        expect(third_expression_items[0].expression.next('/bookmarked_expressions', user)).to eq first_expression_items[0].expression
+        expect(fourth_expression_items[0].expression.next(user)).to eq third_expression_items[0].expression
+        expect(third_expression_items[0].expression.next(user)).to eq first_expression_items[0].expression
       end
 
       it 'return nil if no record is found' do
         FactoryBot.create(:bookmarking, user:, expression: first_expression_items[0].expression)
 
-        expect(first_expression_items[0].expression.next('/bookmarked_expressions', user)).to eq nil
+        expect(first_expression_items[0].expression.next(user)).to eq nil
       end
     end
 
-    context 'when user has logged in and first argument is memorised_expressions' do
+    context 'when user has logged in and url is memorised_expressions' do
       let!(:user) { FactoryBot.create(:user) }
       let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
       let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
@@ -88,8 +88,8 @@ RSpec.describe Expression, type: :model do
         FactoryBot.create(:memorising, user:, expression: third_expression_items[0].expression)
         FactoryBot.create(:memorising, user:, expression: fourth_expression_items[0].expression)
 
-        expect(first_expression_items[0].expression.next('/memorised_expressions', user)).to eq third_expression_items[0].expression
-        expect(third_expression_items[0].expression.next('/memorised_expressions', user)).to eq fourth_expression_items[0].expression
+        expect(first_expression_items[0].expression.next(user)).to eq third_expression_items[0].expression
+        expect(third_expression_items[0].expression.next(user)).to eq fourth_expression_items[0].expression
       end
 
       it 'get next expression when the memorised expression is created different order to expression' do
@@ -98,44 +98,14 @@ RSpec.describe Expression, type: :model do
         FactoryBot.create(:memorising, user:, expression: third_expression_items[0].expression)
         FactoryBot.create(:memorising, user:, expression: first_expression_items[0].expression)
 
-        expect(fourth_expression_items[0].expression.next('/memorised_expressions', user)).to eq third_expression_items[0].expression
-        expect(third_expression_items[0].expression.next('/memorised_expressions', user)).to eq first_expression_items[0].expression
+        expect(fourth_expression_items[0].expression.next(user)).to eq third_expression_items[0].expression
+        expect(third_expression_items[0].expression.next(user)).to eq first_expression_items[0].expression
       end
 
       it 'return nil if no record is found' do
         FactoryBot.create(:memorising, user:, expression: first_expression_items[0].expression)
 
-        expect(first_expression_items[0].expression.next('/memorised_expressions', user)).to eq nil
-      end
-    end
-
-    context 'when first argument is nil and second argument is record of user' do
-      let!(:user) { FactoryBot.create(:user) }
-      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
-      let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
-
-      it 'get next expression' do
-        expect(first_expression_items[0].expression.next(nil, user)).to eq second_expression_items[0].expression
-      end
-
-      it 'return nil if no record is found' do
-        expect(second_expression_items[0].expression.next(nil, user)).to eq nil
-      end
-    end
-
-    context 'when first argument and second argument are nil' do
-      let!(:user) { FactoryBot.create(:user) }
-      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note)) }
-      let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note, user_id: user.id)) }
-      let!(:third_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note)) }
-
-      it 'get next expression' do
-        expect(described_class.find_by(user_id: user.id)).to eq second_expression_items[0].expression
-        expect(first_expression_items[0].expression.next(nil, nil)).to eq third_expression_items[0].expression
-      end
-
-      it 'return nil if no record is found' do
-        expect(third_expression_items[0].expression.next(nil, nil)).to eq nil
+        expect(first_expression_items[0].expression.next(user)).to eq nil
       end
     end
   end
@@ -146,18 +116,18 @@ RSpec.describe Expression, type: :model do
       let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note)) }
 
       it 'get previous expression' do
-        expect(second_expression_items[0].expression.previous('/', nil)).to eq first_expression_items[0].expression
+        expect(second_expression_items[0].expression.previous(nil)).to eq first_expression_items[0].expression
       end
 
       it 'get previous expression even though the previous id is missing' do
         third_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
         second_expression_items[0].expression.destroy
 
-        expect(third_expression_items[0].expression.previous('/', nil)).to eq first_expression_items[0].expression
+        expect(third_expression_items[0].expression.previous(nil)).to eq first_expression_items[0].expression
       end
     end
 
-    context 'when user has logged in and first argument is root' do
+    context 'when user has logged in and url is root' do
       let!(:user) { FactoryBot.create(:user) }
       let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
       let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
@@ -168,15 +138,15 @@ RSpec.describe Expression, type: :model do
         FactoryBot.create(:bookmarking, user:, expression: second_expression_items[0].expression)
         FactoryBot.create(:memorising, user:, expression: third_expression_items[0].expression)
 
-        expect(fourth_expression_items[0].expression.previous('/', user)).to eq first_expression_items[0].expression
+        expect(fourth_expression_items[0].expression.previous(user)).to eq first_expression_items[0].expression
       end
 
       it 'return nil if no record is found' do
-        expect(first_expression_items[0].expression.previous('/', user)).to eq nil
+        expect(first_expression_items[0].expression.previous(user)).to eq nil
       end
     end
 
-    context 'when user has logged in and first argument is bookmarked_expressions' do
+    context 'when user has logged in and url is bookmarked_expressions' do
       let!(:user) { FactoryBot.create(:user) }
       let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
       let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
@@ -188,8 +158,8 @@ RSpec.describe Expression, type: :model do
         FactoryBot.create(:bookmarking, user:, expression: third_expression_items[0].expression)
         FactoryBot.create(:bookmarking, user:, expression: fourth_expression_items[0].expression)
 
-        expect(fourth_expression_items[0].expression.previous('/bookmarked_expressions', user)).to eq third_expression_items[0].expression
-        expect(third_expression_items[0].expression.previous('/bookmarked_expressions', user)).to eq first_expression_items[0].expression
+        expect(fourth_expression_items[0].expression.previous(user)).to eq third_expression_items[0].expression
+        expect(third_expression_items[0].expression.previous(user)).to eq first_expression_items[0].expression
       end
 
       it 'get previous expression when the bookmark is created different order to expression' do
@@ -198,18 +168,18 @@ RSpec.describe Expression, type: :model do
         FactoryBot.create(:bookmarking, user:, expression: third_expression_items[0].expression)
         FactoryBot.create(:bookmarking, user:, expression: first_expression_items[0].expression)
 
-        expect(first_expression_items[0].expression.previous('/bookmarked_expressions', user)).to eq third_expression_items[0].expression
-        expect(fourth_expression_items[0].expression.previous('/bookmarked_expressions', user)).to eq second_expression_items[0].expression
+        expect(first_expression_items[0].expression.previous(user)).to eq third_expression_items[0].expression
+        expect(fourth_expression_items[0].expression.previous(user)).to eq second_expression_items[0].expression
       end
 
       it 'return nil if no record is found' do
         FactoryBot.create(:bookmarking, user:, expression: second_expression_items[0].expression)
 
-        expect(second_expression_items[0].expression.previous('/bookmarked_expressions', user)).to eq nil
+        expect(second_expression_items[0].expression.previous(user)).to eq nil
       end
     end
 
-    context 'when user has logged in and first argument is memorised_expressions' do
+    context 'when user has logged in and url is memorised_expressions' do
       let!(:user) { FactoryBot.create(:user) }
       let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
       let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
@@ -221,8 +191,8 @@ RSpec.describe Expression, type: :model do
         FactoryBot.create(:memorising, user:, expression: third_expression_items[0].expression)
         FactoryBot.create(:memorising, user:, expression: fourth_expression_items[0].expression)
 
-        expect(fourth_expression_items[0].expression.previous('/memorised_expressions', user)).to eq third_expression_items[0].expression
-        expect(third_expression_items[0].expression.previous('/memorised_expressions', user)).to eq first_expression_items[0].expression
+        expect(fourth_expression_items[0].expression.previous(user)).to eq third_expression_items[0].expression
+        expect(third_expression_items[0].expression.previous(user)).to eq first_expression_items[0].expression
       end
 
       it 'get previous expression when the bookmark is created different order to expression' do
@@ -231,45 +201,14 @@ RSpec.describe Expression, type: :model do
         FactoryBot.create(:memorising, user:, expression: third_expression_items[0].expression)
         FactoryBot.create(:memorising, user:, expression: first_expression_items[0].expression)
 
-        expect(first_expression_items[0].expression.previous('/memorised_expressions', user)).to eq third_expression_items[0].expression
-        expect(third_expression_items[0].expression.previous('/memorised_expressions', user)).to eq fourth_expression_items[0].expression
+        expect(first_expression_items[0].expression.previous(user)).to eq third_expression_items[0].expression
+        expect(third_expression_items[0].expression.previous(user)).to eq fourth_expression_items[0].expression
       end
 
       it 'return nil if no record is found' do
         FactoryBot.create(:memorising, user:, expression: second_expression_items[0].expression)
 
-        expect(second_expression_items[0].expression.previous('/memorised_expressions', user)).to eq nil
-      end
-    end
-
-    context 'when first argument is nil and second argument is record of user' do
-      let!(:user) { FactoryBot.create(:user) }
-      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
-      let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
-
-      it 'get previous expression' do
-        expect(second_expression_items[0].expression.previous(nil, user)).to eq first_expression_items[0].expression
-      end
-
-      it 'return nil if no record is found' do
-        expect(first_expression_items[0].expression.previous(nil, user)).to eq nil
-      end
-    end
-
-    context 'when first argument and second argument are nil' do
-      let!(:user) { FactoryBot.create(:user) }
-      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note)) }
-      let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note, user_id: user.id)) }
-      let!(:third_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note)) }
-
-      it 'get previous expression' do
-        expect(described_class.find_by(user_id: user.id)).to eq second_expression_items[0].expression
-        expect(third_expression_items[0].expression.previous(nil, nil)).to eq first_expression_items[0].expression
-      end
-
-      it 'return nil if no record is found' do
-        expression = ExpressionItem.find_by(content: 'balcony').expression
-        expect(expression.previous(nil, nil)).to eq nil
+        expect(second_expression_items[0].expression.previous(user)).to eq nil
       end
     end
   end
