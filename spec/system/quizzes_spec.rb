@@ -3,6 +3,47 @@
 require 'rails_helper'
 
 RSpec.describe 'Quiz' do
+  describe 'questions' do
+    let!(:user) { FactoryBot.create(:user) }
+    let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+    let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+    let!(:third_expression_items) { FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+
+    before do
+      FactoryBot.create(:bookmarking, user:, expression: first_expression_items[0].expression)
+      FactoryBot.create(:memorising, user:, expression: second_expression_items[0].expression)
+    end
+
+    it 'check questions when user has not logged in' do
+      visit '/quiz'
+      2.times do |n|
+        click_button 'クイズに解答する'
+        n < 1 ? click_button('次へ') : click_button('クイズの結果を確認する')
+      end
+      expect(all('.move-to-bookmark-or-memorised-list li', visible: false).count).to eq 1
+      find('summary', text: 'ブックマークする英単語・フレーズ').click
+      expect(page).to have_field 'balcony and Veranda'
+    end
+
+    it 'check questions when user has logged in' do
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+      visit '/'
+      click_button 'Sign up/Log in with Google'
+      has_text? 'ログインしました'
+
+      visit '/quiz'
+      3.times do |n|
+        click_button 'クイズに解答する'
+        n < 2 ? click_button('次へ') : click_button('クイズの結果を確認する')
+      end
+      expect(all('.move-to-bookmark-or-memorised-list li', visible: false).count).to eq 1
+      find('summary', text: 'ブックマークする英単語・フレーズ').click
+      expect(page).to have_field "#{third_expression_items[0].content}, #{third_expression_items[1].content} and #{third_expression_items[2].content}"
+    end
+  end
+
   describe 'a quiz for everyone' do
     before do
       visit '/quiz'

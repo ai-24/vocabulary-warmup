@@ -50,6 +50,11 @@ import WordQuizResult from './word-quiz-result.vue'
 
 export default {
   name: 'WordQuiz',
+  props: {
+    path: {
+      type: String
+    }
+  },
   components: {
     WordQuizResult
   },
@@ -87,7 +92,7 @@ export default {
       this.isResult = true
     },
     async fetchQuizResources() {
-      const quizResources = await fetch('/api/quiz', {
+      const quizResources = await fetch(this.path, {
         method: 'GET',
         headers: { 'X-Requested-With': 'XMLHttpRequest' },
         credentials: 'same-origin'
