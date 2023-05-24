@@ -10,6 +10,9 @@ Rails.application.routes.draw do
   resources :bookmarked_expressions, only: [:index]
   resources :memorised_expressions, only: [:index]
   resource :quiz, only: [:show]
+  namespace :bookmarked_expressions do
+    resource :quiz, only: [:show]
+  end
   namespace :api do
     resources :expressions, only: [:index, :edit]
     resource :quiz, only: [:show]
@@ -17,5 +20,8 @@ Rails.application.routes.draw do
     get '/memorised_expressions', to: 'memorisings#index'
     post '/bookmarked_expressions', to: 'bookmarkings#create'
     post '/memorised_expressions', to: 'memorisings#create'
+    namespace :bookmarked_expressions do
+      resource :quiz, only: [:show]
+    end
   end
 end
