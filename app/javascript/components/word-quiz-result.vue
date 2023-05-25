@@ -10,9 +10,13 @@
       }}
     </p>
   </div>
-  <div v-if="!isSaved" class="move-to-bookmark-or-memorised-list pb-8">
+  <div
+    v-if="!isSaved && movableExpressionExists"
+    class="move-to-bookmark-or-memorised-list pb-8">
     <div
-      v-if="listOfWrongItems.length > 0 && !isSavedBookmark"
+      v-if="
+        listOfWrongItems.length > 0 && !isSavedBookmark && !isBookmarkedList
+      "
       class="section-of-wrong-answers py-2.5">
       <input
         type="checkbox"
@@ -92,8 +96,10 @@
     </ul>
   </details>
   <div>
-    <p>{{ $t('quiz.result.recommendNextAction') }}</p>
-    <p class="text-red-600">{{ $t('quiz.result.important') }}</p>
+    <div v-if="movableExpressionExists">
+      <p>{{ $t('quiz.result.recommendNextAction') }}</p>
+      <p class="text-red-600">{{ $t('quiz.result.important') }}</p>
+    </div>
     <a>{{ $t('quiz.result.review') }}</a>
   </div>
   <button @click="getNewQuiz">{{ $t('quiz.result.tryAgain') }}</button>
@@ -137,7 +143,9 @@ export default {
       success: [],
       warning: false,
       failure: [],
-      unauthorized: false
+      unauthorized: false,
+      isBookmarkedList: this.isBookmarkedExpressionsPath(),
+      movableExpressionExists: true
     }
   },
   methods: {
@@ -383,6 +391,14 @@ export default {
     },
     sortItems(items) {
       items.sort((first, second) => first.expressionId - second.expressionId)
+    },
+    isBookmarkedExpressionsPath() {
+      return location.pathname === '/bookmarked_expressions/quiz'
+    },
+    checkExistenceOfMovableExpressions() {
+      if (this.isBookmarkedList && this.listOfCorrectItems.length === 0) {
+        this.movableExpressionExists = false
+      }
     }
   },
   mounted() {
@@ -393,6 +409,7 @@ export default {
       this.checkedContentsToMemorisedList,
       this.listOfCorrectItems
     )
+    this.checkExistenceOfMovableExpressions()
   }
 }
 </script>
