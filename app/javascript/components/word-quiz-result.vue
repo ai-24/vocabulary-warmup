@@ -363,14 +363,14 @@ export default {
       listOfExpressionIds.forEach((id) => {
         const contents = []
 
-        const expression = this.rawQuizResources.filter(
+        const expressionItems = this.rawQuizResources.filter(
           (quizResource) => quizResource.expressionId === id
         )
-        const lastIndex = expression.length - 1
-        expression.forEach((expressionItem, index) => {
+        const lastIndex = expressionItems.length - 1
+        expressionItems.forEach((expressionItem, index) => {
           if (index === lastIndex) {
             contents.push(`and ${expressionItem.content}`)
-          } else if (expression.length > 2 && index !== lastIndex - 1) {
+          } else if (expressionItems.length > 2 && index !== lastIndex - 1) {
             contents.push(`${expressionItem.content},`)
           } else {
             contents.push(expressionItem.content)
@@ -379,12 +379,12 @@ export default {
         if (type === 'correct') {
           this.listOfCorrectItems.push({
             content: contents.join(' '),
-            expressionId: expression[0].expressionId
+            expressionId: expressionItems[0].expressionId
           })
         } else if (type === 'wrong') {
           this.listOfWrongItems.push({
             content: contents.join(' '),
-            expressionId: expression[0].expressionId
+            expressionId: expressionItems[0].expressionId
           })
         }
       })
