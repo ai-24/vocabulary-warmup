@@ -98,6 +98,22 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
       expect(page).not_to have_selector('.section-of-wrong-answers')
       expect(page).to have_button '保存する'
     end
+
+    it 'check if request for saving bookmarkings is not sent when memorising is saved' do
+      5.times do |n|
+        if has_text?(first_expression_items[0].explanation)
+          fill_in('解答を入力', with: first_expression_items[0].content)
+        elsif has_text?(first_expression_items[1].explanation)
+          fill_in('解答を入力', with: first_expression_items[1].content)
+        end
+        click_button 'クイズに解答する'
+        n < 4 ? click_button('次へ') : click_button('クイズの結果を確認する')
+      end
+      expect(page).to have_selector('.section-of-correct-answers')
+      click_button '保存する'
+      expect(page).to have_content '英単語・フレーズを覚えた語彙リストに保存しました！'
+      expect(page).not_to have_content '覚えた語彙リストに英単語・フレーズを保存しましたがブックマークは出来ませんでした'
+    end
   end
 
   context 'when new user starts quiz from bookmarks' do

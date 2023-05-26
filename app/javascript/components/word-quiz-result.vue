@@ -314,7 +314,9 @@ export default {
       this.classifyUserAnswersByExpressionId()
       this.classifyExpressionGroupsByRightOrWrong()
       this.convertExpressionIds(this.allCorrectExpressionIds, 'correct')
-      this.convertExpressionIds(this.wrongExpressionIds, 'wrong')
+      if (!this.isBookmarkedList) {
+        this.convertExpressionIds(this.wrongExpressionIds, 'wrong')
+      }
     },
     getNumberOfCorrectAnswers() {
       const correctAnswers = this.userAnswers.filter((userAnswer) =>
@@ -387,7 +389,7 @@ export default {
         }
       })
       this.sortItems(this.listOfCorrectItems)
-      this.sortItems(this.listOfWrongItems)
+      if (!this.isBookmarkedList) this.sortItems(this.listOfWrongItems)
     },
     sortItems(items) {
       items.sort((first, second) => first.expressionId - second.expressionId)
@@ -404,7 +406,12 @@ export default {
   mounted() {
     this.getNumberOfCorrectAnswers()
     this.createListOfItems()
-    this.defaultCheckbox(this.checkedContentsToBookmark, this.listOfWrongItems)
+    if (!this.isBookmarkedList) {
+      this.defaultCheckbox(
+        this.checkedContentsToBookmark,
+        this.listOfWrongItems
+      )
+    }
     this.defaultCheckbox(
       this.checkedContentsToMemorisedList,
       this.listOfCorrectItems
