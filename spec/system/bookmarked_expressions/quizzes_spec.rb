@@ -114,6 +114,46 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
       expect(page).to have_content '英単語・フレーズを覚えた語彙リストに保存しました！'
       expect(page).not_to have_content '覚えた語彙リストに英単語・フレーズを保存しましたがブックマークは出来ませんでした'
     end
+
+    it 'check if bookmarking is destroyed when memorising is created' do
+      5.times do |n|
+        if has_text?(first_expression_items[0].explanation)
+          fill_in('解答を入力', with: first_expression_items[0].content)
+        elsif has_text?(first_expression_items[1].explanation)
+          fill_in('解答を入力', with: first_expression_items[1].content)
+        end
+        click_button 'クイズに解答する'
+        n < 4 ? click_button('次へ') : click_button('クイズの結果を確認する')
+      end
+      expect(page).to have_selector('.section-of-correct-answers')
+      expect do
+        click_button '保存する'
+        expect(page).to have_content '英単語・フレーズを覚えた語彙リストに保存しました！'
+      end.to change(Bookmarking, :count).by(-1).and change(Memorising, :count).by(1)
+    end
+
+    it 'check if bookmarkings are destroyed when memorisings are created' do
+      5.times do |n|
+        if has_text?(first_expression_items[0].explanation)
+          fill_in('解答を入力', with: first_expression_items[0].content)
+        elsif has_text?(first_expression_items[1].explanation)
+          fill_in('解答を入力', with: first_expression_items[1].content)
+        elsif has_text?(second_expression_items[0].explanation)
+          fill_in('解答を入力', with: second_expression_items[0].content)
+        elsif has_text?(second_expression_items[1].explanation)
+          fill_in('解答を入力', with: second_expression_items[1].content)
+        elsif has_text?(second_expression_items[2].explanation)
+          fill_in('解答を入力', with: second_expression_items[2].content)
+        end
+        click_button 'クイズに解答する'
+        n < 4 ? click_button('次へ') : click_button('クイズの結果を確認する')
+      end
+      expect(page).to have_selector('.section-of-correct-answers')
+      expect do
+        click_button '保存する'
+        expect(page).to have_content '英単語・フレーズを覚えた語彙リストに保存しました！'
+      end.to change(Bookmarking, :count).by(-2).and change(Memorising, :count).by(2)
+    end
   end
 
   context 'when new user starts quiz from bookmarks' do
