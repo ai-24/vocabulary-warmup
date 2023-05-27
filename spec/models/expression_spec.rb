@@ -214,18 +214,24 @@ RSpec.describe Expression, type: :model do
   end
 
   describe '.copy_initial_expressions!' do
-    let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
-    let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user2.id)) }
-    let!(:example) { FactoryBot.create(:example, expression_item: second_expression_items[0]) }
+    let!(:expression) { FactoryBot.create(:empty_note) }
+    let!(:first_expression_item) { FactoryBot.create(:expression_item, expression:) }
+
     let!(:user) { FactoryBot.create(:user) }
     let!(:user2) { FactoryBot.create(:user) }
+    let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user2.id)) }
+    let!(:example) { FactoryBot.create(:example, expression_item: second_expression_items[0]) }
+
+    before do
+      FactoryBot.create(:expression_item2, expression:)
+    end
 
     it 'check if expressions which user_id are nil are copied' do
       expect do
         described_class.copy_initial_expressions!(user.id)
       end.to change(described_class, :count).by(2).and change(ExpressionItem, :count).by(4).and change(Example, :count).by(2)
       expect(described_class.where('user_id = ?', user.id).count).to eq 2
-      expect(ExpressionItem.where('content = ?', first_expression_items[0].content).count).to eq 2
+      expect(ExpressionItem.where('content = ?', first_expression_item.content).count).to eq 2
       expect(Example.where('content = ?', example.content).count).to eq 1
     end
   end

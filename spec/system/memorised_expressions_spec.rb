@@ -9,7 +9,7 @@ RSpec.describe 'Memorised expressions' do
 
       before do
         FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note))
-        FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note))
+        FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:empty_note))
 
         OmniAuth.config.test_mode = true
         OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
@@ -29,12 +29,16 @@ RSpec.describe 'Memorised expressions' do
     context 'when there are data of memorisings' do
       let!(:user) { FactoryBot.create(:user) }
       let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
-      let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+      let!(:second_expression_items) { FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
 
       before do
         expressions = []
-        10.times do
+        2.times do
           expressions.push(FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)))
+          expressions.push(FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)))
+          expressions.push(FactoryBot.create_list(:expression_item3, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)))
+          expressions.push(FactoryBot.create_list(:expression_item4, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)))
+          expressions.push(FactoryBot.create_list(:expression_item5, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)))
         end
 
         FactoryBot.create(:memorising, user:, expression: first_expression_items[0].expression)
@@ -72,9 +76,12 @@ RSpec.describe 'Memorised expressions' do
 
     context 'when memorisings were made by two different times' do
       let!(:user) { FactoryBot.create(:user) }
-      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
-      let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
-      let!(:third_expression_items) { FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+      let!(:expression) { FactoryBot.create(:empty_note, user_id: user.id) }
+      let!(:first_expression_item) { FactoryBot.create(:expression_item, expression:) }
+      let!(:second_expression_item) { FactoryBot.create(:expression_item2, expression:) }
+
+      let!(:second_expression_items) { FactoryBot.create_list(:expression_item3, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+      let!(:third_expression_items) { FactoryBot.create_list(:expression_item4, 3, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
 
       before do
         FactoryBot.create(:memorising, user:, expression: second_expression_items[0].expression)
@@ -89,10 +96,10 @@ RSpec.describe 'Memorised expressions' do
         visit '/quiz'
 
         2.times do |n|
-          if has_text?(first_expression_items[0].explanation)
-            fill_in('解答を入力', with: first_expression_items[0].content)
-          elsif has_text?(first_expression_items[1].explanation)
-            fill_in('解答を入力', with: first_expression_items[1].content)
+          if has_text?(first_expression_item.explanation)
+            fill_in('解答を入力', with: first_expression_item.content)
+          elsif has_text?(second_expression_item.explanation)
+            fill_in('解答を入力', with: second_expression_item.content)
           end
           click_button 'クイズに解答する'
           n < 1 ? click_button('次へ') : click_button('クイズの結果を確認する')
@@ -107,8 +114,8 @@ RSpec.describe 'Memorised expressions' do
                                          href: expression_path(ExpressionItem.where(content: second_expression_items[0].content).last.expression)
         expect(all('li')[1]).to have_link "#{third_expression_items[0].content}, #{third_expression_items[1].content} and #{third_expression_items[2].content}",
                                           href: expression_path(ExpressionItem.where(content: third_expression_items[0].content).last.expression)
-        expect(all('li').last).to have_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}",
-                                            href: expression_path(ExpressionItem.where(content: first_expression_items[0].content).last.expression)
+        expect(all('li').last).to have_link "#{first_expression_item.content} and #{second_expression_item.content}",
+                                            href: expression_path(ExpressionItem.where(content: first_expression_item.content).last.expression)
       end
     end
   end

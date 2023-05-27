@@ -41,7 +41,7 @@ RSpec.describe 'Expressions' do
   describe 'delete first expression' do
     let!(:user) { FactoryBot.create(:user) }
     let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note, user_id: user.id)) }
-    let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note, user_id: user.id)) }
+    let!(:second_expression_items) { FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:note, user_id: user.id)) }
 
     before do
       OmniAuth.config.test_mode = true
@@ -93,7 +93,7 @@ RSpec.describe 'Expressions' do
   describe 'delete another expression' do
     let!(:user) { FactoryBot.create(:user) }
     let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note, user_id: user.id)) }
-    let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note, user_id: user.id)) }
+    let!(:second_expression_items) { FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:note, user_id: user.id)) }
 
     before do
       OmniAuth.config.test_mode = true

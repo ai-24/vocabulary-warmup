@@ -7,6 +7,11 @@ module Recordable
 
     transaction do
       exist_expression_ids.each do |expression_id|
+        if self == Memorising
+          bookmarking = Bookmarking.find_by(expression_id:)
+          bookmarking&.destroy
+        end
+
         object = new
         object.user_id = user_id
         object.expression_id = expression_id

@@ -5,8 +5,8 @@ require 'rails_helper'
 RSpec.describe 'Bookmarked expressions' do
   context 'when user logged in' do
     let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
-    let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
-    let!(:third_expression_items) { FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note)) }
+    let!(:second_expression_items) { FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:empty_note)) }
+    let!(:third_expression_items) { FactoryBot.create_list(:expression_item3, 3, expression: FactoryBot.create(:empty_note)) }
     let(:user) { FactoryBot.build(:user) }
 
     before do
