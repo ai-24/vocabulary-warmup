@@ -173,7 +173,7 @@ RSpec.describe 'Expressions' do
 
       it 'check next button' do
         first_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
-        second_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
+        second_expression_items = FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:note))
 
         visit '/'
         click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
@@ -187,7 +187,7 @@ RSpec.describe 'Expressions' do
 
       it 'check back button' do
         first_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
-        second_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
+        second_expression_items = FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:note))
 
         visit '/'
         click_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}"
@@ -202,8 +202,8 @@ RSpec.describe 'Expressions' do
     context 'when the expressions page is visited through bookmarked expressions list' do
       let!(:user) { FactoryBot.create(:user) }
       let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
-      let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
-      let!(:third_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+      let!(:second_expression_items) { FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+      let!(:third_expression_items) { FactoryBot.create_list(:expression_item3, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
 
       before do
         FactoryBot.create(:bookmarking, user:, expression: first_expression_items[0].expression)
@@ -280,8 +280,8 @@ RSpec.describe 'Expressions' do
     context 'when the expression page is visited through memorised expression list' do
       let!(:user) { FactoryBot.create(:user) }
       let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
-      let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
-      let!(:third_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+      let!(:second_expression_items) { FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+      let!(:third_expression_items) { FactoryBot.create_list(:expression_item3, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
 
       before do
         FactoryBot.create(:memorising, user:, expression: first_expression_items[0].expression)
@@ -360,7 +360,7 @@ RSpec.describe 'Expressions' do
     let!(:user) { FactoryBot.create(:user) }
     let(:new_user) { FactoryBot.build(:user) }
     let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
-    let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+    let!(:second_expression_items) { FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
 
     it 'check if user who does not own the expressions can not see it' do
       OmniAuth.config.test_mode = true

@@ -6,9 +6,9 @@ RSpec.describe 'Expressions' do
   context 'when user has not logged in' do
     let(:new_user) { FactoryBot.build(:user) }
     let!(:two_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
-    let!(:three_expression_items) { FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note)) }
-    let!(:four_expression_items) { FactoryBot.create_list(:expression_item, 4, expression: FactoryBot.create(:empty_note)) }
-    let!(:five_expression_items) { FactoryBot.create_list(:expression_item, 5, expression: FactoryBot.create(:empty_note)) }
+    let!(:three_expression_items) { FactoryBot.create_list(:expression_item2, 3, expression: FactoryBot.create(:empty_note)) }
+    let!(:four_expression_items) { FactoryBot.create_list(:expression_item3, 4, expression: FactoryBot.create(:empty_note)) }
+    let!(:five_expression_items) { FactoryBot.create_list(:expression_item4, 5, expression: FactoryBot.create(:empty_note)) }
 
     before do
       16.times do
@@ -57,7 +57,7 @@ RSpec.describe 'Expressions' do
     before do
       10.times do
         FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
-        FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note))
+        FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:empty_note))
       end
 
       OmniAuth.config.test_mode = true
@@ -96,9 +96,9 @@ RSpec.describe 'Expressions' do
   context 'when a user who has bookmarks has logged in' do
     let(:new_user) { FactoryBot.build(:user) }
     let!(:two_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
-    let!(:three_expression_items) { FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note)) }
-    let!(:four_expression_items) { FactoryBot.create_list(:expression_item, 4, expression: FactoryBot.create(:empty_note)) }
-    let!(:five_expression_items) { FactoryBot.create_list(:expression_item, 5, expression: FactoryBot.create(:empty_note)) }
+    let!(:three_expression_items) { FactoryBot.create_list(:expression_item2, 3, expression: FactoryBot.create(:empty_note)) }
+    let!(:four_expression_items) { FactoryBot.create_list(:expression_item3, 4, expression: FactoryBot.create(:empty_note)) }
+    let!(:five_expression_items) { FactoryBot.create_list(:expression_item4, 5, expression: FactoryBot.create(:empty_note)) }
 
     before do
       OmniAuth.config.test_mode = true
@@ -161,8 +161,10 @@ RSpec.describe 'Expressions' do
   context 'when a user who has memorised words logged in' do
     let!(:user) { FactoryBot.create(:user) }
     let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
-    let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
-    let!(:third_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+    let!(:second_expression_items) { FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+    let!(:expression) { FactoryBot.create(:empty_note, user_id: user.id) }
+    let!(:first_expression_item) { FactoryBot.create(:expression_item3, expression:) }
+    let!(:second_expression_item) { FactoryBot.create(:expression_item4, expression:) }
 
     before do
       FactoryBot.create(:memorising, user:, expression: first_expression_items[0].expression)
@@ -177,17 +179,17 @@ RSpec.describe 'Expressions' do
 
     it 'check list of expressions' do
       expect(all('li').count).to eq 1
-      expect(page).to have_link "#{third_expression_items[0].content} and #{third_expression_items[1].content}",
-                                href: expression_path(ExpressionItem.where(content: third_expression_items[0].content).last.expression)
+      expect(page).to have_link "#{first_expression_item.content} and #{second_expression_item.content}",
+                                href: expression_path(ExpressionItem.where(content: first_expression_item.content).last.expression)
     end
 
     it 'check if list of expressions has no data after adding all expressions to memorised words list' do
       visit '/quiz'
       2.times do |n|
-        if has_text?(third_expression_items[0].explanation)
-          fill_in('解答を入力', with: third_expression_items[0].content)
-        elsif has_text?(third_expression_items[1].explanation)
-          fill_in('解答を入力', with: third_expression_items[1].content)
+        if has_text?(first_expression_item.explanation)
+          fill_in('解答を入力', with: first_expression_item.content)
+        elsif has_text?(second_expression_item.explanation)
+          fill_in('解答を入力', with: second_expression_item.content)
         end
         click_button 'クイズに解答する'
         n < 1 ? click_button('次へ') : click_button('クイズの結果を確認する')

@@ -6,8 +6,8 @@ RSpec.describe 'Quiz' do
   describe 'questions' do
     let!(:user) { FactoryBot.create(:user) }
     let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
-    let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
-    let!(:third_expression_items) { FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+    let!(:second_expression_items) { FactoryBot.create_list(:expression_item2, 3, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+    let!(:third_expression_items) { FactoryBot.create_list(:expression_item3, 3, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
 
     before do
       FactoryBot.create(:bookmarking, user:, expression: first_expression_items[0].expression)
@@ -224,7 +224,9 @@ RSpec.describe 'Quiz' do
     end
 
     context 'when one expression is in the list that go to bookmark and one expression is in the list that go to memorised words list' do
-      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
+      let!(:expression) { FactoryBot.create(:empty_note) }
+      let!(:first_expression_item) { FactoryBot.create(:expression_item, expression:) }
+      let!(:second_expression_item) { FactoryBot.create(:expression_item2, expression:) }
       let(:answers) { [] } # クイズの問題がランダムに出題されるため、クイズで入力した値をexampleで取得できるようにbeforeでこの配列に値を代入
 
       before do
@@ -239,10 +241,10 @@ RSpec.describe 'Quiz' do
           elsif has_text?('A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.')
             fill_in('解答を入力', with: 'veranda')
             answers.push('veranda')
-          elsif has_text?(first_expression_items[0].explanation)
-            fill_in('解答を入力', with: first_expression_items[0].content)
-          elsif has_text?(first_expression_items[1].explanation)
-            fill_in('解答を入力', with: first_expression_items[1].content)
+          elsif has_text?(first_expression_item.explanation)
+            fill_in('解答を入力', with: first_expression_item.content)
+          elsif has_text?(second_expression_item.explanation)
+            fill_in('解答を入力', with: second_expression_item.content)
           end
 
           click_button 'クイズに解答する'
@@ -256,9 +258,9 @@ RSpec.describe 'Quiz' do
         find('summary', text: '覚えたリストに移動する英単語・フレーズ').click
         if answers.count == 2
           expect(page).to have_content 'balcony and Veranda'
-          expect(page).not_to have_content "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+          expect(page).not_to have_content "#{first_expression_item.content} and #{second_expression_item.content}"
         else
-          expect(page).to have_content "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+          expect(page).to have_content "#{first_expression_item.content} and #{second_expression_item.content}"
           expect(page).not_to have_content 'balcony and Veranda'
         end
 
@@ -270,11 +272,11 @@ RSpec.describe 'Quiz' do
 
         find('summary', text: 'ブックマークする英単語・フレーズ').click
         if answers.count == 2
-          expect(page).to have_content "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+          expect(page).to have_content "#{first_expression_item.content} and #{second_expression_item.content}"
           expect(page).not_to have_content 'balcony and Veranda'
         else
           expect(page).to have_content 'balcony and Veranda'
-          expect(page).not_to have_content "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+          expect(page).not_to have_content "#{first_expression_item.content} and #{second_expression_item.content}"
         end
 
         expect(all('ul.list-of-wrong-answers li').count).to eq 1
@@ -282,7 +284,10 @@ RSpec.describe 'Quiz' do
     end
 
     context 'when two expressions are in memorised words list and zero expression is in bookmark list' do
-      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note)) }
+      let!(:expression) { FactoryBot.create(:empty_note) }
+      let!(:first_expression_item) { FactoryBot.create(:expression_item, expression:) }
+      let!(:second_expression_item) { FactoryBot.create(:expression_item2, expression:) }
+      let!(:third_expression_item) { FactoryBot.create(:expression_item3, expression:) }
 
       before do
         visit '/quiz'
@@ -291,12 +296,12 @@ RSpec.describe 'Quiz' do
             fill_in('解答を入力', with: 'balcony')
           elsif has_text?('A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.')
             fill_in('解答を入力', with: 'veranda')
-          elsif has_text?(first_expression_items[0].explanation)
-            fill_in('解答を入力', with: first_expression_items[0].content)
-          elsif has_text?(first_expression_items[1].explanation)
-            fill_in('解答を入力', with: first_expression_items[1].content)
-          elsif has_text?(first_expression_items[2].explanation)
-            fill_in('解答を入力', with: first_expression_items[2].content)
+          elsif has_text?(first_expression_item.explanation)
+            fill_in('解答を入力', with: first_expression_item.content)
+          elsif has_text?(second_expression_item.explanation)
+            fill_in('解答を入力', with: second_expression_item.content)
+          elsif has_text?(third_expression_item.explanation)
+            fill_in('解答を入力', with: third_expression_item.content)
           end
           click_button 'クイズに解答する'
           n < 4 ? click_button('次へ') : click_button('クイズの結果を確認する')
@@ -310,7 +315,7 @@ RSpec.describe 'Quiz' do
 
         expect(first('ul.list-of-correct-answers li')).to have_content 'balcony and Veranda'
         expect(all('ul.list-of-correct-answers li')[1]).to have_content(
-          "#{first_expression_items[0].content}, #{first_expression_items[1].content} and #{first_expression_items[2].content}"
+          "#{first_expression_item.content}, #{second_expression_item.content} and #{third_expression_item.content}"
         )
 
         expect(page).not_to have_selector 'div.section-of-wrong-answers'
@@ -351,7 +356,9 @@ RSpec.describe 'Quiz' do
     end
 
     describe 'checkbox for memorised words list' do
-      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
+      let!(:expression) { FactoryBot.create(:empty_note) }
+      let!(:first_expression_item) { FactoryBot.create(:expression_item, expression:) }
+      let!(:second_expression_item) { FactoryBot.create(:expression_item2, expression:) }
 
       before do
         visit '/quiz'
@@ -360,10 +367,10 @@ RSpec.describe 'Quiz' do
             fill_in('解答を入力', with: 'balcony')
           elsif has_text?('A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.')
             fill_in('解答を入力', with: 'veranda')
-          elsif has_text?(first_expression_items[0].explanation)
-            fill_in('解答を入力', with: first_expression_items[0].content)
-          elsif has_text?(first_expression_items[1].explanation)
-            fill_in('解答を入力', with: first_expression_items[1].content)
+          elsif has_text?(first_expression_item.explanation)
+            fill_in('解答を入力', with: first_expression_item.content)
+          elsif has_text?(second_expression_item.explanation)
+            fill_in('解答を入力', with: second_expression_item.content)
           end
           click_button 'クイズに解答する'
           n < 3 ? click_button('次へ') : click_button('クイズの結果を確認する')
@@ -374,7 +381,7 @@ RSpec.describe 'Quiz' do
         expect(page).to have_checked_field 'move-to-memorised-list'
         find('summary', text: '覚えたリストに移動する英単語・フレーズ').click
         expect(page).to have_checked_field 'balcony and Veranda'
-        expect(page).to have_checked_field "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+        expect(page).to have_checked_field "#{first_expression_item.content} and #{second_expression_item.content}"
       end
 
       it 'check if the parents checkbox is unchecked when one expression is unchecked' do
@@ -383,7 +390,7 @@ RSpec.describe 'Quiz' do
         find('label', text: 'balcony and Veranda').click
         expect(page).to have_unchecked_field 'balcony and Veranda'
         expect(page).to have_unchecked_field 'move-to-memorised-list'
-        expect(page).to have_checked_field "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+        expect(page).to have_checked_field "#{first_expression_item.content} and #{second_expression_item.content}"
       end
 
       it 'check if parents checkbox is checked after one child checkbox is unchecked and then it is checked again' do
@@ -401,7 +408,7 @@ RSpec.describe 'Quiz' do
         expect(page).to have_unchecked_field 'move-to-memorised-list'
         find('summary', text: '覚えたリストに移動する英単語・フレーズ').click
         expect(page).to have_unchecked_field 'balcony and Veranda'
-        expect(page).to have_unchecked_field "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+        expect(page).to have_unchecked_field "#{first_expression_item.content} and #{second_expression_item.content}"
       end
     end
 
@@ -596,7 +603,9 @@ RSpec.describe 'Quiz' do
     end
 
     describe 'save to memorised words list' do
-      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
+      let!(:expression) { FactoryBot.create(:empty_note) }
+      let!(:first_expression_item) { FactoryBot.create(:expression_item, expression:) }
+      let!(:second_expression_item) { FactoryBot.create(:expression_item2, expression:) }
       let(:user) { FactoryBot.build(:user) }
 
       before do
@@ -614,10 +623,10 @@ RSpec.describe 'Quiz' do
             fill_in('解答を入力', with: 'balcony')
           elsif has_text?('A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.')
             fill_in('解答を入力', with: 'veranda')
-          elsif has_text?(first_expression_items[0].explanation)
-            fill_in('解答を入力', with: first_expression_items[0].content)
-          elsif has_text?(first_expression_items[1].explanation)
-            fill_in('解答を入力', with: first_expression_items[1].content)
+          elsif has_text?(first_expression_item.explanation)
+            fill_in('解答を入力', with: first_expression_item.content)
+          elsif has_text?(second_expression_item.explanation)
+            fill_in('解答を入力', with: second_expression_item.content)
           end
           click_button 'クイズに解答する'
           n < 3 ? click_button('次へ') : click_button('クイズの結果を確認する')
@@ -638,7 +647,7 @@ RSpec.describe 'Quiz' do
         find('summary', text: '覚えたリストに移動する英単語・フレーズ').click
         find('label', text: 'balcony and Veranda').click
         expect(page).to have_unchecked_field 'balcony and Veranda'
-        expect(page).to have_checked_field "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+        expect(page).to have_checked_field "#{first_expression_item.content} and #{second_expression_item.content}"
         expect do
           click_button '保存する'
           expect(page).not_to have_selector 'div.move-to-bookmark-or-memorised-list'
@@ -647,7 +656,7 @@ RSpec.describe 'Quiz' do
       end
 
       it 'check if one expression is saved to memorised words list even if another one is failed to save' do
-        expression_item = ExpressionItem.where(content: first_expression_items[0].content).last
+        expression_item = ExpressionItem.where(content: first_expression_item.content).last
         expression_id = expression_item.expression.id
         expression_item.expression.destroy
         expect(Expression.exists?(id: expression_id)).to be false
@@ -661,7 +670,7 @@ RSpec.describe 'Quiz' do
       it 'check notification when expressions are failed to saved in memorised words list' do
         expression_item = ExpressionItem.where(content: 'balcony').last
         expression_item.expression.destroy
-        expression_item2 = ExpressionItem.where(content: first_expression_items[0].content).last
+        expression_item2 = ExpressionItem.where(content: first_expression_item.content).last
         expression_item2.expression.destroy
         expect do
           click_button '保存する'
@@ -671,7 +680,7 @@ RSpec.describe 'Quiz' do
       end
 
       it 'check if expression is saved to memorised words list after failing to save another one' do
-        ExpressionItem.where(content: first_expression_items[0].content).last.expression.destroy
+        ExpressionItem.where(content: first_expression_item.content).last.expression.destroy
         find('summary', text: '覚えたリストに移動する英単語・フレーズ').click
         find('label', text: 'balcony and Veranda').click
         expect(page).to have_unchecked_field 'balcony and Veranda'
@@ -701,7 +710,7 @@ RSpec.describe 'Quiz' do
 
         find('summary', text: 'ブックマークする英単語・フレーズ').click
         expect(page).to have_content 'balcony and Veranda'
-        expect(page).not_to have_content "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+        expect(page).not_to have_content "#{first_expression_item.content} and #{second_expression_item.content}"
       end
     end
 
@@ -781,9 +790,12 @@ RSpec.describe 'Quiz' do
     end
 
     describe 'two expressions are bookmarked and two expressions are saved to memorised words list' do
-      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
-      let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
-      let!(:third_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
+      let!(:expression) { FactoryBot.create(:empty_note) }
+      let!(:first_expression_item) { FactoryBot.create(:expression_item, expression:) }
+      let!(:second_expression_item) { FactoryBot.create(:expression_item2, expression:) }
+
+      let!(:second_expression_items) { FactoryBot.create_list(:expression_item3, 2, expression: FactoryBot.create(:empty_note)) }
+      let!(:third_expression_items) { FactoryBot.create_list(:expression_item4, 2, expression: FactoryBot.create(:empty_note)) }
       let(:user) { FactoryBot.build(:user) }
 
       before do
@@ -801,10 +813,10 @@ RSpec.describe 'Quiz' do
             fill_in('解答を入力', with: 'balcony')
           elsif has_text?('A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.')
             fill_in('解答を入力', with: 'veranda')
-          elsif has_text?(first_expression_items[0].explanation)
-            fill_in('解答を入力', with: first_expression_items[0].content)
-          elsif has_text?(first_expression_items[1].explanation)
-            fill_in('解答を入力', with: first_expression_items[1].content)
+          elsif has_text?(first_expression_item.explanation)
+            fill_in('解答を入力', with: first_expression_item.content)
+          elsif has_text?(second_expression_item.explanation)
+            fill_in('解答を入力', with: second_expression_item.content)
           elsif has_text?(second_expression_items[0].explanation)
             fill_in('解答を入力', with: '')
           elsif has_text?(second_expression_items[1].explanation)
@@ -831,7 +843,7 @@ RSpec.describe 'Quiz' do
       end
 
       it 'check if expressions are saved to memorised words list and bookmarked when one expression is failed to save to memorised words list' do
-        expression_item = ExpressionItem.where(content: first_expression_items[0].content).last
+        expression_item = ExpressionItem.where(content: first_expression_item.content).last
         expression_item.expression.destroy
 
         expect do
@@ -843,12 +855,15 @@ RSpec.describe 'Quiz' do
     end
 
     describe 'After bookmarking and saving expressions to memorised words list' do
-      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
-      let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
+      let!(:expression) { FactoryBot.create(:empty_note) }
+      let!(:first_expression_item) { FactoryBot.create(:expression_item, expression:) }
+      let!(:second_expression_item) { FactoryBot.create(:expression_item2, expression:) }
+
+      let!(:second_expression_items) { FactoryBot.create_list(:expression_item3, 2, expression: FactoryBot.create(:empty_note)) }
       let(:user) { FactoryBot.build(:user) }
 
       before do
-        FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note))
+        FactoryBot.create_list(:expression_item4, 2, expression: FactoryBot.create(:empty_note))
 
         OmniAuth.config.test_mode = true
         OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
@@ -864,10 +879,10 @@ RSpec.describe 'Quiz' do
             fill_in('解答を入力', with: 'balcony')
           elsif has_text?('A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.')
             fill_in('解答を入力', with: 'veranda')
-          elsif has_text?(first_expression_items[0].explanation)
-            fill_in('解答を入力', with: first_expression_items[0].content)
-          elsif has_text?(first_expression_items[1].explanation)
-            fill_in('解答を入力', with: first_expression_items[1].content)
+          elsif has_text?(first_expression_item.explanation)
+            fill_in('解答を入力', with: first_expression_item.content)
+          elsif has_text?(second_expression_item.explanation)
+            fill_in('解答を入力', with: second_expression_item.content)
           end
           click_button 'クイズに解答する'
           n < 7 ? click_button('次へ') : click_button('クイズの結果を確認する')
@@ -952,7 +967,9 @@ RSpec.describe 'Quiz' do
     end
 
     describe 'show a message when user has not logged in and  there is checkbox for saving to memorised words list' do
-      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
+      let!(:expression) { FactoryBot.create(:empty_note) }
+      let!(:first_expression_item) { FactoryBot.create(:expression_item, expression:) }
+      let!(:second_expression_item) { FactoryBot.create(:expression_item2, expression:) }
 
       before do
         visit '/quiz'
@@ -962,10 +979,10 @@ RSpec.describe 'Quiz' do
             fill_in('解答を入力', with: 'balcony')
           elsif has_text?('A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.')
             fill_in('解答を入力', with: 'veranda')
-          elsif has_text?(first_expression_items[0].explanation)
-            fill_in('解答を入力', with: first_expression_items[0].content)
-          elsif has_text?(first_expression_items[1].explanation)
-            fill_in('解答を入力', with: first_expression_items[1].content)
+          elsif has_text?(first_expression_item.explanation)
+            fill_in('解答を入力', with: first_expression_item.content)
+          elsif has_text?(second_expression_item.explanation)
+            fill_in('解答を入力', with: second_expression_item.content)
           end
           click_button 'クイズに解答する'
           n < 3 ? click_button('次へ') : click_button('クイズの結果を確認する')

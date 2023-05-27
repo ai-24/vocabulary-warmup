@@ -5,17 +5,23 @@ require 'rails_helper'
 RSpec.describe 'BookmarkedExpressions Quiz' do
   context 'when user starts quiz from bookmark list' do
     let!(:user1) { FactoryBot.create(:user) }
-    let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user1.id)) }
-    let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note, user_id: user1.id)) }
-    let!(:third_expression_items) { FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note, user_id: user1.id)) }
+    let!(:expression1) { FactoryBot.create(:empty_note, user_id: user1.id) }
+    let!(:first_expression_item) { FactoryBot.create(:expression_item, expression: expression1) }
+    let!(:second_expression_item) { FactoryBot.create(:expression_item2, expression: expression1) }
+
+    let!(:expression2) { FactoryBot.create(:empty_note, user_id: user1.id) }
+    let!(:third_expression_item) { FactoryBot.create(:expression_item3, expression: expression2) }
+    let!(:fourth_expression_item) { FactoryBot.create(:expression_item4, expression: expression2) }
+    let!(:fifth_expression_item) { FactoryBot.create(:expression_item5, expression: expression2) }
 
     before do
-      FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user1.id))
+      third_expression_items = FactoryBot.create_list(:expression_item6, 3, expression: FactoryBot.create(:empty_note, user_id: user1.id))
+      FactoryBot.create_list(:expression_item6, 2, expression: FactoryBot.create(:empty_note, user_id: user1.id))
       user2 = FactoryBot.create(:user)
-      fifth_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user2.id))
+      fifth_expression_items = FactoryBot.create_list(:expression_item6, 2, expression: FactoryBot.create(:empty_note, user_id: user2.id))
 
-      FactoryBot.create(:bookmarking, user: user1, expression: first_expression_items[0].expression)
-      FactoryBot.create(:bookmarking, user: user1, expression: second_expression_items[0].expression)
+      FactoryBot.create(:bookmarking, user: user1, expression: first_expression_item.expression)
+      FactoryBot.create(:bookmarking, user: user1, expression: third_expression_item.expression)
       FactoryBot.create(:bookmarking, user: user2, expression: fifth_expression_items[0].expression)
       FactoryBot.create(:memorising, user: user1, expression: third_expression_items[0].expression)
 
@@ -37,25 +43,25 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
       end
       expect(all('ul.user-answer-list li', visible: false).count).to eq 5
       find('summary', text: '自分の解答を表示').click
-      expect(page).to have_content "Answer: #{first_expression_items[0].content}"
-      expect(page).to have_content "Answer: #{first_expression_items[1].content}"
-      expect(page).to have_content "Answer: #{second_expression_items[0].content}"
-      expect(page).to have_content "Answer: #{second_expression_items[1].content}"
-      expect(page).to have_content "Answer: #{second_expression_items[2].content}"
+      expect(page).to have_content "Answer: #{first_expression_item.content}"
+      expect(page).to have_content "Answer: #{second_expression_item.content}"
+      expect(page).to have_content "Answer: #{third_expression_item.content}"
+      expect(page).to have_content "Answer: #{fourth_expression_item.content}"
+      expect(page).to have_content "Answer: #{fifth_expression_item.content}"
     end
 
     it 'check the questions and answers are set correctly' do
       5.times do |n|
-        if has_text?(first_expression_items[0].explanation)
-          fill_in('解答を入力', with: first_expression_items[0].content)
+        if has_text?(first_expression_item.explanation)
+          fill_in('解答を入力', with: first_expression_item.content)
           click_button 'クイズに解答する'
           expect(page).to have_content '◯ 正解!'
-        elsif has_text?(first_expression_items[1].explanation)
-          fill_in('解答を入力', with: first_expression_items[1].content)
+        elsif has_text?(second_expression_item.explanation)
+          fill_in('解答を入力', with: second_expression_item.content)
           click_button 'クイズに解答する'
           expect(page).to have_content '◯ 正解!'
-        elsif has_text?(second_expression_items[0].explanation)
-          fill_in('解答を入力', with: second_expression_items[0].content)
+        elsif has_text?(third_expression_item.explanation)
+          fill_in('解答を入力', with: third_expression_item.content)
           click_button 'クイズに解答する'
           expect(page).to have_content '◯ 正解!'
         else
@@ -86,10 +92,10 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
 
     it 'check if a section of moving expressions to memorised list is on the result page when some answers are correct' do
       5.times do |n|
-        if has_text?(first_expression_items[0].explanation)
-          fill_in('解答を入力', with: first_expression_items[0].content)
-        elsif has_text?(first_expression_items[1].explanation)
-          fill_in('解答を入力', with: first_expression_items[1].content)
+        if has_text?(first_expression_item.explanation)
+          fill_in('解答を入力', with: first_expression_item.content)
+        elsif has_text?(second_expression_item.explanation)
+          fill_in('解答を入力', with: second_expression_item.content)
         end
         click_button 'クイズに解答する'
         n < 4 ? click_button('次へ') : click_button('クイズの結果を確認する')
@@ -101,10 +107,10 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
 
     it 'check if request for saving bookmarkings is not sent when memorising is saved' do
       5.times do |n|
-        if has_text?(first_expression_items[0].explanation)
-          fill_in('解答を入力', with: first_expression_items[0].content)
-        elsif has_text?(first_expression_items[1].explanation)
-          fill_in('解答を入力', with: first_expression_items[1].content)
+        if has_text?(first_expression_item.explanation)
+          fill_in('解答を入力', with: first_expression_item.content)
+        elsif has_text?(second_expression_item.explanation)
+          fill_in('解答を入力', with: second_expression_item.content)
         end
         click_button 'クイズに解答する'
         n < 4 ? click_button('次へ') : click_button('クイズの結果を確認する')
@@ -117,10 +123,10 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
 
     it 'check if bookmarking is destroyed when memorising is created' do
       5.times do |n|
-        if has_text?(first_expression_items[0].explanation)
-          fill_in('解答を入力', with: first_expression_items[0].content)
-        elsif has_text?(first_expression_items[1].explanation)
-          fill_in('解答を入力', with: first_expression_items[1].content)
+        if has_text?(first_expression_item.explanation)
+          fill_in('解答を入力', with: first_expression_item.content)
+        elsif has_text?(second_expression_item.explanation)
+          fill_in('解答を入力', with: second_expression_item.content)
         end
         click_button 'クイズに解答する'
         n < 4 ? click_button('次へ') : click_button('クイズの結果を確認する')
@@ -134,16 +140,16 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
 
     it 'check if bookmarkings are destroyed when memorisings are created' do
       5.times do |n|
-        if has_text?(first_expression_items[0].explanation)
-          fill_in('解答を入力', with: first_expression_items[0].content)
-        elsif has_text?(first_expression_items[1].explanation)
-          fill_in('解答を入力', with: first_expression_items[1].content)
-        elsif has_text?(second_expression_items[0].explanation)
-          fill_in('解答を入力', with: second_expression_items[0].content)
-        elsif has_text?(second_expression_items[1].explanation)
-          fill_in('解答を入力', with: second_expression_items[1].content)
-        elsif has_text?(second_expression_items[2].explanation)
-          fill_in('解答を入力', with: second_expression_items[2].content)
+        if has_text?(first_expression_item.explanation)
+          fill_in('解答を入力', with: first_expression_item.content)
+        elsif has_text?(second_expression_item.explanation)
+          fill_in('解答を入力', with: second_expression_item.content)
+        elsif has_text?(third_expression_item.explanation)
+          fill_in('解答を入力', with: third_expression_item.content)
+        elsif has_text?(fourth_expression_item.explanation)
+          fill_in('解答を入力', with: fourth_expression_item.content)
+        elsif has_text?(fifth_expression_item.explanation)
+          fill_in('解答を入力', with: fifth_expression_item.content)
         end
         click_button 'クイズに解答する'
         n < 4 ? click_button('次へ') : click_button('クイズの結果を確認する')
@@ -160,11 +166,11 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
     let(:new_user) { FactoryBot.build(:user) }
     let!(:user) { FactoryBot.create(:user) }
     let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
-    let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note)) }
-    let!(:third_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
+    let!(:second_expression_items) { FactoryBot.create_list(:expression_item2, 3, expression: FactoryBot.create(:empty_note)) }
+    let!(:third_expression_items) { FactoryBot.create_list(:expression_item3, 2, expression: FactoryBot.create(:empty_note)) }
 
     before do
-      FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id))
+      FactoryBot.create_list(:expression_item4, 2, expression: FactoryBot.create(:empty_note, user_id: user.id))
 
       OmniAuth.config.test_mode = true
       OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
@@ -209,7 +215,7 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
 
     before do
       FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note))
-      FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note))
+      FactoryBot.create_list(:expression_item2, 3, expression: FactoryBot.create(:empty_note))
 
       OmniAuth.config.test_mode = true
       OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
