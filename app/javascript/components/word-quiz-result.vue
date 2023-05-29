@@ -318,7 +318,9 @@ export default {
     createListOfItems() {
       this.classifyUserAnswersByExpressionId()
       this.classifyExpressionGroupsByRightOrWrong()
-      this.convertExpressionIds(this.allCorrectExpressionIds, 'correct')
+      if (!this.isMemorisedList) {
+        this.convertExpressionIds(this.allCorrectExpressionIds, 'correct')
+      }
       if (!this.isBookmarkedList) {
         this.convertExpressionIds(this.wrongExpressionIds, 'wrong')
       }
@@ -393,7 +395,7 @@ export default {
           })
         }
       })
-      this.sortItems(this.listOfCorrectItems)
+      if (!this.isMemorisedList) this.sortItems(this.listOfCorrectItems)
       if (!this.isBookmarkedList) this.sortItems(this.listOfWrongItems)
     },
     sortItems(items) {
@@ -423,10 +425,12 @@ export default {
         this.listOfWrongItems
       )
     }
-    this.defaultCheckbox(
-      this.checkedContentsToMemorisedList,
-      this.listOfCorrectItems
-    )
+    if (!this.isMemorisedList) {
+      this.defaultCheckbox(
+        this.checkedContentsToMemorisedList,
+        this.listOfCorrectItems
+      )
+    }
     this.checkExistenceOfMovableExpressions()
   }
 }
