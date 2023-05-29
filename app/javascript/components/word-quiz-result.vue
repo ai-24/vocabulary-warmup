@@ -40,7 +40,11 @@
       </details>
     </div>
     <div
-      v-if="listOfCorrectItems.length > 0 && !isSavedMemorisedList"
+      v-if="
+        listOfCorrectItems.length > 0 &&
+        !isSavedMemorisedList &&
+        !isMemorisedList
+      "
       class="section-of-correct-answers pt-2.5">
       <input
         type="checkbox"
@@ -145,6 +149,7 @@ export default {
       failure: [],
       unauthorized: false,
       isBookmarkedList: this.isBookmarkedExpressionsPath(),
+      isMemorisedList: this.isMemorisedExpressionsPath(),
       movableExpressionExists: true
     }
   },
@@ -397,8 +402,14 @@ export default {
     isBookmarkedExpressionsPath() {
       return location.pathname === '/bookmarked_expressions/quiz'
     },
+    isMemorisedExpressionsPath() {
+      return location.pathname === '/memorised_expressions/quiz'
+    },
     checkExistenceOfMovableExpressions() {
-      if (this.isBookmarkedList && this.listOfCorrectItems.length === 0) {
+      if (
+        (this.isBookmarkedList && this.listOfCorrectItems.length === 0) ||
+        (this.isMemorisedList && this.listOfWrongItems.length === 0)
+      ) {
         this.movableExpressionExists = false
       }
     }

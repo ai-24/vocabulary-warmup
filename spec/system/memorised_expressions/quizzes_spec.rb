@@ -70,6 +70,57 @@ RSpec.describe 'MemorisedExpressions Quiz' do
         n < 4 ? click_button('次へ') : click_button('クイズの結果を確認する')
       end
     end
+
+    it 'check if a section of moving expressions to bookmark or memorised list is not on the result page when all answers were correct' do
+      5.times do |n|
+        if has_text?(first_expression_item.explanation)
+          fill_in('解答を入力', with: first_expression_item.content)
+        elsif has_text?(second_expression_item.explanation)
+          fill_in('解答を入力', with: second_expression_item.content)
+        elsif has_text?(third_expression_item.explanation)
+          fill_in('解答を入力', with: third_expression_item.content)
+        elsif has_text?(fourth_expression_item.explanation)
+          fill_in('解答を入力', with: fourth_expression_item.content)
+        elsif has_text?(fifth_expression_item.explanation)
+          fill_in('解答を入力', with: fifth_expression_item.content)
+        end
+        click_button 'クイズに解答する'
+        n < 4 ? click_button('次へ') : click_button('クイズの結果を確認する')
+      end
+      expect(page).not_to have_selector('.section-of-correct-answers')
+      expect(page).not_to have_selector('.section-of-wrong-answers')
+      expect(page).not_to have_button '保存する'
+    end
+
+    it 'check if a message that recommends next action is not on the result page when a section of moving expressions is not there' do
+      5.times do |n|
+        if has_text?(first_expression_item.explanation)
+          fill_in('解答を入力', with: first_expression_item.content)
+        elsif has_text?(second_expression_item.explanation)
+          fill_in('解答を入力', with: second_expression_item.content)
+        elsif has_text?(third_expression_item.explanation)
+          fill_in('解答を入力', with: third_expression_item.content)
+        elsif has_text?(fourth_expression_item.explanation)
+          fill_in('解答を入力', with: fourth_expression_item.content)
+        elsif has_text?(fifth_expression_item.explanation)
+          fill_in('解答を入力', with: fifth_expression_item.content)
+        end
+        click_button 'クイズに解答する'
+        n < 4 ? click_button('次へ') : click_button('クイズの結果を確認する')
+      end
+      expect(page).not_to have_content 'ブックマークや覚えたリストに英単語・フレーズを移動させた後は復習しましょう！'
+      expect(page).not_to have_content '重要: 一度この画面を離れると戻れません。今回の結果をブックマークや覚えたリストに移動させる場合は、下記ボタンをクリックする前に必ず行なってください。'
+    end
+
+    it 'check if a section of moving expressions to bookmarks list is on the result page when answers are wrong' do
+      5.times do |n|
+        click_button 'クイズに解答する'
+        n < 4 ? click_button('次へ') : click_button('クイズの結果を確認する')
+      end
+      expect(page).not_to have_selector('.section-of-correct-answers')
+      expect(page).to have_selector('.section-of-wrong-answers')
+      expect(page).to have_button '保存する'
+    end
   end
 
   context 'when new user starts quiz from memorised list' do
