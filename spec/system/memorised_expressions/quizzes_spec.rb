@@ -137,6 +137,35 @@ RSpec.describe 'MemorisedExpressions Quiz' do
       expect(page).to have_content 'ブックマークしました！'
       expect(page).not_to have_content '英単語・フレーズをブックマークしましたが覚えた語彙リストには保存できませんでした'
     end
+
+    it 'check if memorising is destroyed when bookmarking is created' do
+      5.times do |n|
+        if has_text?(first_expression_item.explanation)
+          fill_in('解答を入力', with: first_expression_item.content)
+        elsif has_text?(second_expression_item.explanation)
+          fill_in('解答を入力', with: second_expression_item.content)
+        end
+        click_button 'クイズに解答する'
+        n < 4 ? click_button('次へ') : click_button('クイズの結果を確認する')
+      end
+      expect(page).to have_selector('.section-of-wrong-answers')
+      expect do
+        click_button '保存する'
+        expect(page).to have_content 'ブックマークしました！'
+      end.to change(Bookmarking, :count).by(1).and change(Memorising, :count).by(-1)
+    end
+
+    it 'check if memorisings are destroyed when bookmarkings are created' do
+      5.times do |n|
+        click_button 'クイズに解答する'
+        n < 4 ? click_button('次へ') : click_button('クイズの結果を確認する')
+      end
+      expect(page).to have_selector('.section-of-wrong-answers')
+      expect do
+        click_button '保存する'
+        expect(page).to have_content 'ブックマークしました！'
+      end.to change(Bookmarking, :count).by(2).and change(Memorising, :count).by(-2)
+    end
   end
 
   context 'when new user starts quiz from memorised list' do
