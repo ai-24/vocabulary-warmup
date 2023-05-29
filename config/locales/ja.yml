@@ -15,6 +15,10 @@ ja:
     index:
       no_data: 覚えた語彙リストに登録している英単語またはフレーズはありません
       unauthorized: ログインしていないため閲覧できません
+      start_quiz: クイズに挑戦
+    quizzes:
+      show:
+        no_data: このリストのクイズに問題が存在しません
   users:
     confirm_deletion_of_account: "アカウントを削除しますか？\n \n重要:アカウントを削除すると、このアプリに登録した全てのデータは削除されます。"
     destroy:

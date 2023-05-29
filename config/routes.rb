@@ -13,6 +13,9 @@ Rails.application.routes.draw do
   namespace :bookmarked_expressions do
     resource :quiz, only: [:show]
   end
+  namespace :memorised_expressions do
+    resource :quiz, only: [:show]
+  end
   namespace :api do
     resources :expressions, only: [:index, :edit]
     resource :quiz, only: [:show]
@@ -21,6 +24,9 @@ Rails.application.routes.draw do
     post '/bookmarked_expressions', to: 'bookmarkings#create'
     post '/memorised_expressions', to: 'memorisings#create'
     namespace :bookmarked_expressions do
+      resource :quiz, only: [:show]
+    end
+    namespace :memorised_expressions do
       resource :quiz, only: [:show]
     end
   end

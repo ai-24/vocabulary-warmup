@@ -227,6 +227,7 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
 
     it 'check if the page is bookmarks list' do
       expect(new_user.bookmarkings.count).to eq 0
+      visit bookmarked_expressions_path
       expect(page).not_to have_link 'クイズに挑戦'
       visit bookmarked_expressions_quiz_path
       expect(page).to have_current_path bookmarked_expressions_path
