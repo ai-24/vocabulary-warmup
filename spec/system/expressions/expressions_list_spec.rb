@@ -74,12 +74,14 @@ RSpec.describe 'Expressions' do
     end
 
     it 'check the list order before the note has been edited' do
+      expect(page).to have_content 'ログインしました'
       expression_item = ExpressionItem.where('content = ?', 'balcony').last
 
       expect(first('li')).to have_link 'balcony and Veranda', href: expression_path(expression_item.expression)
     end
 
     it 'check if the data is at the same place after the note has been edited' do
+      expect(page).to have_content 'ログインしました'
       click_link 'balcony and Veranda'
       click_link '編集'
       3.times { click_button '次へ' }
@@ -178,12 +180,14 @@ RSpec.describe 'Expressions' do
     end
 
     it 'check list of expressions' do
+      expect(page).to have_content 'ログインしました'
       expect(all('li').count).to eq 1
       expect(page).to have_link "#{first_expression_item.content} and #{second_expression_item.content}",
                                 href: expression_path(ExpressionItem.where(content: first_expression_item.content).last.expression)
     end
 
     it 'check if list of expressions has no data after adding all expressions to memorised words list' do
+      expect(page).to have_content 'ログインしました'
       visit '/quiz'
       2.times do |n|
         if has_text?(first_expression_item.explanation)

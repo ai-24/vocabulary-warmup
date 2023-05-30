@@ -19,6 +19,7 @@ RSpec.describe 'Memorised expressions' do
       end
 
       it 'show a message that there are no data' do
+        expect(page).to have_content 'ログインしました'
         visit '/memorised_expressions'
         expect(page).to have_content user.name
         expect(all('li').count).to eq 0
@@ -92,6 +93,7 @@ RSpec.describe 'Memorised expressions' do
 
         visit '/'
         click_button 'Sign up/Log in with Google'
+        has_text? 'ログインしました'
 
         visit '/quiz'
 
@@ -105,6 +107,7 @@ RSpec.describe 'Memorised expressions' do
           n < 1 ? click_button('次へ') : click_button('クイズの結果を確認する')
         end
         click_button '保存する'
+        has_text? '英単語・フレーズを覚えた語彙リストに保存しました！'
 
         visit '/memorised_expressions'
       end
@@ -129,6 +132,7 @@ RSpec.describe 'Memorised expressions' do
 
       visit '/'
       click_button 'Sign up/Log in with Google'
+      has_text? 'ログインしました'
 
       visit '/quiz'
 
@@ -142,7 +146,9 @@ RSpec.describe 'Memorised expressions' do
         n < 1 ? click_button('次へ') : click_button('クイズの結果を確認する')
       end
       click_button '保存する'
+      has_text? '英単語・フレーズを覚えた語彙リストに保存しました！'
 
+      visit '/'
       find('label', text: user.name).click
       click_button 'Log out'
     end

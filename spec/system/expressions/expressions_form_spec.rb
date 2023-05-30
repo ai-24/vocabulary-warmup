@@ -140,6 +140,7 @@ RSpec.describe 'Expressions' do
 
         visit '/'
         click_button 'Sign up/Log in with Google'
+        has_text? 'ログインしました'
         visit '/expressions/new'
 
         fill_in('１つ目の英単語 / フレーズ', with: 'word1')
