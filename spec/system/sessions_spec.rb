@@ -14,14 +14,9 @@ RSpec.describe 'Sessions' do
     it 'check the function of login' do
       visit '/'
       click_button 'Sign up/Log in with Google'
+      expect(page).to have_content 'ログインしました'
       expect(page).to have_content user.name
       expect(page).not_to have_button 'Sign up/Log in with Google'
-    end
-
-    it 'show a message when login succeed' do
-      visit '/'
-      click_button 'Sign up/Log in with Google'
-      expect(page).to have_content 'ログインしました'
     end
 
     it 'check if current path is bookmarked_expressions after login' do
@@ -50,16 +45,19 @@ RSpec.describe 'Sessions' do
     end
 
     it 'the logout button is invisible before click user name' do
+      expect(page).to have_content 'ログインしました'
       expect(page).not_to have_button 'Log out'
     end
 
     it 'the logout button is visible after click user name' do
+      expect(page).to have_content 'ログインしました'
       find('label', text: user.name).click
       expect(page).not_to have_css('div.invisible', visible: :hidden)
       expect(page).to have_button 'Log out'
     end
 
     it 'check the function of logout' do
+      expect(page).to have_content 'ログインしました'
       find('label', text: user.name).click
       click_button 'Log out'
       expect(page).to have_button 'Sign up/Log in with Google'
@@ -67,6 +65,7 @@ RSpec.describe 'Sessions' do
     end
 
     it 'show a message when logout succeed' do
+      expect(page).to have_content 'ログインしました'
       find('label', text: user.name).click
       click_button 'Log out'
       expect(page).to have_content 'ログアウトしました'

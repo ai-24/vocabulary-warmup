@@ -40,7 +40,11 @@
       </details>
     </div>
     <div
-      v-if="listOfCorrectItems.length > 0 && !isSavedMemorisedList"
+      v-if="
+        listOfCorrectItems.length > 0 &&
+        !isSavedMemorisedList &&
+        !isMemorisedList
+      "
       class="section-of-correct-answers pt-2.5">
       <input
         type="checkbox"
@@ -145,6 +149,7 @@ export default {
       failure: [],
       unauthorized: false,
       isBookmarkedList: this.isBookmarkedExpressionsPath(),
+      isMemorisedList: this.isMemorisedExpressionsPath(),
       movableExpressionExists: true
     }
   },
@@ -313,7 +318,9 @@ export default {
     createListOfItems() {
       this.classifyUserAnswersByExpressionId()
       this.classifyExpressionGroupsByRightOrWrong()
-      this.convertExpressionIds(this.allCorrectExpressionIds, 'correct')
+      if (!this.isMemorisedList) {
+        this.convertExpressionIds(this.allCorrectExpressionIds, 'correct')
+      }
       if (!this.isBookmarkedList) {
         this.convertExpressionIds(this.wrongExpressionIds, 'wrong')
       }
@@ -388,7 +395,7 @@ export default {
           })
         }
       })
-      this.sortItems(this.listOfCorrectItems)
+      if (!this.isMemorisedList) this.sortItems(this.listOfCorrectItems)
       if (!this.isBookmarkedList) this.sortItems(this.listOfWrongItems)
     },
     sortItems(items) {
@@ -397,8 +404,14 @@ export default {
     isBookmarkedExpressionsPath() {
       return location.pathname === '/bookmarked_expressions/quiz'
     },
+    isMemorisedExpressionsPath() {
+      return location.pathname === '/memorised_expressions/quiz'
+    },
     checkExistenceOfMovableExpressions() {
-      if (this.isBookmarkedList && this.listOfCorrectItems.length === 0) {
+      if (
+        (this.isBookmarkedList && this.listOfCorrectItems.length === 0) ||
+        (this.isMemorisedList && this.listOfWrongItems.length === 0)
+      ) {
         this.movableExpressionExists = false
       }
     }
@@ -412,10 +425,12 @@ export default {
         this.listOfWrongItems
       )
     }
-    this.defaultCheckbox(
-      this.checkedContentsToMemorisedList,
-      this.listOfCorrectItems
-    )
+    if (!this.isMemorisedList) {
+      this.defaultCheckbox(
+        this.checkedContentsToMemorisedList,
+        this.listOfCorrectItems
+      )
+    }
     this.checkExistenceOfMovableExpressions()
   }
 }

@@ -20,6 +20,7 @@ RSpec.describe 'Expressions' do
 
       visit '/'
       click_button 'Sign up/Log in with Google'
+      expect(page).to have_content 'ログインしました'
       visit "/expressions/#{first_expression_items[0].expression.id}"
       expect(page).to have_current_path root_path
       expect(page).to have_content '権限がないため閲覧できません'
@@ -32,6 +33,7 @@ RSpec.describe 'Expressions' do
 
       visit '/'
       click_button 'Sign up/Log in with Google'
+      expect(page).to have_content 'ログインしました'
       expect(Expression.where('user_id = ?', user1.id).count).to eq 0
       visit '/expressions/1'
       expect(page).not_to have_button '削除'
@@ -49,6 +51,7 @@ RSpec.describe 'Expressions' do
 
       visit '/'
       click_button 'Sign up/Log in with Google'
+      has_text? 'ログインしました'
 
       click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
     end
@@ -101,6 +104,7 @@ RSpec.describe 'Expressions' do
 
       visit '/'
       click_button 'Sign up/Log in with Google'
+      has_text? 'ログインしました'
 
       visit "/expressions/#{second_expression_items[0].expression.id}"
     end
@@ -127,6 +131,7 @@ RSpec.describe 'Expressions' do
 
       visit '/'
       click_button 'Sign up/Log in with Google'
+      expect(page).to have_content 'ログインしました'
       click_link 'balcony and Veranda'
       accept_confirm do
         click_button '削除'

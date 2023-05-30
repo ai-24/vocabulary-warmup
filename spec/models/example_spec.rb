@@ -7,8 +7,8 @@ RSpec.describe Example, type: :model do
     let!(:user) { FactoryBot.create(:user) }
     let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
     let!(:example1) { FactoryBot.create(:example, expression_item: first_expression_items[0]) }
-    let!(:example2) { FactoryBot.create(:example, expression_item: first_expression_items[0]) }
-    let!(:example3) { FactoryBot.create(:example, expression_item: first_expression_items[0]) }
+    let!(:example2) { FactoryBot.create(:example, content: Faker::Quote.yoda, expression_item: first_expression_items[0]) }
+    let!(:example3) { FactoryBot.create(:example, content: Faker::Quote.robin, expression_item: first_expression_items[0]) }
 
     it 'check if examples are copied' do
       new_expression = Expression.new

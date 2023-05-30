@@ -21,6 +21,7 @@ RSpec.describe 'Users' do
       end
 
       it 'check the function of deleting user account' do
+        expect(page).to have_content 'ログインしました'
         find('label', text: user.name).click
         click_button 'Delete account'
         expect do
@@ -56,6 +57,7 @@ RSpec.describe 'Users' do
       end
 
       it 'check if user is deleted' do
+        expect(page).to have_content 'ログインしました'
         find('label', text: user.name).click
         click_button 'Delete account'
         expect do
@@ -99,6 +101,7 @@ RSpec.describe 'Users' do
       end
 
       it 'check if user is deleted' do
+        expect(page).to have_content 'ログインしました'
         find('label', text: user.name).click
         click_button 'Delete account'
         expect do
@@ -152,6 +155,7 @@ RSpec.describe 'Users' do
       end
 
       it 'check if user is deleted' do
+        expect(page).to have_content 'ログインしました'
         find('label', text: user.name).click
         click_button 'Delete account'
         expect do

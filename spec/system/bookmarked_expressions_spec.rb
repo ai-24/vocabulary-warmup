@@ -19,6 +19,7 @@ RSpec.describe 'Bookmarked expressions' do
 
     context 'when there are no bookmarks' do
       it 'show a message that there are no bookmarks' do
+        expect(page).to have_content 'ログインしました'
         visit '/bookmarked_expressions'
         expect(page).to have_content user.name
         expect(all('li').count).to eq 0
@@ -28,6 +29,7 @@ RSpec.describe 'Bookmarked expressions' do
 
     context 'when there are bookmarks' do
       before do
+        has_text? 'ログインしました'
         visit '/quiz'
 
         9.times do |n|
@@ -39,6 +41,7 @@ RSpec.describe 'Bookmarked expressions' do
         find('summary', text: 'ブックマークする英単語・フレーズ').click
         find('label', text: 'balcony and Veranda').click
         click_button '保存する'
+        has_text? 'ブックマークしました！'
 
         visit '/bookmarked_expressions'
       end
@@ -66,6 +69,7 @@ RSpec.describe 'Bookmarked expressions' do
 
     context 'when bookmarks were made by two different times' do
       before do
+        has_text? 'ログインしました'
         visit '/quiz'
 
         9.times do |n|
@@ -113,6 +117,7 @@ RSpec.describe 'Bookmarked expressions' do
 
       visit '/'
       click_button 'Sign up/Log in with Google'
+      has_text? 'ログインしました'
 
       visit '/quiz'
 

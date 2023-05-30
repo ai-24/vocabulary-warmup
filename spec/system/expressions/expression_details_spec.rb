@@ -218,6 +218,7 @@ RSpec.describe 'Expressions' do
       end
 
       it 'check next button' do
+        expect(page).to have_content 'ログインしました'
         visit '/bookmarked_expressions'
         click_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}"
 
@@ -232,6 +233,7 @@ RSpec.describe 'Expressions' do
       end
 
       it 'check back button' do
+        expect(page).to have_content 'ログインしました'
         visit '/bookmarked_expressions'
         click_link "#{third_expression_items[0].content} and #{third_expression_items[1].content}"
 
@@ -245,6 +247,7 @@ RSpec.describe 'Expressions' do
       end
 
       it 'check if there is no next button when the expression is the last one' do
+        expect(page).to have_content 'ログインしました'
         visit '/bookmarked_expressions'
         click_link "#{third_expression_items[0].content} and #{third_expression_items[1].content}"
 
@@ -254,6 +257,7 @@ RSpec.describe 'Expressions' do
       end
 
       it 'check if there is no back button if the expression is the first one' do
+        expect(page).to have_content 'ログインしました'
         visit '/bookmarked_expressions'
         click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
 
@@ -263,6 +267,7 @@ RSpec.describe 'Expressions' do
       end
 
       it 'check if there is no back and next button when expression is one in a list' do
+        expect(page).to have_content 'ログインしました'
         first_expression_items[0].expression.destroy
         third_expression_items[0].expression.destroy
         expect(User.find(user.id).bookmarkings.count).to eq 1
@@ -296,6 +301,7 @@ RSpec.describe 'Expressions' do
       end
 
       it 'check next button' do
+        expect(page).to have_content 'ログインしました'
         visit '/memorised_expressions'
         click_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}"
 
@@ -310,6 +316,7 @@ RSpec.describe 'Expressions' do
       end
 
       it 'check back button' do
+        expect(page).to have_content 'ログインしました'
         visit '/memorised_expressions'
         click_link "#{third_expression_items[0].content} and #{third_expression_items[1].content}"
 
@@ -323,6 +330,7 @@ RSpec.describe 'Expressions' do
       end
 
       it 'check if there is no next button when the expression is the last one' do
+        expect(page).to have_content 'ログインしました'
         visit '/memorised_expressions'
         click_link "#{third_expression_items[0].content} and #{third_expression_items[1].content}"
 
@@ -332,6 +340,7 @@ RSpec.describe 'Expressions' do
       end
 
       it 'check if there is no back button if the expression is the first one' do
+        expect(page).to have_content 'ログインしました'
         visit '/memorised_expressions'
         click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
 
@@ -341,6 +350,7 @@ RSpec.describe 'Expressions' do
       end
 
       it 'check if there is no back and next button when expression is one in a list' do
+        expect(page).to have_content 'ログインしました'
         first_expression_items[0].expression.destroy
         third_expression_items[0].expression.destroy
         expect(User.find(user.id).memorisings.count).to eq 1
@@ -368,6 +378,7 @@ RSpec.describe 'Expressions' do
 
       visit '/'
       click_button 'Sign up/Log in with Google'
+      expect(page).to have_content 'ログインしました'
 
       visit "/expressions/#{first_expression_items[0].expression.id}"
       expect(page).to have_current_path root_path
@@ -387,6 +398,7 @@ RSpec.describe 'Expressions' do
 
       visit '/'
       click_button 'Sign up/Log in with Google'
+      expect(page).to have_content 'ログインしました'
       visit "/expressions/#{first_expression_items[0].expression.id}"
 
       within '.title' do
