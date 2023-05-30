@@ -179,14 +179,12 @@ export default {
         this.toast.success(`ブックマークしました！${warning}`)
       } else if (this.success[0] === 'memorised_expressions') {
         this.toast.success(
-          `英単語・フレーズを覚えた語彙リストに保存しました！${warning}`
+          `覚えた英単語・フレーズのリストに保存しました！${warning}`
         )
       } else if (this.failure[0] === 'bookmarked_expressions') {
         this.toast.error('ブックマークできませんでした')
       } else if (this.failure[0] === 'memorised_expressions') {
-        this.toast.error(
-          '覚えた語彙リストに英単語・フレーズを保存できませんでした'
-        )
+        this.toast.error('覚えた英単語・フレーズのリストに保存できませんでした')
       }
     },
     checkResponse(response) {
@@ -235,12 +233,12 @@ export default {
           const warning = this.createWarning()
           if (this.failure.length === 2) {
             this.toast.error(
-              'ブックマーク・覚えた語彙リストに英単語・フレーズを保存できませんでした'
+              'ブックマーク・覚えた英単語・フレーズのリストに保存できませんでした'
             )
           } else if (this.success.length === 2) {
             this.isSaved = true
             this.toast.success(
-              `ブックマーク・覚えた語彙リストに英単語・フレーズを保存しました！${warning}`
+              `ブックマーク・覚えた英単語・フレーズのリストに保存しました！${warning}`
             )
           } else if (
             this.failure[0] === 'bookmarked_expressions' &&
@@ -249,7 +247,7 @@ export default {
             this.isSavedMemorisedList = true
             this.checkedContentsToMemorisedList = []
             this.toast.warning(
-              `覚えた語彙リストに英単語・フレーズを保存しました${warning}がブックマークは出来ませんでした`
+              `覚えた英単語・フレーズのリストに保存しました${warning}がブックマークは出来ませんでした`
             )
           } else if (
             this.failure[0] === 'memorised_expressions' &&
@@ -258,7 +256,7 @@ export default {
             this.isSavedBookmark = true
             this.checkedContentsToBookmark = []
             this.toast.warning(
-              `英単語・フレーズをブックマークしました${warning}が覚えた語彙リストには保存できませんでした`
+              `英単語・フレーズをブックマークしました${warning}が覚えた英単語・フレーズのリストには保存できませんでした`
             )
           }
           this.resetCheckResponse()

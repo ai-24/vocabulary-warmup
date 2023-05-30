@@ -639,7 +639,7 @@ RSpec.describe 'Quiz' do
         expect do
           click_button '保存する'
           expect(page).not_to have_selector 'div.move-to-bookmark-or-memorised-list'
-          expect(page).to have_content '英単語・フレーズを覚えた語彙リストに保存しました！'
+          expect(page).to have_content '覚えた英単語・フレーズのリストに保存しました！'
         end.to change(Memorising, :count).by(2)
       end
 
@@ -651,7 +651,7 @@ RSpec.describe 'Quiz' do
         expect do
           click_button '保存する'
           expect(page).not_to have_selector 'div.move-to-bookmark-or-memorised-list'
-          expect(page).to have_content '英単語・フレーズを覚えた語彙リストに保存しました！'
+          expect(page).to have_content '覚えた英単語・フレーズのリストに保存しました！'
         end.to change(Memorising, :count).by(1)
       end
 
@@ -663,7 +663,7 @@ RSpec.describe 'Quiz' do
         expect do
           click_button '保存する'
           expect(page).not_to have_selector 'div.move-to-bookmark-or-memorised-list'
-          expect(page).to have_content "英単語・フレーズを覚えた語彙リストに保存しました！\n(存在が確認できなかった英単語・フレーズを除く)"
+          expect(page).to have_content "覚えた英単語・フレーズのリストに保存しました！\n(存在が確認できなかった英単語・フレーズを除く)"
         end.to change(Memorising, :count).by(1)
       end
 
@@ -675,7 +675,7 @@ RSpec.describe 'Quiz' do
         expect do
           click_button '保存する'
           expect(page).to have_selector 'div.move-to-bookmark-or-memorised-list'
-          expect(page).to have_content '覚えた語彙リストに英単語・フレーズを保存できませんでした'
+          expect(page).to have_content '覚えた英単語・フレーズのリストに保存できませんでした'
         end.to change(Memorising, :count).by(0)
       end
 
@@ -685,14 +685,14 @@ RSpec.describe 'Quiz' do
         find('label', text: 'balcony and Veranda').click
         expect(page).to have_unchecked_field 'balcony and Veranda'
         click_button '保存する'
-        expect(page).to have_content '覚えた語彙リストに英単語・フレーズを保存できませんでした'
+        expect(page).to have_content '覚えた英単語・フレーズのリストに保存できませんでした'
 
         find('label', text: 'balcony and Veranda').click
         expect(page).to have_checked_field 'balcony and Veranda'
         expect do
           click_button '保存する'
           expect(page).not_to have_selector 'div.move-to-bookmark-or-memorised-list'
-          expect(page).to have_content "英単語・フレーズを覚えた語彙リストに保存しました！\n(存在が確認できなかった英単語・フレーズを除く)"
+          expect(page).to have_content "覚えた英単語・フレーズのリストに保存しました！\n(存在が確認できなかった英単語・フレーズを除く)"
         end.to change(Memorising, :count).by(1)
       end
 
@@ -700,7 +700,7 @@ RSpec.describe 'Quiz' do
         find('summary', text: '覚えたリストに移動する英単語・フレーズ').click
         find('label', text: 'balcony and Veranda').click
         click_button '保存する'
-        expect(page).to have_content '英単語・フレーズを覚えた語彙リストに保存しました！'
+        expect(page).to have_content '覚えた英単語・フレーズのリストに保存しました！'
         click_button 'クイズに再挑戦'
 
         2.times do |n|
@@ -747,7 +747,7 @@ RSpec.describe 'Quiz' do
         expect do
           click_button '保存する'
           expect(page).not_to have_selector 'div.move-to-bookmark-or-memorised-list'
-          expect(page).to have_content 'ブックマーク・覚えた語彙リストに英単語・フレーズを保存しました！'
+          expect(page).to have_content 'ブックマーク・覚えた英単語・フレーズのリストに保存しました！'
         end.to change(Memorising, :count).by(1).and change(Bookmarking, :count).by(1)
       end
 
@@ -758,7 +758,7 @@ RSpec.describe 'Quiz' do
         expect do
           click_button '保存する'
           expect(page).to have_selector 'div.move-to-bookmark-or-memorised-list'
-          expect(page).to have_content '英単語・フレーズをブックマークしましたが覚えた語彙リストには保存できませんでした'
+          expect(page).to have_content '英単語・フレーズをブックマークしましたが覚えた英単語・フレーズのリストには保存できませんでした'
           expect(page).not_to have_selector 'div.section-of-wrong-answers'
         end.to change(Memorising, :count).by(0).and change(Bookmarking, :count).by(1)
       end
@@ -770,7 +770,7 @@ RSpec.describe 'Quiz' do
         expect do
           click_button '保存する'
           expect(page).to have_selector 'div.move-to-bookmark-or-memorised-list'
-          expect(page).to have_content '覚えた語彙リストに英単語・フレーズを保存しましたがブックマークは出来ませんでした'
+          expect(page).to have_content '覚えた英単語・フレーズのリストに保存しましたがブックマークは出来ませんでした'
           expect(page).not_to have_selector 'div.section-of-correct-answers'
         end.to change(Memorising, :count).by(1).and change(Bookmarking, :count).by(0)
       end
@@ -784,7 +784,7 @@ RSpec.describe 'Quiz' do
         expect do
           click_button '保存する'
           expect(page).to have_selector 'div.move-to-bookmark-or-memorised-list'
-          expect(page).to have_content 'ブックマーク・覚えた語彙リストに英単語・フレーズを保存できませんでした'
+          expect(page).to have_content 'ブックマーク・覚えた英単語・フレーズのリストに保存できませんでした'
         end.to change(Memorising, :count).by(0).and change(Bookmarking, :count).by(0)
       end
     end
@@ -838,7 +838,7 @@ RSpec.describe 'Quiz' do
         expect do
           click_button '保存する'
           expect(page).not_to have_selector 'div.move-to-bookmark-or-memorised-list'
-          expect(page).to have_content "ブックマーク・覚えた語彙リストに英単語・フレーズを保存しました！\n(存在が確認できなかった英単語・フレーズを除く)"
+          expect(page).to have_content "ブックマーク・覚えた英単語・フレーズのリストに保存しました！\n(存在が確認できなかった英単語・フレーズを除く)"
         end.to change(Memorising, :count).by(2).and change(Bookmarking, :count).by(1)
       end
 
@@ -849,7 +849,7 @@ RSpec.describe 'Quiz' do
         expect do
           click_button '保存する'
           expect(page).not_to have_selector 'div.move-to-bookmark-or-memorised-list'
-          expect(page).to have_content "ブックマーク・覚えた語彙リストに英単語・フレーズを保存しました！\n(存在が確認できなかった英単語・フレーズを除く)"
+          expect(page).to have_content "ブックマーク・覚えた英単語・フレーズのリストに保存しました！\n(存在が確認できなかった英単語・フレーズを除く)"
         end.to change(Memorising, :count).by(1).and change(Bookmarking, :count).by(2)
       end
     end
@@ -893,7 +893,7 @@ RSpec.describe 'Quiz' do
         find('summary', text: 'ブックマークする英単語・フレーズ').click
         find('label', text: "#{second_expression_items[0].content} and #{second_expression_items[1].content}").click
         click_button '保存する'
-        has_text? 'ブックマーク・覚えた語彙リストに英単語・フレーズを保存しました！'
+        has_text? 'ブックマーク・覚えた英単語・フレーズのリストに保存しました！'
         click_button 'クイズに再挑戦'
 
         4.times do |n|
@@ -935,8 +935,8 @@ RSpec.describe 'Quiz' do
         expect do
           click_button '保存する'
           expect(page).to have_selector 'div.move-to-bookmark-or-memorised-list'
-          expect(page).not_to have_content 'ブックマーク・覚えた語彙リストに英単語・フレーズを保存できませんでした'
-          expect(page).to have_content "ログインしていないためブックマークまたは覚えた語彙リストに英単語・フレーズを保存できません。\n保存するにはサインアップ / ログインしてください。"
+          expect(page).not_to have_content 'ブックマーク・覚えた英単語・フレーズのリストに保存できませんでした'
+          expect(page).to have_content "ログインしていないためブックマークまたは覚えた英単語・フレーズのリストに保存できません。\n保存するにはサインアップ / ログインしてください。"
         end.to change(Memorising, :count).by(0).and change(Bookmarking, :count).by(0)
       end
     end
@@ -960,8 +960,8 @@ RSpec.describe 'Quiz' do
         expect do
           click_button '保存する'
           expect(page).to have_selector 'div.move-to-bookmark-or-memorised-list'
-          expect(page).not_to have_content 'ブックマーク・覚えた語彙リストに英単語・フレーズを保存できませんでした'
-          expect(page).to have_content "ログインしていないためブックマークまたは覚えた語彙リストに英単語・フレーズを保存できません。\n保存するにはサインアップ / ログインしてください。"
+          expect(page).not_to have_content 'ブックマーク・覚えた英単語・フレーズのリストに保存できませんでした'
+          expect(page).to have_content "ログインしていないためブックマークまたは覚えた英単語・フレーズのリストに保存できません。\n保存するにはサインアップ / ログインしてください。"
         end.to change(Bookmarking, :count).by(0)
       end
     end
@@ -995,8 +995,8 @@ RSpec.describe 'Quiz' do
         expect do
           click_button '保存する'
           expect(page).to have_selector 'div.move-to-bookmark-or-memorised-list'
-          expect(page).not_to have_content 'ブックマーク・覚えた語彙リストに英単語・フレーズを保存できませんでした'
-          expect(page).to have_content "ログインしていないためブックマークまたは覚えた語彙リストに英単語・フレーズを保存できません。\n保存するにはサインアップ / ログインしてください。"
+          expect(page).not_to have_content 'ブックマーク・覚えた英単語・フレーズのリストに保存できませんでした'
+          expect(page).to have_content "ログインしていないためブックマークまたは覚えた英単語・フレーズのリストに保存できません。\n保存するにはサインアップ / ログインしてください。"
         end.to change(Memorising, :count).by(0)
       end
     end

@@ -78,7 +78,7 @@ RSpec.describe 'Memorised expressions' do
         visit '/memorised_expressions'
 
         expect(all('li.expression').count).to eq 12
-        expect(page).not_to have_content '覚えた語彙リストに登録している英単語またはフレーズはありません'
+        expect(page).not_to have_content 'このリストに登録している英単語またはフレーズはありません'
         expect(page).not_to have_content 'ログインしていないため閲覧できません'
       end
 
@@ -145,7 +145,7 @@ RSpec.describe 'Memorised expressions' do
           n < 1 ? click_button('次へ') : click_button('クイズの結果を確認する')
         end
         click_button '保存する'
-        has_text? '英単語・フレーズを覚えた語彙リストに保存しました！'
+        has_text? '覚えた英単語・フレーズのリストに保存しました！'
 
         visit '/memorised_expressions'
       end
@@ -186,7 +186,7 @@ RSpec.describe 'Memorised expressions' do
         n < 1 ? click_button('次へ') : click_button('クイズの結果を確認する')
       end
       click_button '保存する'
-      has_text? '英単語・フレーズを覚えた語彙リストに保存しました！'
+      has_text? '覚えた英単語・フレーズのリストに保存しました！'
 
       visit '/'
       find('label', text: user.name).click
