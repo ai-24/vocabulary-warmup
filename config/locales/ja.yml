@@ -13,7 +13,7 @@ ja:
         no_data: このリストのクイズに問題が存在しません
   memorised_expressions:
     index:
-      no_data: 覚えた語彙リストに登録している英単語またはフレーズはありません
+      no_data: このリストに登録している英単語またはフレーズはありません
       unauthorized: ログインしていないため閲覧できません
       start_quiz: クイズに挑戦
     quizzes:
@@ -56,3 +56,6 @@ ja:
       no_data: このリストのクイズに問題が存在しません
   no_authority: 権限がありません
   not_logged_in: ログインが必要です
+  words_and_phrases: 英単語・フレーズ
+  bookmark: ブックマーク
+  memorised_list: 覚えた英単語・フレーズ

@@ -57,8 +57,8 @@ RSpec.describe 'Expressions' do
 
       visit '/expressions/1'
       click_link '英単語・フレーズ一覧に戻る'
-      expect(all('li').count).to eq 21
-      expect(first('li')).to have_link 'balcony and Veranda', href: expression_path(1)
+      expect(all('li.expression').count).to eq 21
+      expect(first('li.expression')).to have_link 'balcony and Veranda', href: expression_path(1)
     end
   end
 

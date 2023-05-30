@@ -19,7 +19,7 @@ RSpec.describe 'Expressions' do
     end
 
     it 'show a list of expressions' do
-      expect(all('li').count).to eq 21
+      expect(all('li.expression').count).to eq 21
     end
 
     it 'check the title and the link that is for two expression items' do
@@ -49,6 +49,23 @@ RSpec.describe 'Expressions' do
 
       expect(page).to have_link title, href: expression_path(five_expression_items[0].expression)
     end
+
+    it 'check tabs' do
+      within '.page_tabs' do
+        expect(page).to have_link '英単語・フレーズ', href: root_path
+        expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
+        expect(page).to have_link '覚えた英単語・フレーズ', href: memorised_expressions_path
+        click_link 'ブックマーク'
+      end
+      expect(page).to have_current_path bookmarked_expressions_path
+      expect(page).to have_content 'ログインしていないため閲覧できません'
+      within '.page_tabs' do
+        click_link '英単語・フレーズ'
+        click_link '覚えた英単語・フレーズ'
+      end
+      expect(page).to have_current_path memorised_expressions_path
+      expect(page).to have_content 'ログインしていないため閲覧できません'
+    end
   end
 
   context 'when new user logged in' do
@@ -70,14 +87,14 @@ RSpec.describe 'Expressions' do
     it 'show a list of expressions' do
       expect(page).to have_content 'ログインしました'
 
-      expect(all('li').count).to eq 21
+      expect(all('li.expression').count).to eq 21
     end
 
     it 'check the list order before the note has been edited' do
       expect(page).to have_content 'ログインしました'
       expression_item = ExpressionItem.where('content = ?', 'balcony').last
 
-      expect(first('li')).to have_link 'balcony and Veranda', href: expression_path(expression_item.expression)
+      expect(first('li.expression')).to have_link 'balcony and Veranda', href: expression_path(expression_item.expression)
     end
 
     it 'check if the data is at the same place after the note has been edited' do
@@ -91,7 +108,25 @@ RSpec.describe 'Expressions' do
       visit '/'
       expression_item = ExpressionItem.where('content = ?', 'balcony').last
 
-      expect(first('li')).to have_link 'balcony and Veranda', href: expression_path(expression_item.expression)
+      expect(first('li.expression')).to have_link 'balcony and Veranda', href: expression_path(expression_item.expression)
+    end
+
+    it 'check tabs' do
+      expect(page).to have_content 'ログインしました'
+      within '.page_tabs' do
+        expect(page).to have_link '英単語・フレーズ', href: root_path
+        expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
+        expect(page).to have_link '覚えた英単語・フレーズ', href: memorised_expressions_path
+        click_link 'ブックマーク'
+      end
+      expect(page).to have_current_path bookmarked_expressions_path
+      expect(page).to have_content 'ブックマークしている英単語またはフレーズはありません'
+      within '.page_tabs' do
+        click_link '英単語・フレーズ'
+        click_link '覚えた英単語・フレーズ'
+      end
+      expect(page).to have_current_path memorised_expressions_path
+      expect(page).to have_content 'このリストに登録している英単語またはフレーズはありません'
     end
   end
 
@@ -126,17 +161,19 @@ RSpec.describe 'Expressions' do
       expect(page).to have_content 'ブックマークしました！'
 
       visit '/'
-      expect(all('li').count).to eq 3
+      expect(all('li.expression').count).to eq 3
 
-      expect(first('li')).to have_link "#{three_expression_items[0].content}, #{three_expression_items[1].content} and #{three_expression_items[2].content}"
+      expect(first('li.expression')).to have_link(
+        "#{three_expression_items[0].content}, #{three_expression_items[1].content} and #{three_expression_items[2].content}"
+      )
 
-      expect(all('li')[1]).to have_link(
+      expect(all('li.expression')[1]).to have_link(
         "#{four_expression_items[0].content}, #{four_expression_items[1].content}, #{four_expression_items[2].content} and #{four_expression_items[3].content}"
       )
 
       item0 = five_expression_items[0]
       item1 = five_expression_items[1]
-      expect(all('li')[2]).to have_link(
+      expect(all('li.expression')[2]).to have_link(
         "#{item0.content}, #{item1.content}, #{five_expression_items[2].content}, #{five_expression_items[3].content} and #{five_expression_items[4].content}"
       )
     end
@@ -155,7 +192,7 @@ RSpec.describe 'Expressions' do
       expect(page).to have_content 'ブックマークしました！'
 
       visit '/'
-      expect(all('li').count).to eq 0
+      expect(all('li.expression').count).to eq 0
       expect(page).to have_content 'このリストに登録されている英単語またはフレーズはありません'
     end
   end
@@ -181,7 +218,7 @@ RSpec.describe 'Expressions' do
 
     it 'check list of expressions' do
       expect(page).to have_content 'ログインしました'
-      expect(all('li').count).to eq 1
+      expect(all('li.expression').count).to eq 1
       expect(page).to have_link "#{first_expression_item.content} and #{second_expression_item.content}",
                                 href: expression_path(ExpressionItem.where(content: first_expression_item.content).last.expression)
     end
@@ -201,7 +238,7 @@ RSpec.describe 'Expressions' do
       click_button '保存する'
 
       visit '/'
-      expect(all('li').count).to eq 0
+      expect(all('li.expression').count).to eq 0
       expect(page).to have_content 'このリストに登録されている英単語またはフレーズはありません'
     end
   end

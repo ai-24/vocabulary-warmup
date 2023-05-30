@@ -22,8 +22,26 @@ RSpec.describe 'Memorised expressions' do
         expect(page).to have_content 'ログインしました'
         visit '/memorised_expressions'
         expect(page).to have_content user.name
-        expect(all('li').count).to eq 0
-        expect(page).to have_content '覚えた語彙リストに登録している英単語またはフレーズはありません'
+        expect(all('li.expression').count).to eq 0
+        expect(page).to have_content 'このリストに登録している英単語またはフレーズはありません'
+      end
+
+      it 'check tabs' do
+        expect(page).to have_content 'ログインしました'
+        visit '/memorised_expressions'
+        within '.page_tabs' do
+          expect(page).to have_link '英単語・フレーズ', href: root_path
+          expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
+          expect(page).to have_link '覚えた英単語・フレーズ', href: memorised_expressions_path
+          click_link 'ブックマーク'
+        end
+        expect(page).to have_current_path bookmarked_expressions_path
+        expect(page).to have_content 'ブックマークしている英単語またはフレーズはありません'
+        within '.page_tabs' do
+          click_link '覚えた英単語・フレーズ'
+          click_link '英単語・フレーズ'
+        end
+        expect(all('li.expression').count).to eq 3
       end
     end
 
@@ -59,7 +77,7 @@ RSpec.describe 'Memorised expressions' do
         expect(page).to have_content 'ログインしました'
         visit '/memorised_expressions'
 
-        expect(all('li').count).to eq 12
+        expect(all('li.expression').count).to eq 12
         expect(page).not_to have_content '覚えた語彙リストに登録している英単語またはフレーズはありません'
         expect(page).not_to have_content 'ログインしていないため閲覧できません'
       end
@@ -68,10 +86,30 @@ RSpec.describe 'Memorised expressions' do
         expect(page).to have_content 'ログインしました'
         visit '/memorised_expressions'
 
-        expect(first('li')).to have_link "#{first_expression_items[0].content}, #{first_expression_items[1].content} and #{first_expression_items[2].content}",
-                                         href: expression_path(first_expression_items[0].expression)
-        expect(all('li')[1]).to have_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}",
-                                          href: expression_path(second_expression_items[0].expression)
+        expect(first('li.expression')).to have_link(
+          "#{first_expression_items[0].content}, #{first_expression_items[1].content} and #{first_expression_items[2].content}",
+          href: expression_path(first_expression_items[0].expression)
+        )
+        expect(all('li.expression')[1]).to have_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}",
+                                                     href: expression_path(second_expression_items[0].expression)
+      end
+
+      it 'check tabs' do
+        expect(page).to have_content 'ログインしました'
+        visit '/memorised_expressions'
+        within '.page_tabs' do
+          expect(page).to have_link '英単語・フレーズ', href: root_path
+          expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
+          expect(page).to have_link '覚えた英単語・フレーズ', href: memorised_expressions_path
+          click_link 'ブックマーク'
+        end
+        expect(page).to have_current_path bookmarked_expressions_path
+        expect(page).to have_content 'ブックマークしている英単語またはフレーズはありません'
+        within '.page_tabs' do
+          click_link '覚えた英単語・フレーズ'
+          click_link '英単語・フレーズ'
+        end
+        expect(page).to have_content 'このリストに登録されている英単語またはフレーズはありません'
       end
     end
 
@@ -113,12 +151,14 @@ RSpec.describe 'Memorised expressions' do
       end
 
       it 'check order' do
-        expect(first('li')).to have_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}",
-                                         href: expression_path(ExpressionItem.where(content: second_expression_items[0].content).last.expression)
-        expect(all('li')[1]).to have_link "#{third_expression_items[0].content}, #{third_expression_items[1].content} and #{third_expression_items[2].content}",
-                                          href: expression_path(ExpressionItem.where(content: third_expression_items[0].content).last.expression)
-        expect(all('li').last).to have_link "#{first_expression_item.content} and #{second_expression_item.content}",
-                                            href: expression_path(ExpressionItem.where(content: first_expression_item.content).last.expression)
+        expect(first('li.expression')).to have_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}",
+                                                    href: expression_path(ExpressionItem.where(content: second_expression_items[0].content).last.expression)
+        expect(all('li.expression')[1]).to have_link(
+          "#{third_expression_items[0].content}, #{third_expression_items[1].content} and #{third_expression_items[2].content}",
+          href: expression_path(ExpressionItem.where(content: third_expression_items[0].content).last.expression)
+        )
+        expect(all('li.expression').last).to have_link "#{first_expression_item.content} and #{second_expression_item.content}",
+                                                       href: expression_path(ExpressionItem.where(content: first_expression_item.content).last.expression)
       end
     end
   end
@@ -158,8 +198,27 @@ RSpec.describe 'Memorised expressions' do
 
       visit '/memorised_expressions'
       expect(page).to have_button 'Sign up/Log in with Google'
-      expect(all('li').count).to eq 0
+      expect(all('li.expression').count).to eq 0
       expect(page).to have_content 'ログインしていないため閲覧できません'
+    end
+
+    it 'check tabs' do
+      expect(page).to have_content 'ログアウトしました'
+      visit '/memorised_expressions'
+      within '.page_tabs' do
+        expect(page).to have_link '英単語・フレーズ', href: root_path
+        expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
+        expect(page).to have_link '覚えた英単語・フレーズ', href: memorised_expressions_path
+        click_link 'ブックマーク'
+      end
+      expect(page).to have_current_path bookmarked_expressions_path
+      expect(page).to have_content 'ログインしていないため閲覧できません'
+      within '.page_tabs' do
+        click_link '覚えた英単語・フレーズ'
+        click_link '英単語・フレーズ'
+      end
+      expect(page).to have_current_path root_path
+      expect(all('li.expression').count).to eq 1
     end
   end
 end
