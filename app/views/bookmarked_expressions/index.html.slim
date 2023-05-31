@@ -8,5 +8,5 @@ p style="color: green" = notice
     p
       = t('.unauthorized')
 - else
-  div(data-vue='ExpressionsList' data-vue-path='api/bookmarked_expressions')
+  div(data-vue='ExpressionsList' data-vue-path='/api/bookmarked_expressions')
   = link_to t('.start_quiz'), bookmarked_expressions_quiz_path
