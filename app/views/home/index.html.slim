@@ -16,3 +16,12 @@ p style="color: green" = notice
   - if flash[:unauthorized_access_to_create]
     = button_to 'Sign up/Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }
 = link_to "+ #{t('.create')}", new_expression_path
+
+- if logged_in?
+  = link_to t('.start_quiz'), quiz_path
+- else
+  .try-quiz
+    = link_to t('.try_quiz'), quiz_path
+    p
+      i class="fa-solid fa-circle-exclamation"
+      = t('.warning')
