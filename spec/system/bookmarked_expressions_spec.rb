@@ -67,7 +67,7 @@ RSpec.describe 'Bookmarked expressions' do
       end
 
       it 'show a list of bookmarked expressions' do
-        expect(all('li').count).to eq 3
+        expect(all('li.expression').count).to eq 3
         expect(page).not_to have_content 'ブックマークしている英単語またはフレーズはありません'
         expect(page).not_to have_content 'ログインしていないため閲覧できません'
       end
