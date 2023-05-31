@@ -66,6 +66,14 @@ RSpec.describe 'Expressions' do
       expect(page).to have_current_path memorised_expressions_path
       expect(page).to have_content 'ログインしていないため閲覧できません'
     end
+
+    it 'check a quiz button' do
+      expect(page).to have_link 'クイズを試してみる'
+      expect(page).to have_content 'ブックマークや覚えた英単語・フレーズのリストに保存する機能を使用する場合は必ずログインしてからクイズに挑戦してください'
+      click_link 'クイズを試してみる'
+      expect(page).to have_current_path '/quiz'
+      expect(page).to have_selector 'p.content-of-question'
+    end
   end
 
   context 'when new user logged in' do
@@ -127,6 +135,13 @@ RSpec.describe 'Expressions' do
       end
       expect(page).to have_current_path memorised_expressions_path
       expect(page).to have_content 'このリストに登録している英単語またはフレーズはありません'
+    end
+
+    it 'check a quiz button' do
+      expect(page).to have_link 'クイズに挑戦'
+      click_link 'クイズに挑戦'
+      expect(page).to have_current_path '/quiz'
+      expect(page).to have_selector 'p.content-of-question'
     end
   end
 
