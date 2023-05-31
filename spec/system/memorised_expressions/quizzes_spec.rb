@@ -135,7 +135,7 @@ RSpec.describe 'MemorisedExpressions Quiz' do
       expect(page).to have_selector('.section-of-wrong-answers')
       click_button '保存する'
       expect(page).to have_content 'ブックマークしました！'
-      expect(page).not_to have_content '英単語・フレーズをブックマークしましたが覚えた語彙リストには保存できませんでした'
+      expect(page).not_to have_content '英単語・フレーズをブックマークしましたが覚えた英単語・フレーズのリストには保存できませんでした'
     end
 
     it 'check if memorising is destroyed when bookmarking is created' do
@@ -202,7 +202,7 @@ RSpec.describe 'MemorisedExpressions Quiz' do
         n < 8 ? click_button('次へ') : click_button('クイズの結果を確認する')
       end
       click_button '保存する'
-      has_text? 'ブックマーク・覚えた語彙リストに英単語・フレーズを保存しました！'
+      has_text? 'ブックマーク・覚えた英単語・フレーズのリストに保存しました！'
 
       visit memorised_expressions_path
     end

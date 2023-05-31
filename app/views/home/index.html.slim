@@ -4,11 +4,12 @@ p style="color: green" = notice
   - if alert == 'ログインが必要です'
     = button_to 'Sign up/Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }
 
+= render 'shared/page_tabs'
 - if @expressions.blank?
   p
     = t('.no_data')
 - else
-    div(data-vue='ExpressionsList' data-vue-path='api/expressions')
+    div(data-vue='ExpressionsList' data-vue-path='/api/expressions')
 
 .unauthorized_access_to_create
   p = flash[:unauthorized_access_to_create]

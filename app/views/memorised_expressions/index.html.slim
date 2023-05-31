@@ -1,4 +1,5 @@
 p style="color: green" = notice
+= render 'shared/page_tabs'
 - if @memorisings.blank?
   - if logged_in?
     p
@@ -7,5 +8,5 @@ p style="color: green" = notice
     p
       = t('.unauthorized')
 - else
-  div(data-vue='ExpressionsList' data-vue-path='api/memorised_expressions')
+  div(data-vue='ExpressionsList' data-vue-path='/api/memorised_expressions')
   = link_to t('.start_quiz'), memorised_expressions_quiz_path

@@ -117,8 +117,8 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
       end
       expect(page).to have_selector('.section-of-correct-answers')
       click_button '保存する'
-      expect(page).to have_content '英単語・フレーズを覚えた語彙リストに保存しました！'
-      expect(page).not_to have_content '覚えた語彙リストに英単語・フレーズを保存しましたがブックマークは出来ませんでした'
+      expect(page).to have_content '覚えた英単語・フレーズのリストに保存しました！'
+      expect(page).not_to have_content '覚えた英単語・フレーズのリストに保存しましたがブックマークは出来ませんでした'
     end
 
     it 'check if bookmarking is destroyed when memorising is created' do
@@ -134,7 +134,7 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
       expect(page).to have_selector('.section-of-correct-answers')
       expect do
         click_button '保存する'
-        expect(page).to have_content '英単語・フレーズを覚えた語彙リストに保存しました！'
+        expect(page).to have_content '覚えた英単語・フレーズのリストに保存しました！'
       end.to change(Bookmarking, :count).by(-1).and change(Memorising, :count).by(1)
     end
 
@@ -157,7 +157,7 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
       expect(page).to have_selector('.section-of-correct-answers')
       expect do
         click_button '保存する'
-        expect(page).to have_content '英単語・フレーズを覚えた語彙リストに保存しました！'
+        expect(page).to have_content '覚えた英単語・フレーズのリストに保存しました！'
       end.to change(Bookmarking, :count).by(-2).and change(Memorising, :count).by(2)
     end
   end
