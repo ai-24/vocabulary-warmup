@@ -1,8 +1,8 @@
 .page_tabs
   ul
     li
-      = link_to t('words_and_phrases'), root_path
+      = link_to t('words_and_phrases'), root_path, class: 'words-and-phrases-link'
     li
       = link_to t('bookmark'), bookmarked_expressions_path
     li
-      = link_to t('memorised_list'), memorised_expressions_path
+      = link_to t('memorised_list'), memorised_expressions_path, class: 'memorised-list-link'

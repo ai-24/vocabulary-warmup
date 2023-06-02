@@ -16,10 +16,10 @@ Metrics/ClassLength:
   Max: 120
 
 RSpec/MultipleExpectations:
-  Max: 8
+  Max: 10
 
 RSpec/ExampleLength:
-  Max: 20
+  Max: 30
 
 RSpec/MultipleMemoizedHelpers:
-  Max: 8
+  Max: 11

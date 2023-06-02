@@ -178,22 +178,24 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
       visit '/'
       click_button 'Sign up/Log in with Google'
       has_text? 'ログインしました'
+    end
 
+    it 'check the questions are from bookmarks' do
       visit '/quiz'
       9.times do |n|
+        expect(page).to have_selector 'p.content-of-question'
         click_button 'クイズに解答する'
+        expect(page).to have_content '×'
         n < 8 ? click_button('次へ') : click_button('クイズの結果を確認する')
       end
       find('summary', text: 'ブックマークする英単語・フレーズ').click
       find('label', text: 'balcony and Veranda').click
       find('label', text: "#{second_expression_items[0].content}, #{second_expression_items[1].content} and #{second_expression_items[2].content}").click
       click_button '保存する'
-      has_text? 'ブックマークしました！'
+      expect(page).to have_content 'ブックマークしました！'
 
       visit bookmarked_expressions_path
-    end
 
-    it 'check the questions are from bookmarks' do
       expect(page).to have_link 'クイズに挑戦'
       click_link 'クイズに挑戦'
       expect(page).to have_css 'p.content-of-question'

@@ -4,10 +4,19 @@ require 'rails_helper'
 
 RSpec.describe 'Bookmarked expressions' do
   context 'when user logged in' do
-    let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
-    let!(:second_expression_items) { FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:empty_note)) }
-    let!(:third_expression_items) { FactoryBot.create_list(:expression_item3, 3, expression: FactoryBot.create(:empty_note)) }
-    let(:user) { FactoryBot.build(:user) }
+    let!(:user) { FactoryBot.create(:user) }
+    let!(:expression) { FactoryBot.create(:empty_note, user_id: user.id) }
+    let!(:first_expression_item) { FactoryBot.create(:expression_item, expression:) }
+    let!(:second_expression_item) { FactoryBot.create(:expression_item2, expression:) }
+
+    let!(:expression2) { FactoryBot.create(:empty_note, user_id: user.id) }
+    let!(:third_expression_item) { FactoryBot.create(:expression_item3, expression: expression2) }
+    let!(:fourth_expression_item) { FactoryBot.create(:expression_item4, expression: expression2) }
+
+    let!(:expression3) { FactoryBot.create(:empty_note, user_id: user.id) }
+    let!(:fifth_expression_item) { FactoryBot.create(:expression_item5, expression: expression3) }
+    let!(:sixth_expression_item) { FactoryBot.create(:expression_item6, expression: expression3) }
+    let!(:seventh_expression_item) { FactoryBot.create(:expression_item, content: Faker::Job.field, explanation: Faker::Quote.yoda, expression: expression3) }
 
     before do
       OmniAuth.config.test_mode = true
@@ -34,10 +43,10 @@ RSpec.describe 'Bookmarked expressions' do
           expect(page).to have_link '英単語・フレーズ', href: root_path
           expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
           expect(page).to have_link '覚えた英単語・フレーズ', href: memorised_expressions_path
-          click_link '英単語・フレーズ'
+          find('a.words-and-phrases-link', text: '英単語・フレーズ').click
         end
         expect(page).to have_current_path root_path
-        expect(all('li.expression').count).to eq 4
+        expect(all('li.expression').count).to eq 3
         within '.page_tabs' do
           click_link 'ブックマーク'
           click_link '覚えた英単語・フレーズ'
@@ -48,47 +57,66 @@ RSpec.describe 'Bookmarked expressions' do
     end
 
     context 'when there are bookmarks' do
-      before do
-        has_text? 'ログインしました'
+      it 'show a list of bookmarked expressions' do
+        expect(page).to have_content 'ログインしました'
         visit '/quiz'
 
-        9.times do |n|
-          fill_in('解答を入力', with: '')
+        7.times do |n|
+          expect(page).to have_selector 'p.content-of-question'
           click_button 'クイズに解答する'
-          n < 8 ? click_button('次へ') : click_button('クイズの結果を確認する')
+          expect(page).to have_content '×'
+          n < 6 ? click_button('次へ') : click_button('クイズの結果を確認する')
         end
-
-        find('summary', text: 'ブックマークする英単語・フレーズ').click
-        find('label', text: 'balcony and Veranda').click
         click_button '保存する'
-        has_text? 'ブックマークしました！'
+        expect(page).to have_content 'ブックマークしました！'
 
         visit '/bookmarked_expressions'
-      end
 
-      it 'show a list of bookmarked expressions' do
         expect(all('li.expression').count).to eq 3
         expect(page).not_to have_content 'ブックマークしている英単語またはフレーズはありません'
         expect(page).not_to have_content 'ログインしていないため閲覧できません'
       end
 
       it 'check titles and links' do
-        expression_item_of_first_expression = ExpressionItem.where(content: first_expression_items[0].content).last
-        expression_item_of_second_expression = ExpressionItem.where(content: second_expression_items[0].content).last
-        expression_item_of_third_expression = ExpressionItem.where(content: third_expression_items[0].content).last
+        expect(page).to have_content 'ログインしました'
+        visit '/quiz'
 
-        expect(first('li.expression')).to have_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}",
-                                                    href: expression_path(expression_item_of_first_expression.expression)
-        expect(all('li.expression')[1]).to have_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}",
-                                                     href: expression_path(expression_item_of_second_expression.expression)
+        7.times do |n|
+          expect(page).to have_selector 'p.content-of-question'
+          click_button 'クイズに解答する'
+          expect(page).to have_content '×'
+          n < 6 ? click_button('次へ') : click_button('クイズの結果を確認する')
+        end
+        click_button '保存する'
+        expect(page).to have_content 'ブックマークしました！'
+
+        visit '/bookmarked_expressions'
+
+        expect(all('li.expression').count).to eq 3
+        expect(first('li.expression')).to have_link "#{first_expression_item.content} and #{second_expression_item.content}",
+                                                    href: expression_path(expression)
+        expect(all('li.expression')[1]).to have_link "#{third_expression_item.content} and #{fourth_expression_item.content}",
+                                                     href: expression_path(expression2)
         expect(all('li.expression')[2]).to have_link(
-          "#{third_expression_items[0].content}, #{third_expression_items[1].content} and #{third_expression_items[2].content}",
-          href: expression_path(expression_item_of_third_expression.expression)
+          "#{fifth_expression_item.content}, #{sixth_expression_item.content} and #{seventh_expression_item.content}", href: expression_path(expression3)
         )
-        expect(page).not_to have_link 'balcony and Veranda'
       end
 
       it 'check tabs' do
+        expect(page).to have_content 'ログインしました'
+        visit '/quiz'
+
+        7.times do |n|
+          expect(page).to have_selector 'p.content-of-question'
+          click_button 'クイズに解答する'
+          expect(page).to have_content '×'
+          n < 6 ? click_button('次へ') : click_button('クイズの結果を確認する')
+        end
+        click_button '保存する'
+        expect(page).to have_content 'ブックマークしました！'
+
+        visit '/bookmarked_expressions'
+
         within '.page_tabs' do
           expect(page).to have_link '英単語・フレーズ', href: root_path
           expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
@@ -98,44 +126,41 @@ RSpec.describe 'Bookmarked expressions' do
     end
 
     context 'when bookmarks were made by two different times' do
-      before do
-        has_text? 'ログインしました'
+      it 'check order' do
+        expect(page).to have_content 'ログインしました'
         visit '/quiz'
 
-        9.times do |n|
+        7.times do |n|
+          expect(page).to have_selector 'p.content-of-question'
           click_button 'クイズに解答する'
-          n < 8 ? click_button('次へ') : click_button('クイズの結果を確認する')
+          expect(page).to have_content '×'
+          n < 6 ? click_button('次へ') : click_button('クイズの結果を確認する')
         end
         find('summary', text: 'ブックマークする英単語・フレーズ').click
-        find('label', text: 'balcony and Veranda').click
+        find('label', text: "#{first_expression_item.content} and #{second_expression_item.content}").click
         click_button '保存する'
-        has_text? 'ブックマークしました！'
+        expect(page).to have_content 'ブックマークしました！'
 
-        visit '/quiz'
+        click_button 'クイズに再挑戦'
         2.times do |n|
+          expect(page).to have_selector 'p.content-of-question'
           click_button 'クイズに解答する'
+          expect(page).to have_content '×'
           n < 1 ? click_button('次へ') : click_button('クイズの結果を確認する')
         end
         click_button '保存する'
-        has_text? 'ブックマークしました！'
+        expect(page).to have_content 'ブックマークしました！'
 
         visit '/bookmarked_expressions'
-      end
 
-      it 'check order' do
-        expression_item_of_first_expression = ExpressionItem.where(content: first_expression_items[0].content).last
-        expression_item_of_second_expression = ExpressionItem.where(content: second_expression_items[0].content).last
-        expression_item_of_third_expression = ExpressionItem.where(content: third_expression_items[0].content).last
-        balcony = ExpressionItem.where(content: 'balcony').last
-        expect(first('li.expression')).to have_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}",
-                                                    href: expression_path(expression_item_of_first_expression.expression)
-        expect(all('li.expression')[1]).to have_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}",
-                                                     href: expression_path(expression_item_of_second_expression.expression)
-        expect(all('li.expression')[2]).to have_link(
-          "#{third_expression_items[0].content}, #{third_expression_items[1].content} and #{third_expression_items[2].content}",
-          href: expression_path(expression_item_of_third_expression.expression)
+        expect(first('li.expression')).to have_link "#{third_expression_item.content} and #{fourth_expression_item.content}",
+                                                    href: expression_path(expression2)
+        expect(all('li.expression')[1]).to have_link(
+          "#{fifth_expression_item.content}, #{sixth_expression_item.content} and #{seventh_expression_item.content}",
+          href: expression_path(expression3)
         )
-        expect(all('li.expression').last).to have_link 'balcony and Veranda', href: expression_path(balcony.expression)
+        expect(all('li.expression').last).to have_link "#{first_expression_item.content} and #{second_expression_item.content}",
+                                                       href: expression_path(expression)
       end
     end
   end
@@ -154,12 +179,14 @@ RSpec.describe 'Bookmarked expressions' do
       visit '/quiz'
 
       2.times do |n|
-        fill_in('解答を入力', with: '')
         click_button 'クイズに解答する'
+        has_text? '×'
         n < 1 ? click_button('次へ') : click_button('クイズの結果を確認する')
       end
       click_button '保存する'
+      has_text? 'ブックマークしました！'
 
+      visit '/'
       find('label', text: user.name).click
       click_button 'Log out'
     end
@@ -181,7 +208,7 @@ RSpec.describe 'Bookmarked expressions' do
         expect(page).to have_link '英単語・フレーズ', href: root_path
         expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
         expect(page).to have_link '覚えた英単語・フレーズ', href: memorised_expressions_path
-        click_link '英単語・フレーズ'
+        find('a.words-and-phrases-link', text: '英単語・フレーズ').click
       end
       expect(page).to have_current_path root_path
       expect(all('li.expression').count).to eq 1

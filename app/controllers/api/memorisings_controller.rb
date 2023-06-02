@@ -2,7 +2,7 @@
 
 class Api::MemorisingsController < ApplicationController
   def index
-    @memorisings = current_user.memorisings
+    @memorisings = current_user.memorisings.order(:created_at, :id)
   end
 
   def create
