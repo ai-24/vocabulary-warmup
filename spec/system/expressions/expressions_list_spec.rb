@@ -60,8 +60,8 @@ RSpec.describe 'Expressions' do
       expect(page).to have_current_path bookmarked_expressions_path
       expect(page).to have_content 'ログインしていないため閲覧できません'
       within '.page_tabs' do
-        click_link '英単語・フレーズ'
-        click_link '覚えた英単語・フレーズ'
+        find('a.words-and-phrases-link', text: '英単語・フレーズ').click
+        find('a.memorised-list-link', text: '覚えた英単語・フレーズ').click
       end
       expect(page).to have_current_path memorised_expressions_path
       expect(page).to have_content 'ログインしていないため閲覧できません'
@@ -70,6 +70,7 @@ RSpec.describe 'Expressions' do
     it 'check a quiz button' do
       expect(page).to have_link 'クイズを試してみる'
       expect(page).to have_content 'ブックマークや覚えた英単語・フレーズのリストに保存する機能を使用する場合は必ずログインしてからクイズに挑戦してください'
+      expect(page).to have_content 'balcony and Veranda'
       click_link 'クイズを試してみる'
       expect(page).to have_current_path '/quiz'
       expect(page).to have_selector 'p.content-of-question'
@@ -130,15 +131,17 @@ RSpec.describe 'Expressions' do
       expect(page).to have_current_path bookmarked_expressions_path
       expect(page).to have_content 'ブックマークしている英単語またはフレーズはありません'
       within '.page_tabs' do
-        click_link '英単語・フレーズ'
-        click_link '覚えた英単語・フレーズ'
+        find('a.words-and-phrases-link', text: '英単語・フレーズ').click
+        find('a.memorised-list-link', text: '覚えた英単語・フレーズ').click
       end
       expect(page).to have_current_path memorised_expressions_path
       expect(page).to have_content 'このリストに登録している英単語またはフレーズはありません'
     end
 
     it 'check a quiz button' do
+      expect(page).to have_content 'ログインしました'
       expect(page).to have_link 'クイズに挑戦'
+      expect(page).to have_selector '.page-body__column'
       click_link 'クイズに挑戦'
       expect(page).to have_current_path '/quiz'
       expect(page).to have_selector 'p.content-of-question'
@@ -161,17 +164,20 @@ RSpec.describe 'Expressions' do
       has_text? 'ログインしました'
 
       visit '/quiz'
+    end
+
+    it 'check list of expressions' do
       16.times do |n|
+        expect(page).to have_selector 'p.content-of-question'
         click_button 'クイズに解答する'
+        expect(page).to have_content '×'
         n < 15 ? click_button('次へ') : click_button('クイズの結果を確認する')
       end
       find('input#move-to-bookmark').click
       find('summary', text: 'ブックマークする英単語・フレーズ').click
       find('label', text: 'balcony and Veranda').click
       find('label', text: "#{two_expression_items[0].content} and #{two_expression_items[1].content}").click
-    end
 
-    it 'check list of expressions' do
       click_button '保存する'
       expect(page).to have_content 'ブックマークしました！'
 
@@ -194,6 +200,17 @@ RSpec.describe 'Expressions' do
     end
 
     it 'check if list of expressions has no data after adding all expressions to bookmarks' do
+      16.times do |n|
+        expect(page).to have_selector 'p.content-of-question'
+        click_button 'クイズに解答する'
+        expect(page).to have_content '×'
+        n < 15 ? click_button('次へ') : click_button('クイズの結果を確認する')
+      end
+      find('input#move-to-bookmark').click
+      find('summary', text: 'ブックマークする英単語・フレーズ').click
+      find('label', text: 'balcony and Veranda').click
+      find('label', text: "#{two_expression_items[0].content} and #{two_expression_items[1].content}").click
+
       click_button '保存する'
       expect(page).to have_content 'ブックマークしました！'
 
@@ -216,6 +233,7 @@ RSpec.describe 'Expressions' do
     let!(:user) { FactoryBot.create(:user) }
     let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
     let!(:second_expression_items) { FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+
     let!(:expression) { FactoryBot.create(:empty_note, user_id: user.id) }
     let!(:first_expression_item) { FactoryBot.create(:expression_item3, expression:) }
     let!(:second_expression_item) { FactoryBot.create(:expression_item4, expression:) }
@@ -235,7 +253,7 @@ RSpec.describe 'Expressions' do
       expect(page).to have_content 'ログインしました'
       expect(all('li.expression').count).to eq 1
       expect(page).to have_link "#{first_expression_item.content} and #{second_expression_item.content}",
-                                href: expression_path(ExpressionItem.where(content: first_expression_item.content).last.expression)
+                                href: expression_path(expression)
     end
 
     it 'check if list of expressions has no data after adding all expressions to memorised words list' do

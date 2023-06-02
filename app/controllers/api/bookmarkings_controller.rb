@@ -2,7 +2,7 @@
 
 class Api::BookmarkingsController < ApplicationController
   def index
-    @bookmarkings = current_user.bookmarkings
+    @bookmarkings = current_user.bookmarkings.order(:created_at, :id)
   end
 
   def create

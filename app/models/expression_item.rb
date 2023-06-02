@@ -8,7 +8,7 @@ class ExpressionItem < ApplicationRecord
   }
 
   def self.copy_expression_items!(expression, new_expression)
-    expression.expression_items.each do |expression_item|
+    expression.expression_items.order(:created_at, :id).each do |expression_item|
       new_expression_item = ExpressionItem.new
       new_expression_item.content = expression_item.content
       new_expression_item.explanation = expression_item.explanation
