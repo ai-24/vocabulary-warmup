@@ -49,6 +49,10 @@ RSpec.describe 'Quiz' do
       visit '/quiz'
     end
 
+    it 'check if there is no incremental search' do
+      expect(page).not_to have_selector '.incremental-search'
+    end
+
     it 'check if one question and no answer is on the question screen' do
       if has_text?('A platform on the side of a building, accessible from inside the building.')
         expect(page).to have_content 'A platform on the side of a building, accessible from inside the building.'

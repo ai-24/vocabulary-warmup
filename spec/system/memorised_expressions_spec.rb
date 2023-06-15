@@ -112,6 +112,12 @@ RSpec.describe 'Memorised expressions' do
         expect(page).to have_current_path root_path
         expect(page).to have_content 'このリストに登録されている英単語またはフレーズはありません'
       end
+
+      it 'check if there is incremental search' do
+        expect(page).to have_content 'ログインしました'
+        visit '/memorised_expressions'
+        expect(page).to have_selector '.incremental-search'
+      end
     end
 
     context 'when memorisings were made by two different times' do
@@ -220,6 +226,13 @@ RSpec.describe 'Memorised expressions' do
       end
       expect(page).to have_current_path root_path
       expect(all('li.expression').count).to eq 1
+    end
+
+    it 'check if there is no incremental search' do
+      expect(page).to have_content 'ログアウトしました'
+
+      visit '/memorised_expressions'
+      expect(page).not_to have_selector '.incremental-search'
     end
   end
 end

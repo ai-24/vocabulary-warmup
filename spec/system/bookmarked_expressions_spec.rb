@@ -72,6 +72,7 @@ RSpec.describe 'Bookmarked expressions' do
 
         visit '/bookmarked_expressions'
 
+        expect(page).to have_selector '.incremental-search'
         expect(all('li.expression').count).to eq 3
         expect(page).not_to have_content 'ブックマークしている英単語またはフレーズはありません'
         expect(page).not_to have_content 'ログインしていないため閲覧できません'
@@ -218,6 +219,12 @@ RSpec.describe 'Bookmarked expressions' do
       end
       expect(page).to have_current_path memorised_expressions_path
       expect(page).to have_content 'ログインしていないため閲覧できません'
+    end
+
+    it 'check if there is no incremental search' do
+      expect(page).to have_content 'ログアウトしました'
+      visit '/bookmarked_expressions'
+      expect(page).not_to have_selector '.incremental-search'
     end
   end
 end

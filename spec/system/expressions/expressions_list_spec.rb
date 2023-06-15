@@ -75,6 +75,10 @@ RSpec.describe 'Expressions' do
       expect(page).to have_current_path '/quiz'
       expect(page).to have_selector 'p.content-of-question'
     end
+
+    it 'check if there is no incremental search' do
+      expect(page).not_to have_selector '.incremental-search'
+    end
   end
 
   context 'when new user logged in' do
@@ -145,6 +149,10 @@ RSpec.describe 'Expressions' do
       click_link 'クイズに挑戦'
       expect(page).to have_current_path '/quiz'
       expect(page).to have_selector 'p.content-of-question'
+    end
+
+    it 'check if there is incremental search' do
+      expect(page).to have_selector '.incremental-search'
     end
   end
 
@@ -273,6 +281,141 @@ RSpec.describe 'Expressions' do
       visit '/'
       expect(all('li.expression').count).to eq 0
       expect(page).to have_content 'このリストに登録されている英単語またはフレーズはありません'
+    end
+  end
+
+  describe 'incremental search' do
+    let!(:user) { FactoryBot.create(:user) }
+    let!(:expression) { FactoryBot.create(:empty_note, note: 'this is note', user_id: user.id) }
+    let!(:expression2) { FactoryBot.create(:empty_note, user_id: user.id) }
+
+    before do
+      FactoryBot.create(:expression_item, content: 'on the beach', explanation: 'explain the word', expression:)
+      FactoryBot.create(:expression_item, content: 'at the beach', explanation: 'explain the word', expression:)
+      FactoryBot.create(:expression_item, content: 'balcony', explanation: 'on the side of a building', expression: expression2)
+      FactoryBot.create(:expression_item, content: 'veranda', explanation: 'in front of an entrance', expression: expression2)
+      FactoryBot.create(:expression_item, content: 'terrace', explanation: 'terrace', expression: expression2)
+
+      20.times do
+        FactoryBot.create_list(:expression_item, 2, content: 'word', explanation: 'explain the word',
+                                                    expression: FactoryBot.create(:empty_note, user_id: user.id))
+      end
+
+      FactoryBot.create(:tagging, expression:)
+      FactoryBot.create(:tagging, expression: expression2)
+      FactoryBot.create(:tagging2, expression: expression2)
+
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+      visit '/'
+      click_button 'Sign up/Log in with Google'
+    end
+
+    it 'check reset button' do
+      expect(page).to have_content 'ログインしました'
+
+      within '.incremental-search' do
+        expect(page).not_to have_button '×'
+        fill_in('search-box', with: 'a')
+        expect(page).to have_button '×'
+        click_button '×'
+        expect(page).to have_field 'search-box', with: ''
+      end
+    end
+
+    it 'check if expressions are found by words' do
+      expect(page).to have_content 'ログインしました'
+
+      within '.incremental-search' do
+        fill_in('search-box', with: 'Beach')
+        expect(all('li').count).to eq 1
+        expect(page).to have_link 'on the beach and at the beach', href: expression_path(expression)
+        click_button '×'
+        fill_in('search-box', with: 'at on')
+        expect(all('li').count).to eq 1
+        expect(page).to have_link 'on the beach and at the beach', href: expression_path(expression)
+        click_button '×'
+        fill_in('search-box', with: 'at on of')
+        expect(page).to have_content '一致する英単語・フレーズはありません'
+        expect(all('li').count).to eq 0
+      end
+    end
+
+    it 'check if expressions are found by explanations' do
+      expect(page).to have_content 'ログインしました'
+
+      within '.incremental-search' do
+        fill_in('search-box', with: 'the')
+        expect(all('li').count).to eq 22
+        click_button '×'
+        fill_in('search-box', with: 'the side')
+        expect(page).not_to have_link 'on the beach and at the beach'
+        expect(all('li').count).to eq 1
+        expect(page).to have_link 'balcony, veranda and terrace', href: expression_path(expression2)
+        click_button '×'
+        fill_in('search-box', with: 'at the side')
+        expect(page).to have_content '一致する英単語・フレーズはありません'
+        expect(all('li').count).to eq 0
+      end
+    end
+
+    it 'check if expressions are found by note' do
+      expect(page).to have_content 'ログインしました'
+
+      within '.incremental-search' do
+        fill_in('search-box', with: 'Note')
+        expect(page).to have_link 'on the beach and at the beach', href: expression_path(expression)
+        click_button '×'
+        fill_in('search-box', with: 'Notes')
+        expect(page).to have_content '一致する英単語・フレーズはありません'
+        expect(all('li').count).to eq 0
+      end
+    end
+
+    it 'check if expressions are found by tags' do
+      expect(page).to have_content 'ログインしました'
+
+      within '.incremental-search' do
+        fill_in('search-box', with: 'es')
+        expect(all('li').count).to eq 2
+        expect(page).to have_link 'on the beach and at the beach', href: expression_path(expression)
+        expect(page).to have_link 'balcony, veranda and terrace', href: expression_path(expression2)
+        click_button '×'
+        fill_in('search-box', with: 'Tes 02')
+        expect(page).not_to have_link 'on the beach and at the beach'
+        expect(all('li').count).to eq 1
+        expect(page).to have_link 'balcony, veranda and terrace', href: expression_path(expression2)
+        click_button '×'
+        fill_in('search-box', with: 'tes 2023 expression')
+        expect(page).to have_content '一致する英単語・フレーズはありません'
+        expect(all('li').count).to eq 0
+      end
+    end
+
+    it 'check if expressions are found by explanation and tag' do
+      expect(page).to have_content 'ログインしました'
+
+      within '.incremental-search' do
+        fill_in('search-box', with: 'Word Test')
+        expect(all('li').count).to eq 1
+        expect(page).to have_link 'on the beach and at the beach', href: expression_path(expression)
+        click_button '×'
+        fill_in('search-box', with: 'Word Test 2023')
+        expect(page).to have_content '一致する英単語・フレーズはありません'
+        expect(all('li').count).to eq 0
+      end
+    end
+
+    it 'check if expressions list is not shown when search box is empty' do
+      expect(page).to have_content 'ログインしました'
+
+      within '.incremental-search' do
+        fill_in('search-box', with: 'Word')
+        expect(all('li').count).to eq 21
+        click_button '×'
+        expect(page).not_to have_selector '.searched-expressions'
+      end
     end
   end
 end

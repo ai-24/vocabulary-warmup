@@ -15,6 +15,14 @@ class Expression < ApplicationRecord
   }
   accepts_nested_attributes_for :tags
 
+  def self.ransackable_associations(_auth_object = nil)
+    %w[expression_items]
+  end
+
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[note]
+  end
+
   def bookmarking?
     !!Bookmarking.find_by(expression_id: id, user_id:)
   end
