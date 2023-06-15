@@ -8,8 +8,7 @@ class Api::ExpressionsController < ApplicationController
                      if params[:search_word]
                        search_words = params[:search_word].split(/[[:blank:]]/)
                        users_expressions = Expression.where(user_id: current_user.id)
-                       searched_expressions = search_by_keyword(search_words, users_expressions)
-                       searched_expressions[0]
+                       search_by_keyword(search_words, users_expressions)
                      else
                        Expression.find_expressions_of_users_main_list(current_user.id)
                      end
@@ -42,11 +41,11 @@ class Api::ExpressionsController < ApplicationController
 
   def search_expressions_and_tags(expressions, word)
     searched_expressions = []
-    searched_expressions_and_notes = search_expressions(expressions, word).to_a
-    searched_expressions.push(*searched_expressions_and_notes) if searched_expressions_and_notes.present?
+    result_of_search_expressions = search_expressions(expressions, word).to_a
+    searched_expressions.push(*result_of_search_expressions) if result_of_search_expressions.present?
 
-    new_expressions = search_tags(expressions, word).to_a
-    searched_expressions.push(*new_expressions) if new_expressions.present?
+    result_of_search_tags = search_tags(expressions, word).to_a
+    searched_expressions.push(*result_of_search_tags) if result_of_search_tags.present?
 
     remove_duplicate(searched_expressions) if searched_expressions.present?
   end
@@ -61,6 +60,6 @@ class Api::ExpressionsController < ApplicationController
       expressions.clear
       expressions.push(searched_expressions)
     end
-    expressions
+    expressions[0]
   end
 end
