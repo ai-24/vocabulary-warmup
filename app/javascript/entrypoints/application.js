@@ -6,11 +6,13 @@ import VueMounter from '../VueMounter'
 import WordQuiz from '../components/word-quiz.vue'
 import ExpressionsForm from '../components/expressions-form.vue'
 import ExpressionsList from '../components/expressions-list.vue'
+import IncrementalSearch from '../components/incremental-search.vue'
 
 const mounter = new VueMounter()
 mounter.addComponent(WordQuiz)
 mounter.addComponent(ExpressionsForm)
 mounter.addComponent(ExpressionsList)
+mounter.addComponent(IncrementalSearch)
 mounter.mount()
 
 Turbo.start()

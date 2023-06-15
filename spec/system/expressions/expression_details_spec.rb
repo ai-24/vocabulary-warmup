@@ -60,6 +60,11 @@ RSpec.describe 'Expressions' do
       expect(all('li.expression').count).to eq 21
       expect(first('li.expression')).to have_link 'balcony and Veranda', href: expression_path(1)
     end
+
+    it 'check if there is no incremental search' do
+      visit '/expressions/1'
+      expect(page).not_to have_selector '.incremental-search'
+    end
   end
 
   describe 'new expression with examples, a note and a tag' do
@@ -134,6 +139,10 @@ RSpec.describe 'Expressions' do
         expect(page).to have_content 'タグ'
         expect(page).to have_content 'preposition'
       end
+    end
+
+    it 'check if there is incremental search' do
+      expect(page).to have_selector '.incremental-search'
     end
   end
 

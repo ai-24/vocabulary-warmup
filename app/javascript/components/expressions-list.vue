@@ -17,6 +17,9 @@ export default {
   props: {
     path: {
       type: String
+    },
+    searchedExpressionsResources: {
+      type: Array
     }
   },
   data() {
@@ -63,7 +66,12 @@ export default {
     }
   },
   mounted() {
-    this.setupExpressions()
+    if (this.searchedExpressionsResources) {
+      this.expressionsResources = this.searchedExpressionsResources
+      this.createTitles()
+    } else {
+      this.setupExpressions()
+    }
   }
 }
 </script>

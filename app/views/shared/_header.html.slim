@@ -4,9 +4,11 @@ header.mx-9.my-4
       h1.text-2xl.font-bold
         = link_to 'Word Warmup', root_path
     .basis-1/2
-      .grid.justify-items-end
+      .flex.justify-end
         - if logged_in?
-          label.font-medium.text-lg(for='header-menu')
+          .inline-block.mr-10
+            div(data-vue='IncrementalSearch' class="incremental-search" )
+          label.font-medium.text-xl(for='header-menu')
             = current_user.name
           input#header-menu.peer.hidden(type='checkbox')
           .invisible.peer-checked:visible

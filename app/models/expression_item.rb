@@ -7,6 +7,14 @@ class ExpressionItem < ApplicationRecord
     attributes['content'].blank?
   }
 
+  def self.ransackable_associations(_auth_object = nil)
+    %w[expression]
+  end
+
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[content explanation]
+  end
+
   def self.copy_expression_items!(expression, new_expression)
     expression.expression_items.order(:created_at, :id).each do |expression_item|
       new_expression_item = ExpressionItem.new

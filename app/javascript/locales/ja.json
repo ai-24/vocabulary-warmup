@@ -55,6 +55,10 @@
         "wordsOrPhrases": "単語又はフレーズ",
         "explanationAndExamples": "意味・例文",
         "noteAndTags": "メモ・タグ（任意）"
+    },
+    "incrementalSearch": {
+        "placeholder": "英単語・フレーズ、メモまたはタグ",
+        "noData": "一致する英単語・フレーズはありません"
     }
 }
 }
