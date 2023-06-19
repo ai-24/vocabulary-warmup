@@ -6,7 +6,7 @@ class Api::MemorisedExpressions::QuizzesController < ApplicationController
 
     current_user.memorisings.each do |memorising|
       expression = Expression.find memorising.expression_id
-      expression.expression_items.each { |expression_item| @quiz.push expression_item }
+      expression.expression_items.order(:created_at, :id).each { |expression_item| @quiz.push expression_item }
     end
   end
 end

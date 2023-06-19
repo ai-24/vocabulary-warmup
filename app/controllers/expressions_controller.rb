@@ -48,7 +48,11 @@ class ExpressionsController < ApplicationController
 
   # PATCH/PUT /expressions/1 or /expressions/1.json
   def update
-    if @expression.update(expression_params)
+    params = expression_params
+    @expression.destroy_taggings(params)
+    remove_tag_params(params) if params[:tags_attributes]
+
+    if @expression.update(params)
       redirect_to expression_url(@expression), notice: t('.success')
     else
       render :edit, status: :unprocessable_entity
@@ -82,6 +86,16 @@ class ExpressionsController < ApplicationController
       redirect_to root_path, alert: t('no_authority') unless @expression.user_id == current_user.id
     else
       redirect_to root_path, alert: t('not_logged_in')
+    end
+  end
+
+  def remove_tag_params(params)
+    params[:tags_attributes].each do |parameter|
+      tag = Tag.find_by name: parameter[1][:name]
+      next unless tag
+
+      Tagging.find_or_create_by!(tag:, expression: @expression)
+      params[:tags_attributes].delete(parameter[0])
     end
   end
 
