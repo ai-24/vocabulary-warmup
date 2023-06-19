@@ -21,17 +21,17 @@ p style="color: green" = notice
         - expression_item.examples.order(:created_at, :id).each do |example|
           p.example
             = example.content
-.note
-  - if @expression.note.present?
+- if @expression.note.present?
+  .note
     p
       = t('.note')
     p
       = @expression.note
-.tag
-  - if @expression.tags.present?
+- if @expression.tags.present?
+  .tag
     p
       = t('.tag')
-    - @expression.tags.each do |tag|
+    - @expression.tags.order('taggings.created_at').each do |tag|
       p
         = tag.name
 

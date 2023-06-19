@@ -452,6 +452,7 @@ RSpec.describe 'Expressions' do
         fill_in('例文３', with: 'example3 of around the beach')
         click_button '次へ'
         fill_in('メモ（任意）', with: 'note')
+        fill_in('タグ（任意）', with: 'test')
         click_button '登録'
 
         click_link '編集'
@@ -468,7 +469,9 @@ RSpec.describe 'Expressions' do
         expect do
           click_button '編集する'
           expect(page).to have_content '英単語またはフレーズを編集しました'
-        end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(0).and change(Example, :count).by(0)
+        end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(0).and change(Example, :count).by(0).and change(
+          Tag, :count
+        ).by(0).and change(Tagging, :count).by(0)
       end
 
       it 'check if the word which already saved change to another one' do
@@ -595,7 +598,7 @@ RSpec.describe 'Expressions' do
 
       it 'check if new explanations are on the details page' do
         click_button '編集する'
-        has_text? '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語またはフレーズを編集しました'
 
         within '.details div.expression2 p.explanation' do
           expect(page).to have_content 'explanation of test3'
@@ -671,6 +674,172 @@ RSpec.describe 'Expressions' do
 
         within first('.tag') do
           expect(page).to have_content 'tag'
+        end
+      end
+    end
+
+    context 'when tags are edited' do
+      let!(:user) { FactoryBot.create(:user) }
+      let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+      let!(:user2) { FactoryBot.create(:user) }
+      let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user2.id)) }
+
+      before do
+        FactoryBot.create(:tagging, expression: first_expression_items[0].expression)
+        FactoryBot.create(:tagging2, expression: second_expression_items[0].expression)
+      end
+
+      it 'check if a tag that does not exist in a database is added' do
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+        expect(page).to have_content 'ログインしました'
+
+        click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+        expect(page).to have_current_path expression_path(first_expression_items[0].expression)
+        click_link '編集'
+        3.times { click_button '次へ' }
+        fill_in('タグ（任意）', with: 'tag')
+        find('#tags').send_keys :return
+        expect do
+          click_button '編集する'
+          expect(page).to have_content '英単語またはフレーズを編集しました'
+        end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(0).and change(
+          Example, :count
+        ).by(0).and change(Tag, :count).by(1).and change(Tagging, :count).by(1)
+        within '.tag' do
+          expect(all('p')[1]).to have_content 'test'
+          expect(all('p')[2]).to have_content 'tag'
+        end
+      end
+
+      it 'check if a tag that exists in a database is added' do
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+        expect(page).to have_content 'ログインしました'
+
+        click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+        expect(page).to have_current_path expression_path(first_expression_items[0].expression)
+        click_link '編集'
+        3.times { click_button '次へ' }
+        fill_in('タグ（任意）', with: '2023')
+        find('#tags').send_keys :return
+        expect do
+          click_button '編集する'
+          expect(page).to have_content '英単語またはフレーズを編集しました'
+        end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(0).and change(
+          Example, :count
+        ).by(0).and change(Tag, :count).by(0).and change(Tagging, :count).by(1)
+        within '.tag' do
+          expect(all('p')[1]).to have_content 'test'
+          expect(all('p')[2]).to have_content '2023'
+        end
+      end
+
+      it 'check if a tag is changed to a new tag that does not exist in a database' do
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+        expect(page).to have_content 'ログインしました'
+
+        click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+        expect(page).to have_current_path expression_path(first_expression_items[0].expression)
+        click_link '編集'
+        3.times { click_button '次へ' }
+        within '.tags' do
+          find('i.ti-icon-close').click
+        end
+        fill_in('タグ（任意）', with: 'tag')
+        find('#tags').send_keys :return
+        expect do
+          click_button '編集する'
+          expect(page).to have_content '英単語またはフレーズを編集しました'
+        end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(0).and change(
+          Example, :count
+        ).by(0).and change(Tag, :count).by(1).and change(Tagging, :count).by(0)
+        within '.tag' do
+          expect(all('p')[1]).to have_content 'tag'
+        end
+      end
+
+      it 'check if a tag is changed to a new tag that exists in a database' do
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+        expect(page).to have_content 'ログインしました'
+
+        click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+        expect(page).to have_current_path expression_path(first_expression_items[0].expression)
+        click_link '編集'
+        3.times { click_button '次へ' }
+        within '.tags' do
+          find('i.ti-icon-close').click
+        end
+        fill_in('タグ（任意）', with: '2023')
+        find('#tags').send_keys :return
+        expect do
+          click_button '編集する'
+          expect(page).to have_content '英単語またはフレーズを編集しました'
+        end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(0).and change(
+          Example, :count
+        ).by(0).and change(Tag, :count).by(0).and change(Tagging, :count).by(0)
+        within '.tag' do
+          expect(all('p')[1]).to have_content '2023'
+        end
+      end
+
+      it 'check if a tag is deleted' do
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+        expect(page).to have_content 'ログインしました'
+
+        click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+        expect(page).to have_current_path expression_path(first_expression_items[0].expression)
+        click_link '編集'
+        3.times { click_button '次へ' }
+        within '.tags' do
+          find('i.ti-icon-close').click
+        end
+        expect do
+          click_button '編集する'
+          expect(page).to have_content '英単語またはフレーズを編集しました'
+        end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(0).and change(
+          Example, :count
+        ).by(0).and change(Tag, :count).by(0).and change(Tagging, :count).by(-1)
+        expect(page).not_to have_selector '.tag'
+      end
+
+      it 'check tags order' do
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.add_mock(:google_oauth2, { uid: user2.uid, info: { name: user2.name } })
+
+        visit '/'
+        click_button 'Sign up/Log in with Google'
+        expect(page).to have_content 'ログインしました'
+
+        click_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}"
+        expect(page).to have_current_path expression_path(second_expression_items[0].expression)
+        click_link '編集'
+        3.times { click_button '次へ' }
+        fill_in('タグ（任意）', with: 'test')
+        find('#tags').send_keys :return
+        click_button '編集する'
+        expect(page).to have_content '英単語またはフレーズを編集しました'
+        within '.tag' do
+          expect(all('p')[1]).to have_content '2023'
+          expect(all('p')[2]).to have_content 'test'
         end
       end
     end

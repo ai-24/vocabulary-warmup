@@ -525,14 +525,14 @@
                 id="tags"
                 v-model="tag"
                 :tags="tags"
-                @tags-changed="updateTags"
+                @tags-changed="(newTags) => (tags = newTags)"
                 :placeholder="$t('form.howToUseTagInput')"></vue-tags-input>
               <ul>
-                <li v-for="(tagValue, index) in tagsValue" :key="tagValue">
+                <li v-for="(tag, index) in tags" :key="tag">
                   <input
                     type="hidden"
                     :name="`expression[tags_attributes][${index}][name]`"
-                    :value="tagValue" />
+                    :value="tag.text" />
                 </li>
               </ul>
             </div>
@@ -691,13 +691,6 @@ export default {
       this.expressionId
         ? (this.url = `/expressions/${this.expressionId}`)
         : (this.url = '/expressions')
-    },
-    updateTags(newTags) {
-      this.tags = newTags
-      const tagsArray = newTags.map((tag) => {
-        return tag.text
-      })
-      this.tagsValue = tagsArray
     },
     calculateExpressionsAmount() {
       this.expressionsList = []

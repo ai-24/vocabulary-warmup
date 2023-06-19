@@ -1,6 +1,6 @@
 json.id @expression.id
 json.note @expression.note
-json.tags @expression.tags.pluck(:name)
+json.tags @expression.tags.order('taggings.created_at').pluck(:name)
 json.expressionItems do
   json.array! @expression.expression_items.order(:created_at, :id) do |expression_item|
     json.id expression_item.id
