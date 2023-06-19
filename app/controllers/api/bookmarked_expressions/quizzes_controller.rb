@@ -6,7 +6,7 @@ class Api::BookmarkedExpressions::QuizzesController < ApplicationController
 
     current_user.bookmarkings.each do |bookmarking|
       expression = Expression.find bookmarking.expression_id
-      expression.expression_items.each { |expression_item| @quiz.push expression_item }
+      expression.expression_items.order(:created_at, :id).each { |expression_item| @quiz.push expression_item }
     end
   end
 end

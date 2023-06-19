@@ -6,11 +6,11 @@ class Api::QuizzesController < ApplicationController
 
     if logged_in?
       Expression.find_expressions_of_users_main_list(current_user.id).each do |expression|
-        expression.expression_items.each { |expression_item| @quiz.push expression_item }
+        expression.expression_items.order(:created_at, :id).each { |expression_item| @quiz.push expression_item }
       end
     else
       Expression.where(user_id: nil).each do |expression|
-        expression.expression_items.each { |expression_item| @quiz.push expression_item }
+        expression.expression_items.order(:created_at, :id).each { |expression_item| @quiz.push expression_item }
       end
     end
   end
