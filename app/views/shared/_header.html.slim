@@ -1,7 +1,7 @@
-header.mx-9.my-4
+header.sticky.top-0.bg-white.border.border-b-lavender-600.px-9.py-4
   .flex.flex-row
     .basis-1/2
-      h1.text-2xl.font-bold
+      h1.text-2xl.font-bold.hover:text-gray-400
         = link_to 'Word Warmup', root_path
     .basis-1/2
       .flex.justify-end
@@ -18,5 +18,5 @@ header.mx-9.my-4
               li
                 = button_to 'Delete account', me_path, method: :delete, form: { data: { turbo_confirm: t('users.confirm_deletion_of_account') } }
         - else
-          .button-on-header
+          .button-on-header.rounded-full.bg-lavender-600.hover:bg-lavender-800.text-white.px-5.py-px
             = button_to 'Sign up/Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }, class: 'font-medium text-lg'
