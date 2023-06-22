@@ -219,7 +219,7 @@ RSpec.describe Expression, type: :model do
 
     let!(:user) { FactoryBot.create(:user) }
     let!(:user2) { FactoryBot.create(:user) }
-    let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user2.id)) }
+    let!(:second_expression_items) { FactoryBot.create_list(:expression_item5, 2, expression: FactoryBot.create(:empty_note, user_id: user2.id)) }
     let!(:example) { FactoryBot.create(:example, expression_item: second_expression_items[0]) }
 
     before do
