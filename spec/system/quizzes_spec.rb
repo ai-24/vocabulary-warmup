@@ -46,14 +46,16 @@ RSpec.describe 'Quiz' do
 
   describe 'a quiz for everyone' do
     before do
-      visit '/quiz'
+      visit '/'
     end
 
     it 'check if there is no incremental search' do
+      click_link 'クイズを試してみる'
       expect(page).not_to have_selector '.incremental-search'
     end
 
     it 'check if one question and no answer is on the question screen' do
+      click_link 'クイズを試してみる'
       if has_text?('A platform on the side of a building, accessible from inside the building.')
         expect(page).to have_content 'A platform on the side of a building, accessible from inside the building.'
         expect(page).not_to have_content 'A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy'
@@ -68,6 +70,7 @@ RSpec.describe 'Quiz' do
     end
 
     it 'check if the correct answer is judged as right one' do
+      click_link 'クイズを試してみる'
       if has_text?('A platform on the side of a building, accessible from inside the building.')
         fill_in('解答を入力', with: 'balcony')
       else
@@ -79,6 +82,7 @@ RSpec.describe 'Quiz' do
     end
 
     it 'check if the incorrect answer is judged as wrong one' do
+      click_link 'クイズを試してみる'
       fill_in('解答を入力', with: 'terrace')
       click_button 'クイズに解答する'
       expect(page).not_to have_content '◯ 正解!'
@@ -87,6 +91,7 @@ RSpec.describe 'Quiz' do
     end
 
     it 'check the feedback message if answer is not given by a user' do
+      click_link 'クイズを試してみる'
       click_button 'クイズに解答する'
       expect(page).not_to have_content '◯ 正解!'
       expect(page).not_to have_content '×不正解'
@@ -94,6 +99,7 @@ RSpec.describe 'Quiz' do
     end
 
     it 'check the button and message on the last screen' do
+      click_link 'クイズを試してみる'
       fill_in('解答を入力', with: 'balcony')
       click_button 'クイズに解答する'
       click_button '次へ'

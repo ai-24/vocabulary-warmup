@@ -42,14 +42,14 @@ RSpec.describe 'Bookmarked expressions' do
         within '.page_tabs' do
           expect(page).to have_link '英単語・フレーズ', href: root_path
           expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
-          expect(page).to have_link '覚えた英単語・フレーズ', href: memorised_expressions_path
+          expect(page).to have_link '覚えた語彙', href: memorised_expressions_path
           find('a.words-and-phrases-link', text: '英単語・フレーズ').click
         end
         expect(page).to have_current_path root_path
         expect(all('li.expression').count).to eq 3
         within '.page_tabs' do
           click_link 'ブックマーク'
-          click_link '覚えた英単語・フレーズ'
+          click_link '覚えた語彙'
         end
         expect(page).to have_current_path memorised_expressions_path
         expect(page).to have_content 'このリストに登録している英単語またはフレーズはありません'
@@ -121,7 +121,7 @@ RSpec.describe 'Bookmarked expressions' do
         within '.page_tabs' do
           expect(page).to have_link '英単語・フレーズ', href: root_path
           expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
-          expect(page).to have_link '覚えた英単語・フレーズ', href: memorised_expressions_path
+          expect(page).to have_link '覚えた語彙', href: memorised_expressions_path
         end
       end
     end
@@ -208,14 +208,14 @@ RSpec.describe 'Bookmarked expressions' do
       within '.page_tabs' do
         expect(page).to have_link '英単語・フレーズ', href: root_path
         expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
-        expect(page).to have_link '覚えた英単語・フレーズ', href: memorised_expressions_path
+        expect(page).to have_link '覚えた語彙', href: memorised_expressions_path
         find('a.words-and-phrases-link', text: '英単語・フレーズ').click
       end
       expect(page).to have_current_path root_path
       expect(all('li.expression').count).to eq 1
       within '.page_tabs' do
         click_link 'ブックマーク'
-        click_link '覚えた英単語・フレーズ'
+        click_link '覚えた語彙'
       end
       expect(page).to have_current_path memorised_expressions_path
       expect(page).to have_content 'ログインしていないため閲覧できません'

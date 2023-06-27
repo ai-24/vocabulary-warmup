@@ -54,14 +54,14 @@ RSpec.describe 'Expressions' do
       within '.page_tabs' do
         expect(page).to have_link '英単語・フレーズ', href: root_path
         expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
-        expect(page).to have_link '覚えた英単語・フレーズ', href: memorised_expressions_path
+        expect(page).to have_link '覚えた語彙', href: memorised_expressions_path
         click_link 'ブックマーク'
       end
       expect(page).to have_current_path bookmarked_expressions_path
       expect(page).to have_content 'ログインしていないため閲覧できません'
       within '.page_tabs' do
         find('a.words-and-phrases-link', text: '英単語・フレーズ').click
-        find('a.memorised-list-link', text: '覚えた英単語・フレーズ').click
+        find('a.memorised-list-link', text: '覚えた語彙').click
       end
       expect(page).to have_current_path memorised_expressions_path
       expect(page).to have_content 'ログインしていないため閲覧できません'
@@ -69,7 +69,9 @@ RSpec.describe 'Expressions' do
 
     it 'check a quiz button' do
       expect(page).to have_link 'クイズを試してみる'
-      expect(page).to have_content 'ブックマークや覚えた英単語・フレーズのリストに保存する機能を使用する場合は必ずログインしてからクイズに挑戦してください'
+      expect(page).not_to have_content 'ログイン後に挑戦すると英単語・フレーズをブックマークや覚えた語彙リストに保存可能となります'
+      find('a', text: 'クイズを試してみる').hover
+      expect(page).to have_content 'ログイン後に挑戦すると英単語・フレーズをブックマークや覚えた語彙リストに保存可能となります'
       expect(page).to have_content 'balcony and Veranda'
       click_link 'クイズを試してみる'
       expect(page).to have_current_path '/quiz'
@@ -129,14 +131,14 @@ RSpec.describe 'Expressions' do
       within '.page_tabs' do
         expect(page).to have_link '英単語・フレーズ', href: root_path
         expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
-        expect(page).to have_link '覚えた英単語・フレーズ', href: memorised_expressions_path
+        expect(page).to have_link '覚えた語彙', href: memorised_expressions_path
         click_link 'ブックマーク'
       end
       expect(page).to have_current_path bookmarked_expressions_path
       expect(page).to have_content 'ブックマークしている英単語またはフレーズはありません'
       within '.page_tabs' do
         find('a.words-and-phrases-link', text: '英単語・フレーズ').click
-        find('a.memorised-list-link', text: '覚えた英単語・フレーズ').click
+        find('a.memorised-list-link', text: '覚えた語彙').click
       end
       expect(page).to have_current_path memorised_expressions_path
       expect(page).to have_content 'このリストに登録している英単語またはフレーズはありません'
@@ -145,7 +147,7 @@ RSpec.describe 'Expressions' do
     it 'check a quiz button' do
       expect(page).to have_content 'ログインしました'
       expect(page).to have_link 'クイズに挑戦'
-      expect(page).to have_selector '.page-body__column'
+      expect(page).to have_selector 'ul.expressions-list'
       click_link 'クイズに挑戦'
       expect(page).to have_current_path '/quiz'
       expect(page).to have_selector 'p.content-of-question'

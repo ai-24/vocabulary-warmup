@@ -1,9 +1,10 @@
 <template>
-  <ul>
+  <ul
+    class="expressions-list border border-lavender-800 h-auto max-h-80 overflow-x-auto overflow-y-auto">
     <li
       v-for="expressionsResource in expressionsResources"
       :key="expressionsResource.id"
-      class="expression">
+      class="expression py-2 px-3 border-b border-lavender-800 hover:bg-lavender-50 font-medium">
       <a :href="`/expressions/${expressionsResource.id}`">{{
         titles[expressionsResource.id]
       }}</a>

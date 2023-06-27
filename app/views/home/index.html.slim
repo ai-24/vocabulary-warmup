@@ -1,28 +1,47 @@
-p style="color: green" = notice
-.error
-  p = alert
-  - if alert == 'ログインが必要です'
-    = button_to 'Sign up/Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }
+.bg-white.py-12.rounded-sm.max-w-800.w-full
+  p.text-green-700.pl-5.font-bold
+    = notice
+  .error.text-center
+    - if alert
+      i class="fa-solid fa-circle-exclamation fa-xl pr-1 text-red-600"
+    p.font-semibold.inline-block.text-xl
+      = alert
+    - if alert == 'ログインが必要です'
+      = button_to 'Sign up/Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }, class: 'text-lavender-800 hover:bg-lavender-50 border-2 border-lavender-800 rounded-full font-bold px-3 mt-1.5'
 
-= render 'shared/page_tabs'
-- if @expressions.blank?
-  p
-    = t('.no_data')
-- else
-  .page-body__column
-    div(data-vue='ExpressionsList' data-vue-path='/api/expressions')
+  div class=error_or_not(alert)
+    = render 'shared/page_tabs'
+    .px-7.pt-6.border-golden-yellow-800.border-t-2
+      .h-80
+        - if @expressions.blank?
+          p.font-bold.text-center.py-10
+            = t('.no_data')
+        - else
+          div(data-vue='ExpressionsList' data-vue-path='/api/expressions')
 
-.unauthorized_access_to_create
-  p = flash[:unauthorized_access_to_create]
-  - if flash[:unauthorized_access_to_create]
-    = button_to 'Sign up/Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }
-= link_to "+ #{t('.create')}", new_expression_path
-
-- if logged_in?
-  = link_to t('.start_quiz'), quiz_path
-- else
-  .try-quiz
-    = link_to t('.try_quiz'), quiz_path
-    p
-      i class="fa-solid fa-circle-exclamation"
-      = t('.warning')
+      .flex.flex-row.mt-6
+        .basis-1/2.text-center.ml-10.mr-3
+          - if logged_in?
+            = link_to "+ #{t('.create')}", new_expression_path, class: 'inline-block w-11/12 font-semibold text-lg py-1 rounded-full bg-lavender-800 hover:bg-lavender-600 text-white'
+          - else
+            .create-button-for-non-users.relative.group
+              .group-hover:opacity-100.group-hover:pointer-events-auto.opacity-0.pointer-events-none.bg-golden-yellow-800.rounded.bottom-full.left-2/4.absolute.-translate-x-1/2.-translate-y-2.z-10.w-96.font-semibold.text-sm.p-2
+                p.mb-1
+                  = t('.how_to_create_data')
+                = button_to 'Sign up/Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }, class: 'rounded-full bg-white w-2/3 hover:bg-lavender-50 border-white border'
+              .group-hover:opacity-100.group-hover:pointer-events-auto.pointer-events-none.opacity-0.h-4.bottom-full.left-2/4.absolute.-translate-x-1/2.translate-y-2.z-10.w-96
+              .group-hover:opacity-100.group-hover:pointer-events-auto.pointer-events-none.opacity-0.border-8.border-x-transparent.border-b-transparent.border-t-golden-yellow-800.bottom-full.left-2/4.absolute.-translate-x-1/2.translate-y-2.h-0.w-0.z-20
+              p.inline-block.w-11/12.font-semibold.text-lg.py-1.rounded-full.bg-lavender-600.text-white.hover:cursor-not-allowed
+                = "+ #{t('.create')}"
+        .basis-1/2.text-center.mr-10.ml-3
+          - if logged_in?
+            = link_to t('.start_quiz'), quiz_path, class: 'inline-block w-11/12 font-semibold text-lg py-1 rounded-full bg-lavender-800 hover:bg-lavender-600 text-white'
+          - else
+            .try-quiz.relative.group
+              p.group-hover:opacity-100.group-hover:pointer-events-auto.opacity-0.pointer-events-none.bg-golden-yellow-800.rounded.bottom-full.left-2/4.absolute.-translate-x-1/2.-translate-y-2.z-10.w-96.font-semibold.text-sm.p-2
+                = t('.warning')
+              .group-hover:opacity-100.group-hover:pointer-events-auto.pointer-events-none.opacity-0.border-8.border-x-transparent.border-b-transparent.border-t-golden-yellow-800.bottom-full.left-2/4.absolute.-translate-x-1/2.translate-y-2.h-0.w-0.z-10
+              .w-11/12.py-1.rounded-full.bg-lavender-800.hover:bg-lavender-600
+                = link_to quiz_path, class: 'inline-block font-semibold text-lg text-white w-full' do
+                  i class="fa-solid fa-circle-exclamation fa-lg pr-1 text-golden-yellow-400"
+                  = t('.try_quiz')

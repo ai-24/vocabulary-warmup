@@ -1,12 +1,20 @@
-p style="color: green" = notice
-= render 'shared/page_tabs'
-- if @bookmarkings.blank?
-  - if logged_in?
-    p
-      = t('.no_data')
-  -else
-    p
-      = t('.unauthorized')
-- else
-  div(data-vue='ExpressionsList' data-vue-path='/api/bookmarked_expressions')
-  = link_to t('.start_quiz'), bookmarked_expressions_quiz_path
+.bg-white.py-12.rounded-sm.max-w-800.w-full
+  p.text-green-700.pl-5.pb-6.font-bold
+    = notice
+  = render 'shared/page_tabs'
+  .px-7.pt-6.border-golden-yellow-800.border-t-2
+    - if @bookmarkings.blank?
+      - if logged_in?
+        .h-80
+          p.font-bold.ml-10.pt-6
+            = t('.no_data')
+      - else
+        .h-80
+          p.font-bold.ml-16.pt-6
+            = t('.unauthorized')
+    - else
+      .h-80
+        div(data-vue='ExpressionsList' data-vue-path='/api/bookmarked_expressions')
+      .flex.justify-end.mt-6
+        .text-center.w-1/2.pr-10.pl-3
+          = link_to t('.start_quiz'), bookmarked_expressions_quiz_path, class: 'inline-block w-11/12 font-semibold text-lg py-1 rounded-full bg-lavender-800 hover:bg-lavender-600 text-white'
