@@ -78,7 +78,7 @@ class ExpressionsController < ApplicationController
     return if logged_in?
 
     store_location
-    redirect_to root_path, flash: { unauthorized_access_to_create: t('not_logged_in') }
+    redirect_to root_path, alert: t('not_logged_in')
   end
 
   def require_authority

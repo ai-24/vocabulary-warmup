@@ -10,8 +10,9 @@ module.exports = {
       colors: {
         'golden-yellow': {
           50: '#FFFDF7',
+          200: '#FFEFB7',
           400: '#FFE177',
-          800: '#ffd12a'
+          800: '#FFD12A'
         },
         lavender: {
           50: '#F7F1F6',
