@@ -1,44 +1,75 @@
 <template>
-  <div class="grid justify-items-stretch place-content-center">
-    <div class="w-96">
+  <div class="flex justify-center">
+    <div class="w-10/12">
       <WordQuizResult
         v-if="isResult"
         :number-of-quiz-resources="numberOfResources"
         :raw-quiz-resources="rawQuizResources"
         :userAnswers="userAnswersList"></WordQuizResult>
       <div v-else>
-        <p>{{ $t('quiz.question') }}</p>
-        <template
-          v-for="(quizResource, index) in quizResources"
-          :key="quizResource">
-          <p v-if="currentIndex === index" class="content-of-question">
-            {{ quizResource.explanation }}
-          </p>
-        </template>
+        <p class="font-bold text-lg tracking-widest">
+          {{ $t('quiz.question') }}
+        </p>
+        <div class="h-36">
+          <template
+            v-for="(quizResource, index) in quizResources"
+            :key="quizResource">
+            <p
+              v-if="currentIndex === index"
+              class="content-of-question font-bold border-2 border-lavender-800 bg-lavender-50 rounded py-2 px-4 mt-2 max-h-24 h-auto overflow-y-auto">
+              {{ quizResource.explanation }}
+            </p>
+          </template>
+        </div>
         <input
           v-if="!answered"
           v-model="userAnswer"
+          class="border-2 border-gray-400 rounded w-full h-9 pl-4 mb-3"
           :placeholder="$t('quiz.placeholder')" />
-        <p v-else>{{ this.userAnswer }}</p>
-        <p v-if="answered && isCorrect">◯ {{ $t('quiz.correct') }}!</p>
-        <p v-else-if="answered && !this.userAnswer">
-          ×{{ $t('quiz.answer', { answer: this.correctAnswer }) }}
+        <p
+          v-else
+          class="border-2 border-gray-400 rounded w-full h-9 flex items-center pl-4 mb-3">
+          {{ this.userAnswer }}
         </p>
-        <p v-else-if="answered && !isCorrect">
-          ×{{ $t('quiz.wrong') }}
-          {{ $t('quiz.answer', { answer: this.correctAnswer }) }}
-        </p>
-        <div>
-          <div v-if="isLastQuestion && answered">
-            <p>{{ $t('quiz.completed') }}</p>
-            <button @click="getResult">
+        <div class="flex justify-center font-extrabold text-lg">
+          <p v-if="answered && isCorrect">
+            <span class="text-blue-600 text-xl font-black">◯</span>
+            {{ $t('quiz.correct') }}!
+          </p>
+          <p v-else-if="answered && !this.userAnswer">
+            <span class="text-red-600 text-xl">×</span>
+            {{ $t('quiz.answer', { answer: this.correctAnswer }) }}
+          </p>
+          <p v-else-if="answered && !isCorrect">
+            <span class="text-red-600 text-xl">×</span> {{ $t('quiz.wrong') }}
+            {{ $t('quiz.answer', { answer: this.correctAnswer }) }}
+          </p>
+        </div>
+        <div class="flex justify-center">
+          <div
+            v-if="isLastQuestion && answered"
+            class="flex flex-col grid justify-items-center w-3/5 mt-7">
+            <p class="font-semibold text-sm pb-1">{{ $t('quiz.completed') }}</p>
+            <button
+              @click="getResult"
+              class="rounded-full font-bold py-1 px-5 bg-golden-yellow-400 hover:bg-golden-yellow-800">
               {{ $t('quiz.resultButton') }}
             </button>
           </div>
-          <button v-else-if="answered" @click="getNextQuestion">
-            {{ $t('quiz.next') }}
-          </button>
-          <button v-else @click="onSubmit">{{ $t('quiz.submit') }}</button>
+          <div v-else-if="answered" class="mt-3">
+            <button
+              @click="getNextQuestion"
+              class="rounded-full bg-golden-yellow-400 font-bold py-0.5 px-10 hover:bg-golden-yellow-800">
+              {{ $t('quiz.next') }}
+            </button>
+          </div>
+          <div v-else class="mt-3">
+            <button
+              @click="onSubmit"
+              class="rounded-full bg-golden-yellow-400 font-bold py-1 px-5 hover:bg-golden-yellow-800">
+              {{ $t('quiz.submit') }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
