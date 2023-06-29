@@ -86,8 +86,8 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
         click_button 'クイズに解答する'
         n < 4 ? click_button('次へ') : click_button('クイズの結果を確認する')
       end
-      expect(page).not_to have_content 'ブックマークや覚えたリストに英単語・フレーズを移動させた後は復習しましょう！'
-      expect(page).not_to have_content '重要: 一度この画面を離れると戻れません。今回の結果をブックマークや覚えたリストに移動させる場合は、下記ボタンをクリックする前に必ず行なってください。'
+      expect(page).not_to have_content 'ブックマークや覚えた語彙リストに英単語・フレーズを保存した後は復習しましょう！'
+      expect(page).not_to have_content '重要: 一度この画面を離れると戻れません。今回の結果をブックマークや覚えた語彙リストに保存する場合は、下記ボタンをクリックする前に必ず行なってください。'
     end
 
     it 'check if a section of moving expressions to memorised list is on the result page when some answers are correct' do
@@ -117,8 +117,8 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
       end
       expect(page).to have_selector('.section-of-correct-answers')
       click_button '保存する'
-      expect(page).to have_content '覚えた英単語・フレーズのリストに保存しました！'
-      expect(page).not_to have_content '覚えた英単語・フレーズのリストに保存しましたがブックマークは出来ませんでした'
+      expect(page).to have_content '覚えた語彙リストに保存しました！'
+      expect(page).not_to have_content '覚えた語彙リストに保存しましたがブックマークは出来ませんでした'
     end
 
     it 'check if bookmarking is destroyed when memorising is created' do
@@ -134,7 +134,7 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
       expect(page).to have_selector('.section-of-correct-answers')
       expect do
         click_button '保存する'
-        expect(page).to have_content '覚えた英単語・フレーズのリストに保存しました！'
+        expect(page).to have_content '覚えた語彙リストに保存しました！'
       end.to change(Bookmarking, :count).by(-1).and change(Memorising, :count).by(1)
     end
 
@@ -157,7 +157,7 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
       expect(page).to have_selector('.section-of-correct-answers')
       expect do
         click_button '保存する'
-        expect(page).to have_content '覚えた英単語・フレーズのリストに保存しました！'
+        expect(page).to have_content '覚えた語彙リストに保存しました！'
       end.to change(Bookmarking, :count).by(-2).and change(Memorising, :count).by(2)
     end
   end

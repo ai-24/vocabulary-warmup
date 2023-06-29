@@ -35,7 +35,11 @@
                 = "+ #{t('.create')}"
         .basis-1/2.text-center.mr-10.ml-3
           - if logged_in?
-            = link_to t('.start_quiz'), quiz_path, class: 'inline-block w-11/12 font-semibold text-lg py-1 rounded-full bg-lavender-800 hover:bg-lavender-600 text-white'
+            - if @expressions.blank?
+              p.inline-block.w-11/12.font-semibold.text-lg.py-1.rounded-full.bg-lavender-600.text-white.hover:cursor-not-allowed
+                = t('.start_quiz')
+            - else
+              = link_to t('.start_quiz'), quiz_path, class: 'inline-block w-11/12 font-semibold text-lg py-1 rounded-full bg-lavender-800 hover:bg-lavender-600 text-white'
           - else
             .try-quiz.relative.group
               p.group-hover:opacity-100.group-hover:pointer-events-auto.opacity-0.pointer-events-none.bg-golden-yellow-800.rounded.bottom-full.left-2/4.absolute.-translate-x-1/2.-translate-y-2.z-10.w-96.font-semibold.text-sm.p-2
