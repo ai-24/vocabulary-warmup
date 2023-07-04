@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   get '/welcome', to: 'welcome#index'
   get '/auth/:provider/callback', to: 'sessions#create'
   get '/auth/failure', to: redirect('/')
+  get '/privacy_policy', to: 'welcome#privacy_policy'
   delete '/logout', to: 'sessions#destroy'
   delete '/me', to: 'users#destroy'
   resources :expressions
