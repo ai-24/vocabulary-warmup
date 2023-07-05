@@ -24,4 +24,17 @@ RSpec.describe 'Welcome' do
     click_link '使ってみる'
     expect(page).to have_current_path root_path
   end
+
+  it 'check the button of 利用規約 on footer' do
+    expect(page).to have_link '利用規約'
+    click_link '利用規約'
+    expect(page).to have_current_path terms_of_service_path
+  end
+
+  it 'check the button of プライバシーポリシー on footer' do
+    expect(page).to have_link 'プライバシーポリシー'
+    click_link 'プライバシーポリシー'
+    expect(page).to have_content 'お客様の情報を利用する目的'
+    expect(page).to have_current_path privacy_policy_path
+  end
 end
