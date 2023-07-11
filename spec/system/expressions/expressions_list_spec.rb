@@ -139,6 +139,7 @@ RSpec.describe 'Expressions' do
       3.times { click_button '次へ' }
       fill_in('メモ（任意）', with: 'note is added')
       click_button '編集する'
+      expect(page).to have_content '英単語またはフレーズを編集しました'
 
       click_link '英単語・フレーズ一覧に戻る'
       expression_item = ExpressionItem.where('content = ?', 'balcony').last
