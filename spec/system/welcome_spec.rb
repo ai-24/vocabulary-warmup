@@ -9,7 +9,7 @@ RSpec.describe 'Welcome' do
     OmniAuth.config.test_mode = true
     OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
-    visit '/welcome'
+    visit '/'
   end
 
   it 'check sign up button' do
@@ -17,12 +17,12 @@ RSpec.describe 'Welcome' do
       click_button 'Sign up/Log in with Google'
     end
     expect(page).to have_content 'ログインしました'
-    expect(page).to have_current_path root_path
+    expect(page).to have_current_path home_path
   end
 
   it 'check 使ってみる link' do
     click_link '使ってみる'
-    expect(page).to have_current_path root_path
+    expect(page).to have_current_path home_path
   end
 
   it 'check the button of 利用規約 on footer' do

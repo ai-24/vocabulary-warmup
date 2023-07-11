@@ -2,7 +2,10 @@ header.sticky.top-0.bg-white.border.border-b-lavender-600.px-9.py-4
   .flex.flex-row
     .basis-1/2
       h1.text-2xl.font-bold.hover:text-gray-400
-        = link_to 'Word Warmup', root_path
+        - if logged_in?
+          = link_to 'Word Warmup', home_path
+        - else
+          = link_to 'Word Warmup', root_path
     .basis-1/2
       .flex.justify-end
         - if logged_in?

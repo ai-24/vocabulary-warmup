@@ -1,7 +1,7 @@
 .page_tabs.px-7.pt-4
   ul.flex.flex-row.font-semibold.text-center
     li.w-40.tracking-wider.mr-1.5
-      = link_to t('words_and_phrases'), root_path, class: "words-and-phrases-link inline-block py-1.5 h-full w-full bg-golden-yellow-200 hover:bg-golden-yellow-400 rounded-t #{current_page_tab_or_not('')}"
+      = link_to t('words_and_phrases'), home_path, class: "words-and-phrases-link inline-block py-1.5 h-full w-full bg-golden-yellow-200 hover:bg-golden-yellow-400 rounded-t #{current_page_tab_or_not('home')}"
     li.w-40.tracking-wider.mr-1.5
       = link_to t('bookmark'), bookmarked_expressions_path, class: "inline-block py-1.5 h-full w-full bg-golden-yellow-200 hover:bg-golden-yellow-400 rounded-t #{current_page_tab_or_not('bookmarked_expressions')}"
     li.w-40.tracking-wider

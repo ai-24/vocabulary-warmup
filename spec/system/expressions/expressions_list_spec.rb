@@ -16,6 +16,14 @@ RSpec.describe 'Expressions' do
       end
 
       visit '/'
+      click_link '使ってみる'
+    end
+
+    it 'check the header link' do
+      within 'header' do
+        click_link 'Word Warmup'
+      end
+      expect(page).to have_current_path '/'
     end
 
     it 'show a list of expressions' do
@@ -52,7 +60,7 @@ RSpec.describe 'Expressions' do
 
     it 'check tabs' do
       within '.page_tabs' do
-        expect(page).to have_link '英単語・フレーズ', href: root_path
+        expect(page).to have_link '英単語・フレーズ', href: home_path
         expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
         expect(page).to have_link '覚えた語彙', href: memorised_expressions_path
         click_link 'ブックマーク'
@@ -96,7 +104,19 @@ RSpec.describe 'Expressions' do
       OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
 
       visit '/'
-      click_button 'Sign up/Log in with Google'
+      within '.welcome' do
+        click_button 'Sign up/Log in with Google'
+      end
+    end
+
+    it 'check the header link' do
+      expect(page).to have_content 'ログインしました'
+      click_link 'ブックマーク'
+      expect(page).to have_current_path bookmarked_expressions_path
+      within 'header' do
+        click_link 'Word Warmup'
+      end
+      expect(page).to have_current_path '/home'
     end
 
     it 'show a list of expressions' do
@@ -119,8 +139,9 @@ RSpec.describe 'Expressions' do
       3.times { click_button '次へ' }
       fill_in('メモ（任意）', with: 'note is added')
       click_button '編集する'
+      expect(page).to have_content '英単語またはフレーズを編集しました'
 
-      visit '/'
+      click_link '英単語・フレーズ一覧に戻る'
       expression_item = ExpressionItem.where('content = ?', 'balcony').last
 
       expect(first('li.expression')).to have_link 'balcony and Veranda', href: expression_path(expression_item.expression)
@@ -129,7 +150,7 @@ RSpec.describe 'Expressions' do
     it 'check tabs' do
       expect(page).to have_content 'ログインしました'
       within '.page_tabs' do
-        expect(page).to have_link '英単語・フレーズ', href: root_path
+        expect(page).to have_link '英単語・フレーズ', href: home_path
         expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
         expect(page).to have_link '覚えた語彙', href: memorised_expressions_path
         click_link 'ブックマーク'
@@ -170,10 +191,11 @@ RSpec.describe 'Expressions' do
       OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
 
       visit '/'
-      click_button 'Sign up/Log in with Google'
+      within '.welcome' do
+        click_button 'Sign up/Log in with Google'
+      end
       has_text? 'ログインしました'
-
-      visit '/quiz'
+      click_link 'クイズに挑戦'
     end
 
     it 'check list of expressions' do
@@ -191,7 +213,7 @@ RSpec.describe 'Expressions' do
       click_button '保存する'
       expect(page).to have_content 'ブックマークしました！'
 
-      visit '/'
+      visit '/home'
       expect(all('li.expression').count).to eq 3
 
       expect(first('li.expression')).to have_link(
@@ -233,7 +255,7 @@ RSpec.describe 'Expressions' do
       click_button '保存する'
       expect(page).to have_content 'ブックマークしました！'
 
-      visit '/'
+      visit '/home'
       expect(all('li.expression').count).to eq 0
       expect(page).to have_content 'このリストに登録されている英単語またはフレーズはありません'
     end
@@ -256,7 +278,9 @@ RSpec.describe 'Expressions' do
       OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
       visit '/'
-      click_button 'Sign up/Log in with Google'
+      within '.welcome' do
+        click_button 'Sign up/Log in with Google'
+      end
     end
 
     it 'check list of expressions' do
@@ -268,7 +292,7 @@ RSpec.describe 'Expressions' do
 
     it 'check if list of expressions has no data after adding all expressions to memorised words list' do
       expect(page).to have_content 'ログインしました'
-      visit '/quiz'
+      click_link 'クイズに挑戦'
       2.times do |n|
         if has_text?(first_expression_item.explanation)
           fill_in('解答を入力', with: first_expression_item.content)
@@ -280,7 +304,7 @@ RSpec.describe 'Expressions' do
       end
       click_button '保存する'
 
-      visit '/'
+      visit '/home'
       expect(all('li.expression').count).to eq 0
       expect(page).to have_content 'このリストに登録されている英単語またはフレーズはありません'
     end
@@ -311,7 +335,9 @@ RSpec.describe 'Expressions' do
       OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
       visit '/'
-      click_button 'Sign up/Log in with Google'
+      within '.welcome' do
+        click_button 'Sign up/Log in with Google'
+      end
     end
 
     it 'check reset button' do

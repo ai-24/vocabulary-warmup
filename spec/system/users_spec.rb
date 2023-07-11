@@ -17,7 +17,9 @@ RSpec.describe 'Users' do
         OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
         visit '/'
-        click_button 'Sign up/Log in with Google'
+        within '.welcome' do
+          click_button 'Sign up/Log in with Google'
+        end
       end
 
       it 'check the function of deleting user account' do
@@ -28,6 +30,8 @@ RSpec.describe 'Users' do
           expect(page.accept_confirm).to eq "アカウントを削除しますか？\n \n重要:アカウントを削除すると、このアプリに登録した全てのデータは削除されます。"
           expect(page).to have_content 'アカウントを削除しました'
         end.to change(User, :count).by(-1).and change(Expression, :count).by(-17).and change(ExpressionItem, :count).by(-35).and change(Example, :count).by(-2)
+        expect(page).to have_current_path root_path
+        expect(page).to have_content '使い分けが難しい英単語やフレーズをメモ→テストして記憶し、それぞれの場面に合った英語を使えるようになろう'
       end
     end
 
@@ -53,7 +57,9 @@ RSpec.describe 'Users' do
         OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
         visit '/'
-        click_button 'Sign up/Log in with Google'
+        within '.button-on-header' do
+          click_button 'Sign up/Log in with Google'
+        end
       end
 
       it 'check if user is deleted' do
@@ -97,7 +103,9 @@ RSpec.describe 'Users' do
         OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
         visit '/'
-        click_button 'Sign up/Log in with Google'
+        within '.button-on-header' do
+          click_button 'Sign up/Log in with Google'
+        end
       end
 
       it 'check if user is deleted' do
@@ -151,7 +159,9 @@ RSpec.describe 'Users' do
         OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
         visit '/'
-        click_button 'Sign up/Log in with Google'
+        within '.button-on-header' do
+          click_button 'Sign up/Log in with Google'
+        end
       end
 
       it 'check if user is deleted' do

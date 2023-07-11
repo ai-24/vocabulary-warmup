@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
   end
 
   def redirect_back_or_default
-    redirect_to(session[:forwarding_url] || root_path)
+    redirect_to(session[:forwarding_url] || home_path)
     session.delete(:forwarding_url)
   end
 end

@@ -44,4 +44,4 @@ div
   = link_to t('.back'), expression_path(@expression.previous(@user))
 - if @expression.next(@user)
   = link_to t('.next'), expression_path(@expression.next(@user))
-= link_to t('.go_to_index'), root_path
+= link_to t('.go_to_index'), home_path

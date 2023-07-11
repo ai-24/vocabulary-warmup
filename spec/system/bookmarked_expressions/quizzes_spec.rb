@@ -29,13 +29,18 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
       OmniAuth.config.add_mock(:google_oauth2, { uid: user1.uid, info: { name: user1.name } })
 
       visit '/'
-      click_button 'Sign up/Log in with Google'
-      has_text? 'ログインしました'
-
-      visit bookmarked_expressions_quiz_path
+      within '.button-on-header' do
+        click_button 'Sign up/Log in with Google'
+      end
     end
 
     it 'check the questions are from bookmarks' do
+      expect(page).to have_content 'ログインしました'
+      click_link 'ブックマーク'
+      expect(page).to have_current_path bookmarked_expressions_path
+      click_link 'クイズに挑戦'
+      expect(page).to have_current_path bookmarked_expressions_quiz_path
+
       expect(page).to have_css 'p.content-of-question'
       5.times do |n|
         click_button 'クイズに解答する'
@@ -51,6 +56,12 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
     end
 
     it 'check the questions and answers are set correctly' do
+      expect(page).to have_content 'ログインしました'
+      click_link 'ブックマーク'
+      expect(page).to have_current_path bookmarked_expressions_path
+      click_link 'クイズに挑戦'
+      expect(page).to have_current_path bookmarked_expressions_quiz_path
+
       5.times do |n|
         if has_text?(first_expression_item.explanation)
           fill_in('解答を入力', with: first_expression_item.content)
@@ -72,6 +83,12 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
     end
 
     it 'check if a section of moving expressions to bookmark or memorised list is not on the result page when all answers were wrong' do
+      expect(page).to have_content 'ログインしました'
+      click_link 'ブックマーク'
+      expect(page).to have_current_path bookmarked_expressions_path
+      click_link 'クイズに挑戦'
+      expect(page).to have_current_path bookmarked_expressions_quiz_path
+
       5.times do |n|
         click_button 'クイズに解答する'
         n < 4 ? click_button('次へ') : click_button('クイズの結果を確認する')
@@ -82,6 +99,12 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
     end
 
     it 'check if a message that recommends next action is not on the result page when a section of moving expressions is not there' do
+      expect(page).to have_content 'ログインしました'
+      click_link 'ブックマーク'
+      expect(page).to have_current_path bookmarked_expressions_path
+      click_link 'クイズに挑戦'
+      expect(page).to have_current_path bookmarked_expressions_quiz_path
+
       5.times do |n|
         click_button 'クイズに解答する'
         n < 4 ? click_button('次へ') : click_button('クイズの結果を確認する')
@@ -91,6 +114,12 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
     end
 
     it 'check if a section of moving expressions to memorised list is on the result page when some answers are correct' do
+      expect(page).to have_content 'ログインしました'
+      click_link 'ブックマーク'
+      expect(page).to have_current_path bookmarked_expressions_path
+      click_link 'クイズに挑戦'
+      expect(page).to have_current_path bookmarked_expressions_quiz_path
+
       5.times do |n|
         if has_text?(first_expression_item.explanation)
           fill_in('解答を入力', with: first_expression_item.content)
@@ -106,6 +135,12 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
     end
 
     it 'check if request for saving bookmarkings is not sent when memorising is saved' do
+      expect(page).to have_content 'ログインしました'
+      click_link 'ブックマーク'
+      expect(page).to have_current_path bookmarked_expressions_path
+      click_link 'クイズに挑戦'
+      expect(page).to have_current_path bookmarked_expressions_quiz_path
+
       5.times do |n|
         if has_text?(first_expression_item.explanation)
           fill_in('解答を入力', with: first_expression_item.content)
@@ -122,6 +157,12 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
     end
 
     it 'check if bookmarking is destroyed when memorising is created' do
+      expect(page).to have_content 'ログインしました'
+      click_link 'ブックマーク'
+      expect(page).to have_current_path bookmarked_expressions_path
+      click_link 'クイズに挑戦'
+      expect(page).to have_current_path bookmarked_expressions_quiz_path
+
       5.times do |n|
         if has_text?(first_expression_item.explanation)
           fill_in('解答を入力', with: first_expression_item.content)
@@ -139,6 +180,12 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
     end
 
     it 'check if bookmarkings are destroyed when memorisings are created' do
+      expect(page).to have_content 'ログインしました'
+      click_link 'ブックマーク'
+      expect(page).to have_current_path bookmarked_expressions_path
+      click_link 'クイズに挑戦'
+      expect(page).to have_current_path bookmarked_expressions_quiz_path
+
       5.times do |n|
         if has_text?(first_expression_item.explanation)
           fill_in('解答を入力', with: first_expression_item.content)
@@ -175,13 +222,13 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
       OmniAuth.config.test_mode = true
       OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
 
-      visit '/'
+      visit '/home'
       click_button 'Sign up/Log in with Google'
       has_text? 'ログインしました'
     end
 
     it 'check the questions are from bookmarks' do
-      visit '/quiz'
+      click_link 'クイズに挑戦'
       9.times do |n|
         expect(page).to have_selector 'p.content-of-question'
         click_button 'クイズに解答する'
@@ -223,11 +270,13 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
       OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
 
       visit '/'
-      click_button 'Sign up/Log in with Google'
-      has_text? 'ログインしました'
+      within '.button-on-header' do
+        click_button 'Sign up/Log in with Google'
+      end
     end
 
     it 'check if the page is bookmarks list' do
+      expect(page).to have_content 'ログインしました'
       expect(new_user.bookmarkings.count).to eq 0
       visit bookmarked_expressions_path
       expect(page).not_to have_link 'クイズに挑戦'

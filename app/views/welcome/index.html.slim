@@ -1,45 +1,54 @@
 .welcome.bg-white.py-16.rounded-sm.max-w-800.mx-auto
   p.text-green-700.pl-8.pb-5.font-bold
     = notice
-  h1.text-2xl.font-bold.w-2/3.pb-14.pl-8.max-w-lg
-    = t('.target')
-    i class="fa-solid fa-earth-asia pr-0.5"
-    i class="fa-regular fa-comments"
-  .w-4/5.mx-auto.border-lavender-600.border-2.rounded.py-9.px-12
-    .pb-4
-      .rounded-t.bg-golden-yellow-800.w-2/5.grid.justify-items-center
-        h2.text-lg.font-semibold.mx-5
-          = t('.about_word_warmup')
-      .py-3.px-4.bg-golden-yellow-50.rounded-r.rounded-bl.border.border-golden-yellow-800
-        p.font-semibold
-          = t('.description')
-        .py-1.pl-3
-          i class="fa-solid fa-asterisk fa-xs"
-          p.text-sm.inline
-            = t('.note1')
-          p.text-sm.pl-2
-            = t('.note2')
-    .px-6.pt-2
-      p.font-medium.underline.decoration-golden-yellow-800
-        = t('.target_user')
-      ul.list-disc.pl-4
-        li
-          = t('.user1')
-        li
-          = t('.user2')
-        li
-          = t('.user3')
-    .pt-6
-      .bg-golden-yellow-800.rounded.w-2/5.grid.justify-items-center
-        p.font-medium.mx-5
-          = t('.after_login')
-      ul.list-disc.pl-5.pt-2
-        li
-          = t('.function1')
-        li
-          = t('.function2')
-  .w-4/5.flex.flex-row.mx-auto.mx-40.mt-6
-    .basis-1/2.text-center.ml-7.mr-3
-      = button_to 'Sign up/Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }, class: 'w-full font-bold text-lg py-2 rounded-full bg-lavender-800 hover:bg-lavender-600 text-white'
-    .basis-1/2.text-center.tracking-widest.ml-3.mr-7
-      = link_to t('.try_app'), root_path, class: 'inline-block w-full font-bold text-lg py-2 rounded-full bg-lavender-800 hover:bg-lavender-600 text-white'
+  - if alert
+    .error.text-center.pb-16
+      i class="fa-solid fa-circle-exclamation fa-xl pr-1 text-red-600"
+      p.font-semibold.inline-block.text-xl
+        = alert
+      - if alert == 'ログインが必要です'
+        = button_to 'Sign up/Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }, class: 'text-lavender-800 hover:bg-lavender-50 border-2 border-lavender-800 rounded-full font-bold px-3 mt-1.5'
+
+  div class=error_or_not(alert)
+    h1.text-2xl.font-bold.w-2/3.pb-14.pl-8.max-w-lg
+      = t('.target')
+      i class="fa-solid fa-earth-asia pr-0.5"
+      i class="fa-regular fa-comments"
+    .w-4/5.mx-auto.border-lavender-600.border-2.rounded.py-9.px-12
+      .pb-4
+        .rounded-t.bg-golden-yellow-800.w-2/5.grid.justify-items-center
+          h2.text-lg.font-semibold.mx-5
+            = t('.about_word_warmup')
+        .py-3.px-4.bg-golden-yellow-50.rounded-r.rounded-bl.border.border-golden-yellow-800
+          p.font-semibold
+            = t('.description')
+          .py-1.pl-3
+            i class="fa-solid fa-asterisk fa-xs"
+            p.text-sm.inline
+              = t('.note1')
+            p.text-sm.pl-2
+              = t('.note2')
+      .px-6.pt-2
+        p.font-medium.underline.decoration-golden-yellow-800
+          = t('.target_user')
+        ul.list-disc.pl-4
+          li
+            = t('.user1')
+          li
+            = t('.user2')
+          li
+            = t('.user3')
+      .pt-6
+        .bg-golden-yellow-800.rounded.w-2/5.grid.justify-items-center
+          p.font-medium.mx-5
+            = t('.after_login')
+        ul.list-disc.pl-5.pt-2
+          li
+            = t('.function1')
+          li
+            = t('.function2')
+    .w-4/5.flex.flex-row.mx-auto.mx-40.mt-6
+      .basis-1/2.text-center.ml-7.mr-3
+        = button_to 'Sign up/Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }, class: 'w-full font-bold text-lg py-2 rounded-full bg-lavender-800 hover:bg-lavender-600 text-white'
+      .basis-1/2.text-center.tracking-widest.ml-3.mr-7
+        = link_to t('.try_app'), home_path, class: 'inline-block w-full font-bold text-lg py-2 rounded-full bg-lavender-800 hover:bg-lavender-600 text-white'

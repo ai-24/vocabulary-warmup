@@ -4,6 +4,6 @@ class UsersController < ApplicationController
   def destroy
     current_user.destroy!
     reset_session
-    redirect_to welcome_path, notice: t('.success')
+    redirect_to root_path, notice: t('.success')
   end
 end
