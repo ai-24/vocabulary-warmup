@@ -6,6 +6,7 @@ RSpec.describe 'Expressions' do
   describe 'expressions/1' do
     it 'check url' do
       visit '/'
+      click_link '使ってみる'
       click_link 'balcony and Veranda'
       expect(page).to have_content '下記の英単語・フレーズの違いについて'
       expect(page).to have_current_path expression_path(1), ignore_query: true
@@ -13,6 +14,7 @@ RSpec.describe 'Expressions' do
 
     it 'show a title section' do
       visit '/'
+      click_link '使ってみる'
       click_link 'balcony and Veranda'
       within '.title' do
         expect(page).to have_content '1. balcony'
@@ -23,6 +25,7 @@ RSpec.describe 'Expressions' do
 
     it 'show details of the first expression' do
       visit '/'
+      click_link '使ってみる'
       click_link 'balcony and Veranda'
       within '.expression0' do
         expect(page).to have_content 'balcony'
@@ -34,6 +37,7 @@ RSpec.describe 'Expressions' do
 
     it 'show details of the second expression' do
       visit '/'
+      click_link '使ってみる'
       click_link 'balcony and Veranda'
       within '.expression1' do
         expect(page).to have_content 'Veranda'
@@ -75,9 +79,11 @@ RSpec.describe 'Expressions' do
       OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
       visit '/'
-      click_button 'Sign up/Log in with Google'
+      within '.welcome' do
+        click_button 'Sign up/Log in with Google'
+      end
 
-      visit '/expressions/new'
+      click_link '新規作成'
       fill_in('１つ目の英単語 / フレーズ', with: 'on the beach')
       fill_in('２つ目の英単語 / フレーズ', with: 'at the beach')
       fill_in('３つ目の英単語 / フレーズ', with: 'around the beach')
@@ -97,8 +103,6 @@ RSpec.describe 'Expressions' do
     end
 
     it 'show a title section' do
-      visit '/'
-      click_link 'on the beach, at the beach and around the beach'
       within '.title' do
         expect(page).to have_content '1. on the beach'
         expect(page).to have_content '2. at the beach'
@@ -147,11 +151,12 @@ RSpec.describe 'Expressions' do
   end
 
   describe 'next and back button' do
-    context 'when the expressions page is visited through root' do
+    context 'when the expressions is in words and phrases list' do
       it 'check if there is no next button when the expression is the last one' do
         first_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
 
         visit '/'
+        click_link '使ってみる'
         click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
 
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
@@ -164,6 +169,7 @@ RSpec.describe 'Expressions' do
         expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
 
         visit '/'
+        click_link '使ってみる'
         click_link 'balcony and Veranda'
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path '/expressions/1'
@@ -173,6 +179,7 @@ RSpec.describe 'Expressions' do
 
       it 'check if there is no back and next button when expression is one in a list' do
         visit '/'
+        click_link '使ってみる'
         click_link 'balcony and Veranda'
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path '/expressions/1'
@@ -185,6 +192,7 @@ RSpec.describe 'Expressions' do
         second_expression_items = FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:note))
 
         visit '/'
+        click_link '使ってみる'
         click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path "/expressions/#{first_expression_items[0].expression.id}", ignore_query: true
@@ -199,6 +207,7 @@ RSpec.describe 'Expressions' do
         second_expression_items = FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:note))
 
         visit '/'
+        click_link '使ってみる'
         click_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}"
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true
@@ -208,7 +217,7 @@ RSpec.describe 'Expressions' do
       end
     end
 
-    context 'when the expressions page is visited through bookmarked expressions list' do
+    context 'when the expressions is in bookmarked expressions list' do
       let!(:user) { FactoryBot.create(:user) }
       let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
       let!(:second_expression_items) { FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
@@ -223,7 +232,9 @@ RSpec.describe 'Expressions' do
         OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
         visit '/'
-        click_button 'Sign up/Log in with Google'
+        within '.button-on-header' do
+          click_button 'Sign up/Log in with Google'
+        end
       end
 
       it 'check next button' do
@@ -291,7 +302,7 @@ RSpec.describe 'Expressions' do
       end
     end
 
-    context 'when the expression page is visited through memorised expression list' do
+    context 'when the expression is in memorised expression list' do
       let!(:user) { FactoryBot.create(:user) }
       let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
       let!(:second_expression_items) { FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
@@ -306,7 +317,9 @@ RSpec.describe 'Expressions' do
         OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
         visit '/'
-        click_button 'Sign up/Log in with Google'
+        within '.button-on-header' do
+          click_button 'Sign up/Log in with Google'
+        end
       end
 
       it 'check next button' do
@@ -386,18 +399,20 @@ RSpec.describe 'Expressions' do
       OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
 
       visit '/'
-      click_button 'Sign up/Log in with Google'
+      within '.welcome' do
+        click_button 'Sign up/Log in with Google'
+      end
       expect(page).to have_content 'ログインしました'
 
       visit "/expressions/#{first_expression_items[0].expression.id}"
-      expect(page).to have_current_path root_path
+      expect(page).to have_current_path home_path
       expect(page).to have_content '権限がないため閲覧できません'
       within '.error' do
         expect(page).not_to have_button 'Sign up/Log in with Google'
       end
 
       visit "/expressions/#{second_expression_items[0].expression.id}"
-      expect(page).to have_current_path root_path
+      expect(page).to have_current_path home_path
       expect(page).to have_content '権限がないため閲覧できません'
     end
 
@@ -406,7 +421,9 @@ RSpec.describe 'Expressions' do
       OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
       visit '/'
-      click_button 'Sign up/Log in with Google'
+      within '.button-on-header' do
+        click_button 'Sign up/Log in with Google'
+      end
       expect(page).to have_content 'ログインしました'
       visit "/expressions/#{first_expression_items[0].expression.id}"
 

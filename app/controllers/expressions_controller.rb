@@ -15,12 +15,12 @@ class ExpressionsController < ApplicationController
     if @expression.user_id.nil?
       @user = current_user
       session.delete(:forwarding_url)
-      session[:forwarding_url] = root_path
+      session[:forwarding_url] = home_path
     elsif logged_in?
       if @expression.user_id == current_user.id
         @user = current_user
       else
-        redirect_to root_path, alert: t('.no_authority')
+        redirect_to home_path, alert: t('.no_authority')
       end
     else
       redirect_to root_path, alert: t('not_logged_in')
@@ -68,7 +68,7 @@ class ExpressionsController < ApplicationController
     if expression
       redirect_to expression_path(expression), notice: t('.success')
     else
-      redirect_to root_path, notice: t('.success')
+      redirect_to home_path, notice: t('.success')
     end
   end
 
@@ -83,7 +83,7 @@ class ExpressionsController < ApplicationController
 
   def require_authority
     if logged_in?
-      redirect_to root_path, alert: t('no_authority') unless @expression.user_id == current_user.id
+      redirect_to home_path, alert: t('no_authority') unless @expression.user_id == current_user.id
     else
       redirect_to root_path, alert: t('not_logged_in')
     end

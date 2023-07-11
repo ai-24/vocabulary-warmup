@@ -6,8 +6,6 @@
       i class="fa-solid fa-circle-exclamation fa-xl pr-1 text-red-600"
     p.font-semibold.inline-block.text-xl
       = alert
-    - if alert == 'ログインが必要です'
-      = button_to 'Sign up/Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }, class: 'text-lavender-800 hover:bg-lavender-50 border-2 border-lavender-800 rounded-full font-bold px-3 mt-1.5'
 
   div class=error_or_not(alert)
     = render 'shared/page_tabs'

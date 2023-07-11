@@ -11,6 +11,7 @@ RSpec.describe 'Expressions' do
     describe 'authority' do
       it 'check if the link is not shown when user has not logged in' do
         visit '/'
+        click_link '使ってみる'
         expect(page).not_to have_link '新規作成'
         expect(page).to have_content '新規作成'
         expect(page).not_to have_content 'ログインすると英単語やフレーズの登録が可能です'
@@ -64,16 +65,16 @@ RSpec.describe 'Expressions' do
         expect(page).to have_content '意味の違いや使い分けを学習したい英単語又はフレーズを入力してください'
       end
 
-      it 'check if root is on the page when user logged in from tooltip' do
+      it 'check if home is on the page when user logged in from tooltip' do
         OmniAuth.config.test_mode = true
         OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
-        visit '/'
+        visit '/home'
         find('p', text: '新規作成').hover
         within '.create-button-for-non-users' do
           click_button 'Sign up/Log in with Google'
         end
-        expect(page).to have_current_path root_path
+        expect(page).to have_current_path home_path
         expect(page).to have_link '新規作成'
       end
     end
@@ -86,7 +87,10 @@ RSpec.describe 'Expressions' do
         OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
         visit '/'
-        click_button 'Sign up/Log in with Google'
+        within '.button-on-header' do
+          click_button 'Sign up/Log in with Google'
+        end
+
         click_link '新規作成'
 
         fill_in('１つ目の英単語 / フレーズ', with: 'on the beach')
@@ -122,7 +126,9 @@ RSpec.describe 'Expressions' do
         OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
         visit '/'
-        click_button 'Sign up/Log in with Google'
+        within '.button-on-header' do
+          click_button 'Sign up/Log in with Google'
+        end
         has_text? 'ログインしました'
         visit '/expressions/new'
 
@@ -159,7 +165,9 @@ RSpec.describe 'Expressions' do
         OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
         visit '/'
-        click_button 'Sign up/Log in with Google'
+        within '.button-on-header' do
+          click_button 'Sign up/Log in with Google'
+        end
         click_link '新規作成'
 
         fill_in('１つ目の英単語 / フレーズ', with: 'word1')
@@ -207,7 +215,9 @@ RSpec.describe 'Expressions' do
         OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
         visit '/'
-        click_button 'Sign up/Log in with Google'
+        within '.button-on-header' do
+          click_button 'Sign up/Log in with Google'
+        end
         click_link '新規作成'
 
         fill_in('１つ目の英単語 / フレーズ', with: 'word1')
@@ -253,7 +263,9 @@ RSpec.describe 'Expressions' do
       OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
       visit '/'
-      click_button 'Sign up/Log in with Google'
+      within '.button-on-header' do
+        click_button 'Sign up/Log in with Google'
+      end
       click_link '新規作成'
     end
 
@@ -429,7 +441,9 @@ RSpec.describe 'Expressions' do
       OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
       visit '/'
-      click_button 'Sign up/Log in with Google'
+      within '.button-on-header' do
+        click_button 'Sign up/Log in with Google'
+      end
       click_link '新規作成'
     end
 
@@ -532,7 +546,9 @@ RSpec.describe 'Expressions' do
       OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
       visit '/'
-      click_button 'Sign up/Log in with Google'
+      within '.welcome' do
+        click_button 'Sign up/Log in with Google'
+      end
       click_link '新規作成'
     end
 

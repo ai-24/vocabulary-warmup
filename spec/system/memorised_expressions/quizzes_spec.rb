@@ -29,10 +29,13 @@ RSpec.describe 'MemorisedExpressions Quiz' do
       OmniAuth.config.add_mock(:google_oauth2, { uid: user1.uid, info: { name: user1.name } })
 
       visit '/'
-      click_button 'Sign up/Log in with Google'
+      within '.button-on-header' do
+        click_button 'Sign up/Log in with Google'
+      end
       has_text? 'ログインしました'
 
-      visit memorised_expressions_quiz_path
+      click_link '覚えた語彙'
+      click_link 'クイズに挑戦'
     end
 
     it 'check the questions are from memorised list' do
@@ -184,10 +187,12 @@ RSpec.describe 'MemorisedExpressions Quiz' do
       OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
 
       visit '/'
-      click_button 'Sign up/Log in with Google'
+      within '.button-on-header' do
+        click_button 'Sign up/Log in with Google'
+      end
       has_text? 'ログインしました'
 
-      visit '/quiz'
+      click_link 'クイズに挑戦'
       9.times do |n|
         if has_text?('A platform on the side of a building, accessible from inside the building.')
           fill_in('解答を入力', with: 'balcony')
@@ -235,13 +240,15 @@ RSpec.describe 'MemorisedExpressions Quiz' do
       OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
 
       visit '/'
-      click_button 'Sign up/Log in with Google'
+      within '.welcome' do
+        click_button 'Sign up/Log in with Google'
+      end
       has_text? 'ログインしました'
     end
 
     it 'check if the page is memorised list' do
       expect(new_user.memorisings.count).to eq 0
-      visit memorised_expressions_path
+      click_link '覚えた語彙'
       expect(page).not_to have_link 'クイズに挑戦'
       visit memorised_expressions_quiz_path
       expect(page).to have_current_path memorised_expressions_path
@@ -251,7 +258,9 @@ RSpec.describe 'MemorisedExpressions Quiz' do
 
   context 'when user has not logged in' do
     it 'check if the page is memorised list' do
-      visit memorised_expressions_path
+      visit '/'
+      click_link '使ってみる'
+      click_link '覚えた語彙'
       expect(page).not_to have_link 'クイズに挑戦'
 
       visit memorised_expressions_quiz_path

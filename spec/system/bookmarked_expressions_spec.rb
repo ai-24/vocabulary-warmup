@@ -23,13 +23,16 @@ RSpec.describe 'Bookmarked expressions' do
       OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
       visit '/'
-      click_button 'Sign up/Log in with Google'
+      within '.button-on-header' do
+        click_button 'Sign up/Log in with Google'
+      end
     end
 
     context 'when there are no bookmarks' do
       it 'show a message that there are no bookmarks' do
         expect(page).to have_content 'ログインしました'
-        visit '/bookmarked_expressions'
+        click_link 'ブックマーク'
+        expect(page).to have_current_path bookmarked_expressions_path
         expect(page).to have_content user.name
         expect(all('li.expression').count).to eq 0
         expect(page).to have_content 'ブックマークしている英単語またはフレーズはありません'
@@ -37,15 +40,15 @@ RSpec.describe 'Bookmarked expressions' do
 
       it 'check tabs' do
         expect(page).to have_content 'ログインしました'
-        visit '/bookmarked_expressions'
+        click_link 'ブックマーク'
 
         within '.page_tabs' do
-          expect(page).to have_link '英単語・フレーズ', href: root_path
+          expect(page).to have_link '英単語・フレーズ', href: home_path
           expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
           expect(page).to have_link '覚えた語彙', href: memorised_expressions_path
           find('a.words-and-phrases-link', text: '英単語・フレーズ').click
         end
-        expect(page).to have_current_path root_path
+        expect(page).to have_current_path home_path
         expect(all('li.expression').count).to eq 3
         within '.page_tabs' do
           click_link 'ブックマーク'
@@ -59,7 +62,7 @@ RSpec.describe 'Bookmarked expressions' do
     context 'when there are bookmarks' do
       it 'show a list of bookmarked expressions' do
         expect(page).to have_content 'ログインしました'
-        visit '/quiz'
+        click_link 'クイズに挑戦'
 
         7.times do |n|
           expect(page).to have_selector 'p.content-of-question'
@@ -80,7 +83,7 @@ RSpec.describe 'Bookmarked expressions' do
 
       it 'check titles and links' do
         expect(page).to have_content 'ログインしました'
-        visit '/quiz'
+        click_link 'クイズに挑戦'
 
         7.times do |n|
           expect(page).to have_selector 'p.content-of-question'
@@ -105,7 +108,7 @@ RSpec.describe 'Bookmarked expressions' do
 
       it 'check tabs' do
         expect(page).to have_content 'ログインしました'
-        visit '/quiz'
+        click_link 'クイズに挑戦'
 
         7.times do |n|
           expect(page).to have_selector 'p.content-of-question'
@@ -119,7 +122,7 @@ RSpec.describe 'Bookmarked expressions' do
         visit '/bookmarked_expressions'
 
         within '.page_tabs' do
-          expect(page).to have_link '英単語・フレーズ', href: root_path
+          expect(page).to have_link '英単語・フレーズ', href: home_path
           expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
           expect(page).to have_link '覚えた語彙', href: memorised_expressions_path
         end
@@ -129,7 +132,7 @@ RSpec.describe 'Bookmarked expressions' do
     context 'when bookmarks were made by two different times' do
       it 'check order' do
         expect(page).to have_content 'ログインしました'
-        visit '/quiz'
+        click_link 'クイズに挑戦'
 
         7.times do |n|
           expect(page).to have_selector 'p.content-of-question'
@@ -174,7 +177,10 @@ RSpec.describe 'Bookmarked expressions' do
       OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
       visit '/'
-      click_button 'Sign up/Log in with Google'
+      within '.button-on-header' do
+        click_button 'Sign up/Log in with Google'
+      end
+
       has_text? 'ログインしました'
 
       visit '/quiz'
@@ -187,15 +193,16 @@ RSpec.describe 'Bookmarked expressions' do
       click_button '保存する'
       has_text? 'ブックマークしました！'
 
-      visit '/'
+      visit '/home'
       find('label', text: user.name).click
       click_button 'Log out'
     end
 
     it 'show message that is not logged in' do
       expect(page).to have_content 'ログアウトしました'
-
-      visit '/bookmarked_expressions'
+      click_link '使ってみる'
+      expect(page).to have_current_path home_path
+      click_link 'ブックマーク'
       expect(page).to have_button 'Sign up/Log in with Google'
       expect(all('li.expression').count).to eq 0
       expect(page).to have_content 'ログインしていないため閲覧できません'
@@ -203,15 +210,17 @@ RSpec.describe 'Bookmarked expressions' do
 
     it 'check tabs' do
       expect(page).to have_content 'ログアウトしました'
-      visit '/bookmarked_expressions'
+      click_link '使ってみる'
+      expect(page).to have_current_path home_path
+      click_link 'ブックマーク'
 
       within '.page_tabs' do
-        expect(page).to have_link '英単語・フレーズ', href: root_path
+        expect(page).to have_link '英単語・フレーズ', href: home_path
         expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
         expect(page).to have_link '覚えた語彙', href: memorised_expressions_path
         find('a.words-and-phrases-link', text: '英単語・フレーズ').click
       end
-      expect(page).to have_current_path root_path
+      expect(page).to have_current_path home_path
       expect(all('li.expression').count).to eq 1
       within '.page_tabs' do
         click_link 'ブックマーク'
@@ -223,7 +232,9 @@ RSpec.describe 'Bookmarked expressions' do
 
     it 'check if there is no incremental search' do
       expect(page).to have_content 'ログアウトしました'
-      visit '/bookmarked_expressions'
+      click_link '使ってみる'
+      expect(page).to have_current_path home_path
+      click_link 'ブックマーク'
       expect(page).not_to have_selector '.incremental-search'
     end
   end

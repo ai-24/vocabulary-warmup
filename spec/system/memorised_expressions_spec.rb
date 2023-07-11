@@ -15,12 +15,15 @@ RSpec.describe 'Memorised expressions' do
         OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
         visit '/'
-        click_button 'Sign up/Log in with Google'
+        within '.welcome' do
+          click_button 'Sign up/Log in with Google'
+        end
       end
 
       it 'show a message that there are no data' do
         expect(page).to have_content 'ログインしました'
-        visit '/memorised_expressions'
+        click_link '覚えた語彙'
+        expect(page).to have_current_path memorised_expressions_path
         expect(page).to have_content user.name
         expect(all('li.expression').count).to eq 0
         expect(page).to have_content 'このリストに登録している英単語またはフレーズはありません'
@@ -30,7 +33,7 @@ RSpec.describe 'Memorised expressions' do
         expect(page).to have_content 'ログインしました'
         visit '/memorised_expressions'
         within '.page_tabs' do
-          expect(page).to have_link '英単語・フレーズ', href: root_path
+          expect(page).to have_link '英単語・フレーズ', href: home_path
           expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
           expect(page).to have_link '覚えた語彙', href: memorised_expressions_path
           click_link 'ブックマーク'
@@ -70,12 +73,15 @@ RSpec.describe 'Memorised expressions' do
         OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
         visit '/'
-        click_button 'Sign up/Log in with Google'
+        within '.button-on-header' do
+          click_button 'Sign up/Log in with Google'
+        end
       end
 
       it 'show a list of memorised expressions' do
         expect(page).to have_content 'ログインしました'
-        visit '/memorised_expressions'
+        click_link '覚えた語彙'
+        expect(page).to have_current_path memorised_expressions_path
 
         expect(all('li.expression').count).to eq 12
         expect(page).not_to have_content 'このリストに登録している英単語またはフレーズはありません'
@@ -96,9 +102,10 @@ RSpec.describe 'Memorised expressions' do
 
       it 'check tabs' do
         expect(page).to have_content 'ログインしました'
-        visit '/memorised_expressions'
+        click_link '覚えた語彙'
+        expect(page).to have_current_path memorised_expressions_path
         within '.page_tabs' do
-          expect(page).to have_link '英単語・フレーズ', href: root_path
+          expect(page).to have_link '英単語・フレーズ', href: home_path
           expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
           expect(page).to have_link '覚えた語彙', href: memorised_expressions_path
           click_link 'ブックマーク'
@@ -109,13 +116,14 @@ RSpec.describe 'Memorised expressions' do
           click_link '覚えた語彙'
           find('a.words-and-phrases-link', text: '英単語・フレーズ').click
         end
-        expect(page).to have_current_path root_path
+        expect(page).to have_current_path home_path
         expect(page).to have_content 'このリストに登録されている英単語またはフレーズはありません'
       end
 
       it 'check if there is incremental search' do
         expect(page).to have_content 'ログインしました'
-        visit '/memorised_expressions'
+        click_link '覚えた語彙'
+        expect(page).to have_current_path memorised_expressions_path
         expect(page).to have_selector '.incremental-search'
       end
     end
@@ -137,10 +145,12 @@ RSpec.describe 'Memorised expressions' do
         OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
         visit '/'
-        click_button 'Sign up/Log in with Google'
+        within '.button-on-header' do
+          click_button 'Sign up/Log in with Google'
+        end
         has_text? 'ログインしました'
 
-        visit '/quiz'
+        click_link 'クイズに挑戦'
 
         2.times do |n|
           if has_text?(first_expression_item.explanation)
@@ -178,10 +188,12 @@ RSpec.describe 'Memorised expressions' do
       OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
       visit '/'
-      click_button 'Sign up/Log in with Google'
+      within '.button-on-header' do
+        click_button 'Sign up/Log in with Google'
+      end
       has_text? 'ログインしました'
 
-      visit '/quiz'
+      click_link 'クイズに挑戦'
 
       2.times do |n|
         if has_text?('A platform on the side of a building, accessible from inside the building.')
@@ -195,7 +207,7 @@ RSpec.describe 'Memorised expressions' do
       click_button '保存する'
       has_text? '覚えた英単語・フレーズのリストに保存しました！'
 
-      visit '/'
+      visit '/home'
       find('label', text: user.name).click
       click_button 'Log out'
     end
@@ -213,7 +225,7 @@ RSpec.describe 'Memorised expressions' do
       expect(page).to have_content 'ログアウトしました'
       visit '/memorised_expressions'
       within '.page_tabs' do
-        expect(page).to have_link '英単語・フレーズ', href: root_path
+        expect(page).to have_link '英単語・フレーズ', href: home_path
         expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
         expect(page).to have_link '覚えた語彙', href: memorised_expressions_path
         click_link 'ブックマーク'
@@ -224,7 +236,7 @@ RSpec.describe 'Memorised expressions' do
         click_link '覚えた語彙'
         find('a.words-and-phrases-link', text: '英単語・フレーズ').click
       end
-      expect(page).to have_current_path root_path
+      expect(page).to have_current_path home_path
       expect(all('li.expression').count).to eq 1
     end
 

@@ -30,10 +30,12 @@ RSpec.describe 'Quiz' do
       OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
       visit '/'
-      click_button 'Sign up/Log in with Google'
+      within '.button-on-header' do
+        click_button 'Sign up/Log in with Google'
+      end
       has_text? 'ログインしました'
 
-      visit '/quiz'
+      click_link 'クイズに挑戦'
       3.times do |n|
         click_button 'クイズに解答する'
         n < 2 ? click_button('次へ') : click_button('クイズの結果を確認する')
@@ -47,6 +49,7 @@ RSpec.describe 'Quiz' do
   describe 'a quiz for everyone' do
     before do
       visit '/'
+      click_link '使ってみる'
     end
 
     it 'check if there is no incremental search' do
@@ -114,7 +117,9 @@ RSpec.describe 'Quiz' do
   describe 'quiz result' do
     describe 'check if screens change' do
       before do
-        visit '/quiz'
+        visit '/'
+        click_link '使ってみる'
+        click_link 'クイズを試してみる'
       end
 
       it 'change the screen from quiz to result' do
@@ -147,7 +152,9 @@ RSpec.describe 'Quiz' do
       let(:answers) { [] } # クイズの問題がランダムに出題されるため、クイズで入力した値をexampleで取得できるようにbeforeでこの配列に値を代入
 
       before do
-        visit '/quiz'
+        visit '/'
+        click_link '使ってみる'
+        click_link 'クイズを試してみる'
         fill_in('解答を入力', with: 'wrong answer')
         click_button 'クイズに解答する'
         click_button '次へ'
@@ -177,7 +184,9 @@ RSpec.describe 'Quiz' do
 
     describe 'show user answers when an answer was not given' do
       before do
-        visit '/quiz'
+        visit '/'
+        click_link '使ってみる'
+        click_link 'クイズを試してみる'
         fill_in('解答を入力', with: '')
         click_button 'クイズに解答する'
         click_button '次へ'
@@ -195,7 +204,9 @@ RSpec.describe 'Quiz' do
 
     describe 'show important notice' do
       before do
-        visit '/quiz'
+        visit '/'
+        click_link '使ってみる'
+        click_link 'クイズを試してみる'
         fill_in('解答を入力', with: '')
         click_button 'クイズに解答する'
         click_button '次へ'
@@ -216,7 +227,9 @@ RSpec.describe 'Quiz' do
       before do
         2.times { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
 
-        visit '/quiz'
+        visit '/'
+        click_link '使ってみる'
+        click_link 'クイズを試してみる'
         5.times do
           fill_in('解答を入力', with: 'test')
           click_button 'クイズに解答する'
@@ -240,7 +253,9 @@ RSpec.describe 'Quiz' do
       let(:answers) { [] } # クイズの問題がランダムに出題されるため、クイズで入力した値をexampleで取得できるようにbeforeでこの配列に値を代入
 
       before do
-        visit '/quiz'
+        visit '/'
+        click_link '使ってみる'
+        click_link 'クイズを試してみる'
         fill_in('解答を入力', with: '')
         click_button 'クイズに解答する'
         click_button '次へ'
@@ -300,7 +315,9 @@ RSpec.describe 'Quiz' do
       let!(:third_expression_item) { FactoryBot.create(:expression_item3, expression:) }
 
       before do
-        visit '/quiz'
+        visit '/'
+        click_link '使ってみる'
+        click_link 'クイズを試してみる'
         5.times do |n|
           if has_text?('A platform on the side of a building, accessible from inside the building.')
             fill_in('解答を入力', with: 'balcony')
@@ -337,7 +354,9 @@ RSpec.describe 'Quiz' do
       let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note)) }
 
       before do
-        visit '/quiz'
+        visit '/'
+        click_link '使ってみる'
+        click_link 'クイズを試してみる'
         2.times do
           fill_in('解答を入力', with: 'wrong answer')
           click_button 'クイズに解答する'
@@ -371,7 +390,9 @@ RSpec.describe 'Quiz' do
       let!(:second_expression_item) { FactoryBot.create(:expression_item2, expression:) }
 
       before do
-        visit '/quiz'
+        visit '/'
+        click_link '使ってみる'
+        click_link 'クイズを試してみる'
         4.times do |n|
           if has_text?('A platform on the side of a building, accessible from inside the building.')
             fill_in('解答を入力', with: 'balcony')
@@ -426,7 +447,9 @@ RSpec.describe 'Quiz' do
       let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
 
       before do
-        visit '/quiz'
+        visit '/'
+        click_link '使ってみる'
+        click_link 'クイズを試してみる'
         4.times do |n|
           fill_in('解答を入力', with: '')
           click_button 'クイズに解答する'
@@ -473,7 +496,9 @@ RSpec.describe 'Quiz' do
       let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
 
       before do
-        visit '/quiz'
+        visit '/'
+        click_link '使ってみる'
+        click_link 'クイズを試してみる'
         4.times do |n|
           if has_text?('A platform on the side of a building, accessible from inside the building.')
             fill_in('解答を入力', with: 'balcony')
@@ -519,10 +544,12 @@ RSpec.describe 'Quiz' do
         OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
         visit '/'
-        click_button 'Sign up/Log in with Google'
+        within '.welcome' do
+          click_button 'Sign up/Log in with Google'
+        end
         has_text? 'ログインしました'
 
-        visit '/quiz'
+        click_link 'クイズに挑戦'
 
         4.times do |n|
           fill_in('解答を入力', with: '')
@@ -623,10 +650,12 @@ RSpec.describe 'Quiz' do
         OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
         visit '/'
-        click_button 'Sign up/Log in with Google'
+        within '.welcome' do
+          click_button 'Sign up/Log in with Google'
+        end
         has_text? 'ログインしました'
 
-        visit '/quiz'
+        click_link 'クイズに挑戦'
 
         4.times do |n|
           if has_text?('A platform on the side of a building, accessible from inside the building.')
@@ -733,10 +762,12 @@ RSpec.describe 'Quiz' do
         OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
         visit '/'
-        click_button 'Sign up/Log in with Google'
+        within '.welcome' do
+          click_button 'Sign up/Log in with Google'
+        end
         has_text? 'ログインしました'
 
-        visit '/quiz'
+        click_link 'クイズに挑戦'
 
         4.times do |n|
           if has_text?('A platform on the side of a building, accessible from inside the building.')
@@ -813,10 +844,12 @@ RSpec.describe 'Quiz' do
         OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
         visit '/'
-        click_button 'Sign up/Log in with Google'
+        within '.welcome' do
+          click_button 'Sign up/Log in with Google'
+        end
         has_text? 'ログインしました'
 
-        visit '/quiz'
+        click_link 'クイズに挑戦'
 
         8.times do |n|
           if has_text?('A platform on the side of a building, accessible from inside the building.')
@@ -879,10 +912,12 @@ RSpec.describe 'Quiz' do
         OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
         visit '/'
-        click_button 'Sign up/Log in with Google'
+        within '.welcome' do
+          click_button 'Sign up/Log in with Google'
+        end
         has_text? 'ログインしました'
 
-        visit '/quiz'
+        click_link 'クイズに挑戦'
 
         8.times do |n|
           if has_text?('A platform on the side of a building, accessible from inside the building.')
@@ -923,7 +958,9 @@ RSpec.describe 'Quiz' do
       before do
         FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note))
 
-        visit '/quiz'
+        visit '/'
+        click_link '使ってみる'
+        click_link 'クイズを試してみる'
 
         4.times do |n|
           if has_text?('A platform on the side of a building, accessible from inside the building.')
@@ -955,7 +992,9 @@ RSpec.describe 'Quiz' do
       before do
         FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note))
 
-        visit '/quiz'
+        visit '/'
+        click_link '使ってみる'
+        click_link 'クイズを試してみる'
 
         4.times do |n|
           fill_in('解答を入力', with: '')
@@ -982,7 +1021,9 @@ RSpec.describe 'Quiz' do
       let!(:second_expression_item) { FactoryBot.create(:expression_item2, expression:) }
 
       before do
-        visit '/quiz'
+        visit '/'
+        click_link '使ってみる'
+        click_link 'クイズを試してみる'
 
         4.times do |n|
           if has_text?('A platform on the side of a building, accessible from inside the building.')
@@ -1019,10 +1060,12 @@ RSpec.describe 'Quiz' do
         OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
         visit '/'
-        click_button 'Sign up/Log in with Google'
+        within '.welcome' do
+          click_button 'Sign up/Log in with Google'
+        end
         has_text? 'ログインしました'
 
-        visit '/quiz'
+        click_link 'クイズに挑戦'
         2.times do |n|
           click_button 'クイズに解答する'
           n < 1 ? click_button('次へ') : click_button('クイズの結果を確認する')
@@ -1035,7 +1078,7 @@ RSpec.describe 'Quiz' do
         expect(Expression.find_expressions_of_users_main_list(user.id).count).to eq 0
 
         click_button 'クイズに再挑戦'
-        expect(page).to have_current_path '/'
+        expect(page).to have_current_path '/home'
         expect(page).to have_content 'このリストのクイズに問題が存在しません'
       end
 

@@ -7,6 +7,6 @@ class QuizzesController < ApplicationController
     expressions = Expression.find_expressions_of_users_main_list(current_user.id)
     return unless expressions.count.zero?
 
-    redirect_to root_path, notice: t('.no_data')
+    redirect_to home_path, notice: t('.no_data')
   end
 end

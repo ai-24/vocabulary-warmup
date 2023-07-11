@@ -6,6 +6,8 @@ RSpec.describe 'Expressions' do
   describe 'authority' do
     it 'check if expression is not deleted without login' do
       visit '/'
+      click_link '使ってみる'
+      expect(page).to have_current_path home_path
       click_link 'balcony and Veranda'
       expect(page).not_to have_button '削除'
     end
@@ -19,10 +21,13 @@ RSpec.describe 'Expressions' do
       OmniAuth.config.add_mock(:google_oauth2, { uid: user2.uid, info: { name: user2.name } })
 
       visit '/'
-      click_button 'Sign up/Log in with Google'
+      within '.welcome' do
+        click_button 'Sign up/Log in with Google'
+      end
+
       expect(page).to have_content 'ログインしました'
       visit "/expressions/#{first_expression_items[0].expression.id}"
-      expect(page).to have_current_path root_path
+      expect(page).to have_current_path home_path
       expect(page).to have_content '権限がないため閲覧できません'
     end
 
@@ -32,7 +37,9 @@ RSpec.describe 'Expressions' do
       OmniAuth.config.add_mock(:google_oauth2, { uid: user1.uid, info: { name: user1.name } })
 
       visit '/'
-      click_button 'Sign up/Log in with Google'
+      within '.welcome' do
+        click_button 'Sign up/Log in with Google'
+      end
       expect(page).to have_content 'ログインしました'
       expect(Expression.where('user_id = ?', user1.id).count).to eq 0
       visit '/expressions/1'
@@ -50,7 +57,9 @@ RSpec.describe 'Expressions' do
       OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
       visit '/'
-      click_button 'Sign up/Log in with Google'
+      within '.welcome' do
+        click_button 'Sign up/Log in with Google'
+      end
       has_text? 'ログインしました'
 
       click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
@@ -103,7 +112,9 @@ RSpec.describe 'Expressions' do
       OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
       visit '/'
-      click_button 'Sign up/Log in with Google'
+      within '.welcome' do
+        click_button 'Sign up/Log in with Google'
+      end
       has_text? 'ログインしました'
 
       visit "/expressions/#{second_expression_items[0].expression.id}"
@@ -130,16 +141,18 @@ RSpec.describe 'Expressions' do
       OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
       visit '/'
-      click_button 'Sign up/Log in with Google'
+      within '.welcome' do
+        click_button 'Sign up/Log in with Google'
+      end
       expect(page).to have_content 'ログインしました'
       click_link 'balcony and Veranda'
       accept_confirm do
         click_button '削除'
       end
-      has_text? '英単語又はフレーズを削除しました'
+      expect(page).to have_content '英単語又はフレーズを削除しました'
 
       expect(Expression.where('user_id = ?', user.id).count).to eq 0
-      expect(page).to have_current_path root_path, ignore_query: true
+      expect(page).to have_current_path home_path, ignore_query: true
       expect(page).to have_content 'このリストに登録されている英単語またはフレーズはありません'
     end
   end
