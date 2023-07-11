@@ -19,6 +19,13 @@ RSpec.describe 'Expressions' do
       click_link '使ってみる'
     end
 
+    it 'check the header link' do
+      within 'header' do
+        click_link 'Word Warmup'
+      end
+      expect(page).to have_current_path '/'
+    end
+
     it 'show a list of expressions' do
       expect(all('li.expression').count).to eq 21
     end
@@ -100,6 +107,16 @@ RSpec.describe 'Expressions' do
       within '.welcome' do
         click_button 'Sign up/Log in with Google'
       end
+    end
+
+    it 'check the header link' do
+      expect(page).to have_content 'ログインしました'
+      click_link 'ブックマーク'
+      expect(page).to have_current_path bookmarked_expressions_path
+      within 'header' do
+        click_link 'Word Warmup'
+      end
+      expect(page).to have_current_path '/home'
     end
 
     it 'show a list of expressions' do
