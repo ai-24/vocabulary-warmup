@@ -32,13 +32,14 @@ RSpec.describe 'MemorisedExpressions Quiz' do
       within '.button-on-header' do
         click_button 'Sign up/Log in with Google'
       end
-      has_text? 'ログインしました'
-
-      click_link '覚えた語彙'
-      click_link 'クイズに挑戦'
     end
 
     it 'check the questions are from memorised list' do
+      expect(page).to have_content 'ログインしました'
+      click_link '覚えた語彙'
+      expect(page).to have_current_path memorised_expressions_path
+      click_link 'クイズに挑戦'
+
       expect(page).to have_css 'p.content-of-question'
       5.times do |n|
         click_button 'クイズに解答する'
@@ -54,6 +55,11 @@ RSpec.describe 'MemorisedExpressions Quiz' do
     end
 
     it 'check the questions and answers are set correctly' do
+      expect(page).to have_content 'ログインしました'
+      click_link '覚えた語彙'
+      expect(page).to have_current_path memorised_expressions_path
+      click_link 'クイズに挑戦'
+
       5.times do |n|
         if has_text?(first_expression_item.explanation)
           fill_in('解答を入力', with: first_expression_item.content)
@@ -75,6 +81,11 @@ RSpec.describe 'MemorisedExpressions Quiz' do
     end
 
     it 'check if a section of moving expressions to bookmark or memorised list is not on the result page when all answers were correct' do
+      expect(page).to have_content 'ログインしました'
+      click_link '覚えた語彙'
+      expect(page).to have_current_path memorised_expressions_path
+      click_link 'クイズに挑戦'
+
       5.times do |n|
         if has_text?(first_expression_item.explanation)
           fill_in('解答を入力', with: first_expression_item.content)
@@ -96,6 +107,11 @@ RSpec.describe 'MemorisedExpressions Quiz' do
     end
 
     it 'check if a message that recommends next action is not on the result page when a section of moving expressions is not there' do
+      expect(page).to have_content 'ログインしました'
+      click_link '覚えた語彙'
+      expect(page).to have_current_path memorised_expressions_path
+      click_link 'クイズに挑戦'
+
       5.times do |n|
         if has_text?(first_expression_item.explanation)
           fill_in('解答を入力', with: first_expression_item.content)
@@ -116,6 +132,11 @@ RSpec.describe 'MemorisedExpressions Quiz' do
     end
 
     it 'check if a section of moving expressions to bookmarks list is on the result page when answers are wrong' do
+      expect(page).to have_content 'ログインしました'
+      click_link '覚えた語彙'
+      expect(page).to have_current_path memorised_expressions_path
+      click_link 'クイズに挑戦'
+
       5.times do |n|
         click_button 'クイズに解答する'
         n < 4 ? click_button('次へ') : click_button('クイズの結果を確認する')
@@ -126,6 +147,11 @@ RSpec.describe 'MemorisedExpressions Quiz' do
     end
 
     it 'check if request for saving memorising is not sent when bookmarking is saved' do
+      expect(page).to have_content 'ログインしました'
+      click_link '覚えた語彙'
+      expect(page).to have_current_path memorised_expressions_path
+      click_link 'クイズに挑戦'
+
       5.times do |n|
         if has_text?(first_expression_item.explanation)
           fill_in('解答を入力', with: first_expression_item.content)
@@ -142,6 +168,11 @@ RSpec.describe 'MemorisedExpressions Quiz' do
     end
 
     it 'check if memorising is destroyed when bookmarking is created' do
+      expect(page).to have_content 'ログインしました'
+      click_link '覚えた語彙'
+      expect(page).to have_current_path memorised_expressions_path
+      click_link 'クイズに挑戦'
+
       5.times do |n|
         if has_text?(first_expression_item.explanation)
           fill_in('解答を入力', with: first_expression_item.content)
@@ -159,6 +190,11 @@ RSpec.describe 'MemorisedExpressions Quiz' do
     end
 
     it 'check if memorisings are destroyed when bookmarkings are created' do
+      expect(page).to have_content 'ログインしました'
+      click_link '覚えた語彙'
+      expect(page).to have_current_path memorised_expressions_path
+      click_link 'クイズに挑戦'
+
       5.times do |n|
         click_button 'クイズに解答する'
         n < 4 ? click_button('次へ') : click_button('クイズの結果を確認する')

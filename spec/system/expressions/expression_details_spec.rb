@@ -7,6 +7,7 @@ RSpec.describe 'Expressions' do
     it 'check url' do
       visit '/'
       click_link '使ってみる'
+      expect(page).to have_current_path home_path
       click_link 'balcony and Veranda'
       expect(page).to have_content '下記の英単語・フレーズの違いについて'
       expect(page).to have_current_path expression_path(1), ignore_query: true
@@ -15,6 +16,7 @@ RSpec.describe 'Expressions' do
     it 'show a title section' do
       visit '/'
       click_link '使ってみる'
+      expect(page).to have_current_path home_path
       click_link 'balcony and Veranda'
       within '.title' do
         expect(page).to have_content '1. balcony'
@@ -26,6 +28,7 @@ RSpec.describe 'Expressions' do
     it 'show details of the first expression' do
       visit '/'
       click_link '使ってみる'
+      expect(page).to have_current_path home_path
       click_link 'balcony and Veranda'
       within '.expression0' do
         expect(page).to have_content 'balcony'
@@ -38,6 +41,7 @@ RSpec.describe 'Expressions' do
     it 'show details of the second expression' do
       visit '/'
       click_link '使ってみる'
+      expect(page).to have_current_path home_path
       click_link 'balcony and Veranda'
       within '.expression1' do
         expect(page).to have_content 'Veranda'
@@ -157,6 +161,7 @@ RSpec.describe 'Expressions' do
 
         visit '/'
         click_link '使ってみる'
+        expect(page).to have_current_path home_path
         click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
 
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
@@ -170,6 +175,7 @@ RSpec.describe 'Expressions' do
 
         visit '/'
         click_link '使ってみる'
+        expect(page).to have_current_path home_path
         click_link 'balcony and Veranda'
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path '/expressions/1'
@@ -180,6 +186,7 @@ RSpec.describe 'Expressions' do
       it 'check if there is no back and next button when expression is one in a list' do
         visit '/'
         click_link '使ってみる'
+        expect(page).to have_current_path home_path
         click_link 'balcony and Veranda'
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path '/expressions/1'
@@ -193,6 +200,7 @@ RSpec.describe 'Expressions' do
 
         visit '/'
         click_link '使ってみる'
+        expect(page).to have_current_path home_path
         click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path "/expressions/#{first_expression_items[0].expression.id}", ignore_query: true
@@ -208,6 +216,7 @@ RSpec.describe 'Expressions' do
 
         visit '/'
         click_link '使ってみる'
+        expect(page).to have_current_path home_path
         click_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}"
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true

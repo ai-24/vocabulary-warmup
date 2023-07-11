@@ -38,6 +38,7 @@ RSpec.describe 'Expressions' do
     it 'check if edit button is not on the page when user has not logged in' do
       visit '/'
       click_link '使ってみる'
+      expect(page).to have_current_path home_path
       click_link 'balcony and Veranda'
       expect(page).not_to have_link '編集'
     end

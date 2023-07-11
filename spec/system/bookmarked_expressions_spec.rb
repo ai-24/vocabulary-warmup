@@ -203,6 +203,7 @@ RSpec.describe 'Bookmarked expressions' do
       click_link '使ってみる'
       expect(page).to have_current_path home_path
       click_link 'ブックマーク'
+      expect(page).to have_current_path bookmarked_expressions_path
       expect(page).to have_button 'Sign up/Log in with Google'
       expect(all('li.expression').count).to eq 0
       expect(page).to have_content 'ログインしていないため閲覧できません'
