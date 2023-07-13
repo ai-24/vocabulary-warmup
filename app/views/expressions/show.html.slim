@@ -1,47 +1,48 @@
-p style="color: green" = notice
+.specific-expression
+  p style="color: green" = notice
 
-.title
-  h1
-    = t('.title')
-  div
+  .title
+    h1
+      = t('.title')
+    div
+      - @expression.expression_items.order(:created_at, :id).each_with_index do |expression_item, i|
+        p #{i + 1}. #{expression_item.content}
+  .details
     - @expression.expression_items.order(:created_at, :id).each_with_index do |expression_item, i|
-      p #{i + 1}. #{expression_item.content}
-.details
-  - @expression.expression_items.order(:created_at, :id).each_with_index do |expression_item, i|
-    div class="expression#{i}"
-      p.content
-        = expression_item.content
-      p
-        = t('.explanation')
-      p.explanation
-        = expression_item.explanation
-      - if expression_item.examples.present?
+      div class="expression#{i}"
+        p.content
+          = expression_item.content
         p
-          = t('.example')
-        - expression_item.examples.order(:created_at, :id).each do |example|
-          p.example
-            = example.content
-- if @expression.note.present?
-  .note
-    p
-      = t('.note')
-    p
-      = @expression.note
-- if @expression.tags.present?
-  .tag
-    p
-      = t('.tag')
-    - @expression.tags.order('taggings.created_at').each do |tag|
+          = t('.explanation')
+        p.explanation
+          = expression_item.explanation
+        - if expression_item.examples.present?
+          p
+            = t('.example')
+          - expression_item.examples.order(:created_at, :id).each do |example|
+            p.example
+              = example.content
+  - if @expression.note.present?
+    .note
       p
-        = tag.name
+        = t('.note')
+      p
+        = @expression.note
+  - if @expression.tags.present?
+    .tag
+      p
+        = t('.tag')
+      - @expression.tags.order('taggings.created_at').each do |tag|
+        p
+          = tag.name
 
-div
-  - if logged_in? && @expression.user_id == current_user.id
-    = link_to t('.edit'), edit_expression_path(@expression)
-    = button_to t('.delete'), @expression, method: :delete, data: { turbo_confirm: t('.confirm_deletion_of_expression') }
+  div
+    - if logged_in? && @expression.user_id == current_user.id
+      = link_to t('.edit'), edit_expression_path(@expression)
+      = button_to t('.delete'), @expression, method: :delete, data: { turbo_confirm: t('.confirm_deletion_of_expression') }
 
-- if @expression.previous(@user)
-  = link_to t('.back'), expression_path(@expression.previous(@user))
-- if @expression.next(@user)
-  = link_to t('.next'), expression_path(@expression.next(@user))
-= link_to t('.go_to_index'), home_path
+  - if @expression.previous(@user)
+    = link_to t('.back'), expression_path(@expression.previous(@user))
+  - if @expression.next(@user)
+    = link_to t('.next'), expression_path(@expression.next(@user))
+  = link_to t('.go_to_index'), home_path
