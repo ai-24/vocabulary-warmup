@@ -1,25 +1,24 @@
-header.sticky.top-0.bg-white.border.border-b-lavender-600.px-9.py-4
-  .flex.flex-row
-    .basis-1/2
-      h1.text-2xl.font-bold.hover:text-gray-400
+header.sticky.top-0.bg-white.border.border-b-lavender-600.pl-2.lg:pl-9.h-16
+  .flex.flex-row.h-full
+    .basis-1/2.flex.items-center
+      .lg:text-2xl.font-bold.hover:text-gray-400
         - if logged_in?
           = link_to 'Word Warmup', home_path
         - else
           = link_to 'Word Warmup', root_path
     .basis-1/2
-      .flex.justify-end
+      .flex.justify-end.h-full
         - if logged_in?
-          .inline-block.mr-10
+          .inline-block.flex.items-center.mr-10
             div(data-vue='IncrementalSearch' class="incremental-search" )
-          label.font-medium.text-xl(for='header-menu')
-            = current_user.name
-          input#header-menu.peer.hidden(type='checkbox')
-          .invisible.peer-checked:visible
-            ul
-              li
-                = button_to 'Log out', logout_path, method: :delete
-              li
-                = button_to 'Delete account', me_path, method: :delete, form: { data: { turbo_confirm: t('users.confirm_deletion_of_account') } }
+          .account.relative
+            label.inline-block.font-medium.h-full.w-36.px-2.flex.justify-center.hover:cursor-pointer.hover:bg-lavender-600.hover:text-white.border-l.flex.items-center.overflow-auto(for='header-menu')
+              = current_user.name
+            input#header-menu.peer.hidden(type='checkbox')
+            .invisible.peer-checked:visible
+              label.fixed.top-0.right-0.left-0.bottom-0.z-50(for='header-menu')
+              .left-0.top-full.absolute.text-center.z-50
+                = button_to 'Log out', logout_path, method: :delete, class: 'w-36 bg-white border py-3 rounded hover:bg-lavender-600 hover:text-white'
         - else
-          .button-on-header.rounded-full.bg-lavender-800.hover:bg-lavender-600.text-white.px-5.py-px
-            = button_to 'Sign up/Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }, class: 'font-medium text-lg'
+          .button-on-header.flex.items-center.mr-9
+            = button_to 'Sign up/Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }, class: 'font-medium text-lg rounded-full bg-lavender-800 hover:bg-lavender-600 text-white px-5 py-0.5'
