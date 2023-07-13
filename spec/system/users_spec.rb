@@ -17,15 +17,23 @@ RSpec.describe 'Users' do
         OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
         visit '/'
+      end
+
+      it 'check the アカウント削除 button' do
+        expect(page).not_to have_button 'アカウント削除'
         within '.welcome' do
           click_button 'Sign up/Log in with Google'
         end
+        expect(page).to have_content 'ログインしました'
+        expect(page).to have_button 'アカウント削除'
       end
 
       it 'check the function of deleting user account' do
+        within '.welcome' do
+          click_button 'Sign up/Log in with Google'
+        end
         expect(page).to have_content 'ログインしました'
-        find('label', text: user.name).click
-        click_button 'Delete account'
+        click_button 'アカウント削除'
         expect do
           expect(page.accept_confirm).to eq "アカウントを削除しますか？\n \n重要:アカウントを削除すると、このアプリに登録した全てのデータは削除されます。"
           expect(page).to have_content 'アカウントを削除しました'
@@ -35,7 +43,7 @@ RSpec.describe 'Users' do
       end
     end
 
-    context 'when user is the one who has bookmarks and memorised words list' do
+    context 'when user has bookmarks and memorised words list' do
       let!(:user) { FactoryBot.create(:user) }
 
       before do
@@ -64,8 +72,7 @@ RSpec.describe 'Users' do
 
       it 'check if user is deleted' do
         expect(page).to have_content 'ログインしました'
-        find('label', text: user.name).click
-        click_button 'Delete account'
+        click_button 'アカウント削除'
         expect do
           expect(page.accept_confirm).to eq "アカウントを削除しますか？\n \n重要:アカウントを削除すると、このアプリに登録した全てのデータは削除されます。"
           expect(page).to have_content 'アカウントを削除しました'
@@ -75,7 +82,7 @@ RSpec.describe 'Users' do
       end
     end
 
-    context 'when user is the one who has tags' do
+    context 'when user has tags' do
       let!(:user) { FactoryBot.create(:user) }
 
       before do
@@ -110,8 +117,7 @@ RSpec.describe 'Users' do
 
       it 'check if user is deleted' do
         expect(page).to have_content 'ログインしました'
-        find('label', text: user.name).click
-        click_button 'Delete account'
+        click_button 'アカウント削除'
         expect do
           expect(page.accept_confirm).to eq "アカウントを削除しますか？\n \n重要:アカウントを削除すると、このアプリに登録した全てのデータは削除されます。"
           expect(page).to have_content 'アカウントを削除しました'
@@ -121,7 +127,7 @@ RSpec.describe 'Users' do
       end
     end
 
-    context 'when user is the one who has tags, bookmarks and memorised words list' do
+    context 'when user has tags, bookmarks and memorised words list' do
       let!(:user) { FactoryBot.create(:user) }
 
       before do
@@ -166,8 +172,7 @@ RSpec.describe 'Users' do
 
       it 'check if user is deleted' do
         expect(page).to have_content 'ログインしました'
-        find('label', text: user.name).click
-        click_button 'Delete account'
+        click_button 'アカウント削除'
         expect do
           expect(page.accept_confirm).to eq "アカウントを削除しますか？\n \n重要:アカウントを削除すると、このアプリに登録した全てのデータは削除されます。"
           expect(page).to have_content 'アカウントを削除しました'
