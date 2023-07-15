@@ -6,7 +6,7 @@ RSpec.describe 'Expressions' do
   describe 'expressions/1' do
     it 'check url' do
       visit '/'
-      click_link '使ってみる'
+      click_link '試してみる(機能に制限あり)'
       expect(page).to have_current_path home_path
       click_link 'balcony and Veranda'
       expect(page).to have_content '下記の英単語・フレーズの違いについて'
@@ -15,7 +15,7 @@ RSpec.describe 'Expressions' do
 
     it 'show a title section' do
       visit '/'
-      click_link '使ってみる'
+      click_link '試してみる(機能に制限あり)'
       expect(page).to have_current_path home_path
       click_link 'balcony and Veranda'
       within '.title' do
@@ -27,7 +27,7 @@ RSpec.describe 'Expressions' do
 
     it 'show details of the first expression' do
       visit '/'
-      click_link '使ってみる'
+      click_link '試してみる(機能に制限あり)'
       expect(page).to have_current_path home_path
       click_link 'balcony and Veranda'
       within '.expression0' do
@@ -40,7 +40,7 @@ RSpec.describe 'Expressions' do
 
     it 'show details of the second expression' do
       visit '/'
-      click_link '使ってみる'
+      click_link '試してみる(機能に制限あり)'
       expect(page).to have_current_path home_path
       click_link 'balcony and Veranda'
       within '.expression1' do
@@ -160,7 +160,7 @@ RSpec.describe 'Expressions' do
         first_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
 
         visit '/'
-        click_link '使ってみる'
+        click_link '試してみる(機能に制限あり)'
         expect(page).to have_current_path home_path
         click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
 
@@ -174,7 +174,7 @@ RSpec.describe 'Expressions' do
         expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
 
         visit '/'
-        click_link '使ってみる'
+        click_link '試してみる(機能に制限あり)'
         expect(page).to have_current_path home_path
         click_link 'balcony and Veranda'
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
@@ -185,7 +185,7 @@ RSpec.describe 'Expressions' do
 
       it 'check if there is no back and next button when expression is one in a list' do
         visit '/'
-        click_link '使ってみる'
+        click_link '試してみる(機能に制限あり)'
         expect(page).to have_current_path home_path
         click_link 'balcony and Veranda'
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
@@ -199,7 +199,7 @@ RSpec.describe 'Expressions' do
         second_expression_items = FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:note))
 
         visit '/'
-        click_link '使ってみる'
+        click_link '試してみる(機能に制限あり)'
         expect(page).to have_current_path home_path
         click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
@@ -215,7 +215,7 @@ RSpec.describe 'Expressions' do
         second_expression_items = FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:note))
 
         visit '/'
-        click_link '使ってみる'
+        click_link '試してみる(機能に制限あり)'
         expect(page).to have_current_path home_path
         click_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}"
         expect(page).to have_content '下記の英単語・フレーズの違いについて'

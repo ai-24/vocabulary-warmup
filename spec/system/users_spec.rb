@@ -39,7 +39,7 @@ RSpec.describe 'Users' do
           expect(page).to have_content 'アカウントを削除しました'
         end.to change(User, :count).by(-1).and change(Expression, :count).by(-17).and change(ExpressionItem, :count).by(-35).and change(Example, :count).by(-2)
         expect(page).to have_current_path root_path
-        expect(page).to have_content '使い分けが難しい英単語やフレーズをメモ→テストして記憶し、それぞれの場面に合った英語を使えるようになろう'
+        expect(page).to have_content '間違いやすい英単語やフレーズの学習をサポートするツール'
       end
     end
 

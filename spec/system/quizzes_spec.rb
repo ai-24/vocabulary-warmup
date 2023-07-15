@@ -49,7 +49,7 @@ RSpec.describe 'Quiz' do
   describe 'a quiz for everyone' do
     before do
       visit '/'
-      click_link '使ってみる'
+      click_link '試してみる(機能に制限あり)'
     end
 
     it 'check if there is no incremental search' do
@@ -118,7 +118,7 @@ RSpec.describe 'Quiz' do
     describe 'check if screens change' do
       before do
         visit '/'
-        click_link '使ってみる'
+        click_link '試してみる(機能に制限あり)'
         click_link 'クイズを試してみる'
       end
 
@@ -153,7 +153,7 @@ RSpec.describe 'Quiz' do
 
       before do
         visit '/'
-        click_link '使ってみる'
+        click_link '試してみる(機能に制限あり)'
         click_link 'クイズを試してみる'
         fill_in('解答を入力', with: 'wrong answer')
         click_button 'クイズに解答する'
@@ -185,7 +185,7 @@ RSpec.describe 'Quiz' do
     describe 'show user answers when an answer was not given' do
       before do
         visit '/'
-        click_link '使ってみる'
+        click_link '試してみる(機能に制限あり)'
         click_link 'クイズを試してみる'
         fill_in('解答を入力', with: '')
         click_button 'クイズに解答する'
@@ -205,7 +205,7 @@ RSpec.describe 'Quiz' do
     describe 'show important notice' do
       before do
         visit '/'
-        click_link '使ってみる'
+        click_link '試してみる(機能に制限あり)'
         click_link 'クイズを試してみる'
         fill_in('解答を入力', with: '')
         click_button 'クイズに解答する'
@@ -228,7 +228,7 @@ RSpec.describe 'Quiz' do
         2.times { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
 
         visit '/'
-        click_link '使ってみる'
+        click_link '試してみる(機能に制限あり)'
         click_link 'クイズを試してみる'
         5.times do
           fill_in('解答を入力', with: 'test')
@@ -254,7 +254,7 @@ RSpec.describe 'Quiz' do
 
       before do
         visit '/'
-        click_link '使ってみる'
+        click_link '試してみる(機能に制限あり)'
         click_link 'クイズを試してみる'
         fill_in('解答を入力', with: '')
         click_button 'クイズに解答する'
@@ -316,7 +316,7 @@ RSpec.describe 'Quiz' do
 
       before do
         visit '/'
-        click_link '使ってみる'
+        click_link '試してみる(機能に制限あり)'
         click_link 'クイズを試してみる'
         5.times do |n|
           if has_text?('A platform on the side of a building, accessible from inside the building.')
@@ -355,7 +355,7 @@ RSpec.describe 'Quiz' do
 
       before do
         visit '/'
-        click_link '使ってみる'
+        click_link '試してみる(機能に制限あり)'
         click_link 'クイズを試してみる'
         2.times do
           fill_in('解答を入力', with: 'wrong answer')
@@ -391,7 +391,7 @@ RSpec.describe 'Quiz' do
 
       before do
         visit '/'
-        click_link '使ってみる'
+        click_link '試してみる(機能に制限あり)'
         click_link 'クイズを試してみる'
         4.times do |n|
           if has_text?('A platform on the side of a building, accessible from inside the building.')
@@ -448,7 +448,7 @@ RSpec.describe 'Quiz' do
 
       before do
         visit '/'
-        click_link '使ってみる'
+        click_link '試してみる(機能に制限あり)'
         click_link 'クイズを試してみる'
         4.times do |n|
           fill_in('解答を入力', with: '')
@@ -497,7 +497,7 @@ RSpec.describe 'Quiz' do
 
       before do
         visit '/'
-        click_link '使ってみる'
+        click_link '試してみる(機能に制限あり)'
         click_link 'クイズを試してみる'
         4.times do |n|
           if has_text?('A platform on the side of a building, accessible from inside the building.')
@@ -959,7 +959,7 @@ RSpec.describe 'Quiz' do
         FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note))
 
         visit '/'
-        click_link '使ってみる'
+        click_link '試してみる(機能に制限あり)'
         click_link 'クイズを試してみる'
 
         4.times do |n|
@@ -993,7 +993,7 @@ RSpec.describe 'Quiz' do
         FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note))
 
         visit '/'
-        click_link '使ってみる'
+        click_link '試してみる(機能に制限あり)'
         click_link 'クイズを試してみる'
 
         4.times do |n|
@@ -1022,7 +1022,7 @@ RSpec.describe 'Quiz' do
 
       before do
         visit '/'
-        click_link '使ってみる'
+        click_link '試してみる(機能に制限あり)'
         click_link 'クイズを試してみる'
 
         4.times do |n|

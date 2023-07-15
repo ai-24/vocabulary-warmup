@@ -16,7 +16,7 @@ RSpec.describe 'Expressions' do
       end
 
       visit '/'
-      click_link '使ってみる'
+      click_link '試してみる(機能に制限あり)'
     end
 
     it 'check the header link' do
