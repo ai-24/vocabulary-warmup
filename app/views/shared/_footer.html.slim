@@ -1,11 +1,11 @@
 footer.border-t.border-lavender-600.text-neutral-600.text-sm
-  ul.flex.justify-center.py-6
-    li.mr-5
+  ul.text-center.pb-5.sm:flex.sm:justify-center.sm:py-6
+    li.border-b.border-neutral-300.py-1.sm:mr-5.sm:border-b-0
       = link_to t('terms_of_service'), terms_of_service_path, class: 'hover:underline'
-    li.mr-5
+    li.border-b.border-neutral-300.py-1.sm:mr-5.sm:border-b-0
       = link_to t('privacy_policy'), privacy_policy_path, class: 'hover:underline'
     - if logged_in?
-      li
+      li.border-b.border-neutral-300.py-1.sm:border-b-0
         = button_to t('delete_account'), me_path, method: :delete, form: { data: { turbo_confirm: t('users.confirm_deletion_of_account') } }, class: 'hover:underline'
   .flex.justify-center
     .text-center.pb-5
