@@ -1,7 +1,7 @@
-.bg-white.py-12.rounded-sm.max-w-800.w-full.mx-auto
+.bg-white.pt-16.pb-24.rounded-sm.max-w-800.w-full.mx-auto
   p.text-green-700.pl-5.font-bold
     = notice
-  .error.text-center
+  .error.text-center.pb-4
     - if alert
       i class="fa-solid fa-circle-exclamation fa-xl pr-1 text-red-600"
     p.font-semibold.inline-block.text-xl
@@ -9,41 +9,42 @@
 
   div class=error_or_not(alert)
     = render 'shared/page_tabs'
-    .px-7.pt-6.border-golden-yellow-800.border-t-2
-      .h-80
+    .sm:px-7.py-6.bg-lavender-600
+      .h-80.px-3.sm:px-0
         - if @expressions.blank?
-          p.font-bold.text-center.py-10
-            = t('.no_data')
+          .flex.justify-center
+            p.font-bold.text-center.py-10.px-3.sm:w-full.w-72
+              = t('.no_data')
         - else
           div(data-vue='ExpressionsList' data-vue-path='/api/expressions')
 
-      .flex.flex-row.mt-6
-        .basis-1/2.text-center.ml-10.mr-3
+      .flex.flex-row.mt-6.px-2
+        .basis-1/2.text-center.sm:ml-10.mr-3
           - if logged_in?
-            = link_to "+ #{t('.create')}", new_expression_path, class: 'inline-block w-11/12 font-semibold text-lg py-1 rounded-full bg-lavender-800 hover:bg-lavender-600 text-white'
+            = link_to "+ #{t('.create')}", new_expression_path, class: 'inline-block w-11/12 font-semibold text-lg py-1 rounded-full bg-golden-yellow-400 text-black hover:bg-golden-yellow-200'
           - else
             .create-button-for-non-users.relative.group
-              .group-hover:opacity-100.group-hover:pointer-events-auto.opacity-0.pointer-events-none.bg-golden-yellow-800.rounded.bottom-full.left-2/4.absolute.-translate-x-1/2.-translate-y-2.z-10.w-96.font-semibold.text-sm.p-2
+              .group-hover:opacity-100.group-hover:pointer-events-auto.opacity-0.pointer-events-none.bg-golden-yellow-400.rounded.bottom-full.left-2/4.absolute.-translate-x-1/2.-translate-y-2.z-10.w-44.sm:w-96.font-semibold.text-sm.px-1.py-2.sm:px-2
                 p.mb-1
                   = t('.how_to_create_data')
-                = button_to 'Sign up/Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }, class: 'rounded-full bg-white w-2/3 hover:bg-lavender-50 border-white border'
+                = button_to 'Sign up/Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }, class: 'rounded-full bg-white hover:bg-lavender-50 sm:px-2'
               .group-hover:opacity-100.group-hover:pointer-events-auto.pointer-events-none.opacity-0.h-4.bottom-full.left-2/4.absolute.-translate-x-1/2.translate-y-2.z-10.w-96
-              .group-hover:opacity-100.group-hover:pointer-events-auto.pointer-events-none.opacity-0.border-8.border-x-transparent.border-b-transparent.border-t-golden-yellow-800.bottom-full.left-2/4.absolute.-translate-x-1/2.translate-y-2.h-0.w-0.z-20
-              p.inline-block.w-11/12.font-semibold.text-lg.py-1.rounded-full.bg-lavender-600.text-white.hover:cursor-not-allowed
+              .group-hover:opacity-100.group-hover:pointer-events-auto.pointer-events-none.opacity-0.border-8.border-x-transparent.border-b-transparent.border-t-golden-yellow-400.bottom-full.left-2/4.absolute.-translate-x-1/2.translate-y-2.h-0.w-0.z-20
+              p.opacity-70.inline-block.w-full.sm:w-11/12.font-semibold.sm:text-lg.py-1.rounded-full.bg-golden-yellow-400.hover:cursor-not-allowed
                 = "+ #{t('.create')}"
-        .basis-1/2.text-center.mr-10.ml-3
+        .basis-1/2.text-center.sm:mr-10.sm:ml-3
           - if logged_in?
             - if @expressions.blank?
-              p.inline-block.w-11/12.font-semibold.text-lg.py-1.rounded-full.bg-lavender-600.text-white.hover:cursor-not-allowed
+              p.opacity-70.inline-block.w-11/12.font-semibold.text-lg.py-1.rounded-full.bg-golden-yellow-400.text-black.hover:cursor-not-allowed
                 = t('.start_quiz')
             - else
-              = link_to t('.start_quiz'), quiz_path, class: 'inline-block w-11/12 font-semibold text-lg py-1 rounded-full bg-lavender-800 hover:bg-lavender-600 text-white'
+              = link_to t('.start_quiz'), quiz_path, class: 'inline-block w-11/12 font-semibold text-lg py-1 rounded-full bg-golden-yellow-400 text-black hover:bg-golden-yellow-200'
           - else
             .try-quiz.relative.group
-              p.group-hover:opacity-100.group-hover:pointer-events-auto.opacity-0.pointer-events-none.bg-golden-yellow-800.rounded.bottom-full.left-2/4.absolute.-translate-x-1/2.-translate-y-2.z-10.w-96.font-semibold.text-sm.p-2
+              p.inline-block.group-hover:opacity-100.group-hover:pointer-events-auto.xl:opacity-0.pointer-events-none.bg-white.border.border-golden-yellow-800.xl:border-0.xl:bg-golden-yellow-800.rounded.top-full.xl:top-auto.xl:bottom-full.right-0.xl:left-2/4.absolute.translate-y-2.xl:-translate-x-1/2.xl:-translate-y-2.z-10.w-60.sm:w-96.font-semibold.text-sm.p-2
                 = t('.warning')
-              .group-hover:opacity-100.group-hover:pointer-events-auto.pointer-events-none.opacity-0.border-8.border-x-transparent.border-b-transparent.border-t-golden-yellow-800.bottom-full.left-2/4.absolute.-translate-x-1/2.translate-y-2.h-0.w-0.z-10
-              .w-11/12.py-1.rounded-full.bg-lavender-800.hover:bg-lavender-600
-                = link_to quiz_path, class: 'inline-block font-semibold text-lg text-white w-full' do
-                  i class="fa-solid fa-circle-exclamation fa-lg pr-1 text-golden-yellow-400"
+              .xl:group-hover:opacity-100.xl:group-hover:pointer-events-auto.xl:pointer-events-none.xl:opacity-0.border-8.border-x-transparent.border-t-transparent.xl:border-b-transparent.border-b-golden-yellow-800.xl:border-t-golden-yellow-800.top-1/2.xl:top-auto.xl:bottom-full.left-2/4.absolute.-translate-x-1/2.translate-y-2.h-0.w-0.z-10
+              .w-full.sm:w-11/12.py-1.rounded-full.bg-golden-yellow-400.hover:bg-golden-yellow-200
+                = link_to quiz_path, class: 'inline-block font-semibold sm:text-lg w-full' do
+                  i class="fa-solid fa-circle-exclamation fa-lg pr-1 text-red-600"
                   = t('.try_quiz')

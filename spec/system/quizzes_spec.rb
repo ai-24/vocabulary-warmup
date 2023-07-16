@@ -53,12 +53,12 @@ RSpec.describe 'Quiz' do
     end
 
     it 'check if there is no incremental search' do
-      click_link 'クイズを試してみる'
+      click_link 'クイズを試す'
       expect(page).not_to have_selector '.incremental-search'
     end
 
     it 'check if one question and no answer is on the question screen' do
-      click_link 'クイズを試してみる'
+      click_link 'クイズを試す'
       if has_text?('A platform on the side of a building, accessible from inside the building.')
         expect(page).to have_content 'A platform on the side of a building, accessible from inside the building.'
         expect(page).not_to have_content 'A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy'
@@ -73,7 +73,7 @@ RSpec.describe 'Quiz' do
     end
 
     it 'check if the correct answer is judged as right one' do
-      click_link 'クイズを試してみる'
+      click_link 'クイズを試す'
       if has_text?('A platform on the side of a building, accessible from inside the building.')
         fill_in('解答を入力', with: 'balcony')
       else
@@ -85,7 +85,7 @@ RSpec.describe 'Quiz' do
     end
 
     it 'check if the incorrect answer is judged as wrong one' do
-      click_link 'クイズを試してみる'
+      click_link 'クイズを試す'
       fill_in('解答を入力', with: 'terrace')
       click_button 'クイズに解答する'
       expect(page).not_to have_content '◯ 正解!'
@@ -94,7 +94,7 @@ RSpec.describe 'Quiz' do
     end
 
     it 'check the feedback message if answer is not given by a user' do
-      click_link 'クイズを試してみる'
+      click_link 'クイズを試す'
       click_button 'クイズに解答する'
       expect(page).not_to have_content '◯ 正解!'
       expect(page).not_to have_content '× 不正解'
@@ -102,7 +102,7 @@ RSpec.describe 'Quiz' do
     end
 
     it 'check the button and message on the last screen' do
-      click_link 'クイズを試してみる'
+      click_link 'クイズを試す'
       fill_in('解答を入力', with: 'balcony')
       click_button 'クイズに解答する'
       click_button '次へ'
@@ -119,7 +119,7 @@ RSpec.describe 'Quiz' do
       before do
         visit '/'
         click_link '試してみる(機能に制限あり)'
-        click_link 'クイズを試してみる'
+        click_link 'クイズを試す'
       end
 
       it 'change the screen from quiz to result' do
@@ -154,7 +154,7 @@ RSpec.describe 'Quiz' do
       before do
         visit '/'
         click_link '試してみる(機能に制限あり)'
-        click_link 'クイズを試してみる'
+        click_link 'クイズを試す'
         fill_in('解答を入力', with: 'wrong answer')
         click_button 'クイズに解答する'
         click_button '次へ'
@@ -186,7 +186,7 @@ RSpec.describe 'Quiz' do
       before do
         visit '/'
         click_link '試してみる(機能に制限あり)'
-        click_link 'クイズを試してみる'
+        click_link 'クイズを試す'
         fill_in('解答を入力', with: '')
         click_button 'クイズに解答する'
         click_button '次へ'
@@ -206,7 +206,7 @@ RSpec.describe 'Quiz' do
       before do
         visit '/'
         click_link '試してみる(機能に制限あり)'
-        click_link 'クイズを試してみる'
+        click_link 'クイズを試す'
         fill_in('解答を入力', with: '')
         click_button 'クイズに解答する'
         click_button '次へ'
@@ -229,7 +229,7 @@ RSpec.describe 'Quiz' do
 
         visit '/'
         click_link '試してみる(機能に制限あり)'
-        click_link 'クイズを試してみる'
+        click_link 'クイズを試す'
         5.times do
           fill_in('解答を入力', with: 'test')
           click_button 'クイズに解答する'
@@ -255,7 +255,7 @@ RSpec.describe 'Quiz' do
       before do
         visit '/'
         click_link '試してみる(機能に制限あり)'
-        click_link 'クイズを試してみる'
+        click_link 'クイズを試す'
         fill_in('解答を入力', with: '')
         click_button 'クイズに解答する'
         click_button '次へ'
@@ -317,7 +317,7 @@ RSpec.describe 'Quiz' do
       before do
         visit '/'
         click_link '試してみる(機能に制限あり)'
-        click_link 'クイズを試してみる'
+        click_link 'クイズを試す'
         5.times do |n|
           if has_text?('A platform on the side of a building, accessible from inside the building.')
             fill_in('解答を入力', with: 'balcony')
@@ -356,7 +356,7 @@ RSpec.describe 'Quiz' do
       before do
         visit '/'
         click_link '試してみる(機能に制限あり)'
-        click_link 'クイズを試してみる'
+        click_link 'クイズを試す'
         2.times do
           fill_in('解答を入力', with: 'wrong answer')
           click_button 'クイズに解答する'
@@ -392,7 +392,7 @@ RSpec.describe 'Quiz' do
       before do
         visit '/'
         click_link '試してみる(機能に制限あり)'
-        click_link 'クイズを試してみる'
+        click_link 'クイズを試す'
         4.times do |n|
           if has_text?('A platform on the side of a building, accessible from inside the building.')
             fill_in('解答を入力', with: 'balcony')
@@ -449,7 +449,7 @@ RSpec.describe 'Quiz' do
       before do
         visit '/'
         click_link '試してみる(機能に制限あり)'
-        click_link 'クイズを試してみる'
+        click_link 'クイズを試す'
         4.times do |n|
           fill_in('解答を入力', with: '')
           click_button 'クイズに解答する'
@@ -498,7 +498,7 @@ RSpec.describe 'Quiz' do
       before do
         visit '/'
         click_link '試してみる(機能に制限あり)'
-        click_link 'クイズを試してみる'
+        click_link 'クイズを試す'
         4.times do |n|
           if has_text?('A platform on the side of a building, accessible from inside the building.')
             fill_in('解答を入力', with: 'balcony')
@@ -960,7 +960,7 @@ RSpec.describe 'Quiz' do
 
         visit '/'
         click_link '試してみる(機能に制限あり)'
-        click_link 'クイズを試してみる'
+        click_link 'クイズを試す'
 
         4.times do |n|
           if has_text?('A platform on the side of a building, accessible from inside the building.')
@@ -994,7 +994,7 @@ RSpec.describe 'Quiz' do
 
         visit '/'
         click_link '試してみる(機能に制限あり)'
-        click_link 'クイズを試してみる'
+        click_link 'クイズを試す'
 
         4.times do |n|
           fill_in('解答を入力', with: '')
@@ -1023,7 +1023,7 @@ RSpec.describe 'Quiz' do
       before do
         visit '/'
         click_link '試してみる(機能に制限あり)'
-        click_link 'クイズを試してみる'
+        click_link 'クイズを試す'
 
         4.times do |n|
           if has_text?('A platform on the side of a building, accessible from inside the building.')

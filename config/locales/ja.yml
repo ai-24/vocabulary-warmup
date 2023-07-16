@@ -24,7 +24,7 @@ ja:
       no_data: このリストに登録されている英単語またはフレーズはありません
       create: 新規作成
       start_quiz: クイズに挑戦
-      try_quiz: クイズを試してみる
+      try_quiz: クイズを試す
       warning: ログイン後に挑戦すると英単語・フレーズをブックマークや覚えた語彙リストに保存可能となります
       how_to_create_data: ログインすると英単語やフレーズの登録が可能です
   bookmarked_expressions:
