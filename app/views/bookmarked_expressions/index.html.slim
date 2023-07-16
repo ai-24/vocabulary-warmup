@@ -1,24 +1,27 @@
-.bg-white.py-12.rounded-sm.max-w-800.w-full.mx-auto
+.bg-white.pt-16.pb-24.max-w-800.w-full.mx-auto
   p.text-green-700.pl-5.pb-6.font-bold
     = notice
-  = render 'shared/page_tabs'
-  .px-7.pt-6.border-golden-yellow-800.border-t-2
+  .mt-4
+    = render 'shared/page_tabs'
+  .sm:px-7.py-6.bg-lavender-600
     - if @bookmarkings.blank?
       - if logged_in?
-        .h-80
-          p.font-bold.ml-10.pt-6
-            = t('.no_data')
+        .h-80.px-3.sm:px-0
+          .flex.justify-center
+            p.font-bold.text-center.py-10.px-3.sm:w-full.w-72
+              = t('.no_data')
         .flex.justify-end.mt-6
-          .text-center.w-1/2.pr-10.pl-3
-            p.inline-block.w-11/12.font-semibold.text-lg.py-1.rounded-full.bg-lavender-600.text-white.hover:cursor-not-allowed
+          .text-center.w-1/2.sm:pr-10.sm:pl-3
+            p.opacity-70.inline-block.w-11/12.font-semibold.text-lg.py-1.rounded-full.bg-golden-yellow-400.text-black.hover:cursor-not-allowed
               = t('.start_quiz')
       - else
-        .h-80
-          p.font-bold.ml-16.pt-6
-            = t('.unauthorized')
+        .h-80.px-3.sm:px-0
+          .flex.justify-center
+            p.font-bold.text-center.py-10.px-3.sm:w-full.w-80
+              = t('.unauthorized')
     - else
-      .h-80
+      .h-80.px-3.sm:px-0
         div(data-vue='ExpressionsList' data-vue-path='/api/bookmarked_expressions')
-      .flex.justify-end.mt-6
-        .text-center.w-1/2.pr-10.pl-3
-          = link_to t('.start_quiz'), bookmarked_expressions_quiz_path, class: 'inline-block w-11/12 font-semibold text-lg py-1 rounded-full bg-lavender-800 hover:bg-lavender-600 text-white'
+      .flex.justify-end.mt-6.pl-5.pr-2.sm:pl-2.5
+        .text-center.w-1/2.sm:pr-10.sm:pl-3
+          = link_to t('.start_quiz'), bookmarked_expressions_quiz_path, class: 'inline-block w-11/12 font-semibold text-lg py-1 rounded-full bg-golden-yellow-400 hover:bg-golden-yellow-200 text-black'
