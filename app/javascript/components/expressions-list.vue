@@ -1,5 +1,6 @@
 <template>
-  <ul class="expressions-list h-auto max-h-80 overflow-x-auto overflow-y-auto">
+  <ul
+    class="expressions-list h-auto max-h-80 overflow-x-auto overflow-y-auto py-2">
     <li
       v-for="expressionsResource in expressionsResources"
       :key="expressionsResource.id"
