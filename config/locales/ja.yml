@@ -70,8 +70,6 @@ ja:
       edit: 編集
       delete: 削除
       confirm_deletion_of_expression: この英単語又はフレーズを本当に削除しますか？
-      back: １つ前の英単語・フレーズへ
-      next: 次の英単語・フレーズへ
     edit:
       go_to_show: 詳細画面に戻る
       go_to_index: 英単語・フレーズ一覧に戻る

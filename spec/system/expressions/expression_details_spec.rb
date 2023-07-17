@@ -166,8 +166,8 @@ RSpec.describe 'Expressions' do
 
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path "/expressions/#{first_expression_items[0].expression.id}", ignore_query: true
-        expect(page).to have_link '１つ前の英単語・フレーズへ', href: '/expressions/1'
-        expect(page).not_to have_link '次の英単語・フレーズへ'
+        expect(page).to have_link 'previous', href: '/expressions/1'
+        expect(page).not_to have_link 'next'
       end
 
       it 'check if there is no back button when the expression is the first one' do
@@ -179,8 +179,8 @@ RSpec.describe 'Expressions' do
         click_link 'balcony and Veranda'
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path '/expressions/1'
-        expect(page).to have_link '次の英単語・フレーズへ', href: "/expressions/#{expression_items[0].expression.id}"
-        expect(page).not_to have_link '１つ前の英単語・フレーズへ'
+        expect(page).to have_link 'next', href: "/expressions/#{expression_items[0].expression.id}"
+        expect(page).not_to have_link 'previous'
       end
 
       it 'check if there is no back and next button when expression is one in a list' do
@@ -190,8 +190,8 @@ RSpec.describe 'Expressions' do
         click_link 'balcony and Veranda'
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path '/expressions/1'
-        expect(page).not_to have_link '１つ前の英単語・フレーズへ'
-        expect(page).not_to have_link '次の英単語・フレーズへ'
+        expect(page).not_to have_link 'previous'
+        expect(page).not_to have_link 'next'
       end
 
       it 'check next button' do
@@ -205,7 +205,7 @@ RSpec.describe 'Expressions' do
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path "/expressions/#{first_expression_items[0].expression.id}", ignore_query: true
 
-        click_link '次の英単語・フレーズへ'
+        click_link 'next'
         expect(page).to have_content "1. #{second_expression_items[0].content}"
         expect(page).to have_current_path expression_path(second_expression_items[0].expression), ignore_query: true
       end
@@ -220,7 +220,7 @@ RSpec.describe 'Expressions' do
         click_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}"
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true
-        click_link '１つ前の英単語・フレーズへ'
+        click_link 'previous'
         expect(page).to have_content "1. #{first_expression_items[0].content}"
         expect(page).to have_current_path expression_path(first_expression_items[0].expression), ignore_query: true
       end
@@ -253,9 +253,9 @@ RSpec.describe 'Expressions' do
 
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true
-        expect(page).to have_link '１つ前の英単語・フレーズへ'
-        expect(page).to have_link '次の英単語・フレーズへ'
-        click_link '次の英単語・フレーズへ'
+        expect(page).to have_link 'previous'
+        expect(page).to have_link 'next'
+        click_link 'next'
 
         expect(page).to have_content "1. #{third_expression_items[0].content}"
         expect(page).to have_current_path "/expressions/#{third_expression_items[0].expression.id}", ignore_query: true
@@ -268,8 +268,8 @@ RSpec.describe 'Expressions' do
 
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path "/expressions/#{third_expression_items[0].expression.id}", ignore_query: true
-        expect(page).to have_link '１つ前の英単語・フレーズへ'
-        click_link '１つ前の英単語・フレーズへ'
+        expect(page).to have_link 'previous'
+        click_link 'previous'
 
         expect(page).to have_content "1. #{second_expression_items[0].content}"
         expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true
@@ -282,7 +282,7 @@ RSpec.describe 'Expressions' do
 
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path "/expressions/#{third_expression_items[0].expression.id}", ignore_query: true
-        expect(page).not_to have_link '次の英単語・フレーズへ'
+        expect(page).not_to have_link 'next'
       end
 
       it 'check if there is no back button if the expression is the first one' do
@@ -292,7 +292,7 @@ RSpec.describe 'Expressions' do
 
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path "/expressions/#{first_expression_items[0].expression.id}", ignore_query: true
-        expect(page).not_to have_link '１つ前の英単語・フレーズへ'
+        expect(page).not_to have_link 'previous'
       end
 
       it 'check if there is no back and next button when expression is one in a list' do
@@ -306,8 +306,8 @@ RSpec.describe 'Expressions' do
 
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true
-        expect(page).not_to have_link '１つ前の英単語・フレーズへ'
-        expect(page).not_to have_link '次の英単語・フレーズへ'
+        expect(page).not_to have_link 'previous'
+        expect(page).not_to have_link 'next'
       end
     end
 
@@ -338,9 +338,9 @@ RSpec.describe 'Expressions' do
 
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true
-        expect(page).to have_link '１つ前の英単語・フレーズへ'
-        expect(page).to have_link '次の英単語・フレーズへ'
-        click_link '次の英単語・フレーズへ'
+        expect(page).to have_link 'previous'
+        expect(page).to have_link 'next'
+        click_link 'next'
 
         expect(page).to have_content "1. #{third_expression_items[0].content}"
         expect(page).to have_current_path "/expressions/#{third_expression_items[0].expression.id}", ignore_query: true
@@ -353,8 +353,8 @@ RSpec.describe 'Expressions' do
 
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path "/expressions/#{third_expression_items[0].expression.id}", ignore_query: true
-        expect(page).to have_link '１つ前の英単語・フレーズへ'
-        click_link '１つ前の英単語・フレーズへ'
+        expect(page).to have_link 'previous'
+        click_link 'previous'
 
         expect(page).to have_content "1. #{second_expression_items[0].content}"
         expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true
@@ -367,7 +367,7 @@ RSpec.describe 'Expressions' do
 
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path "/expressions/#{third_expression_items[0].expression.id}", ignore_query: true
-        expect(page).not_to have_link '次の英単語・フレーズへ'
+        expect(page).not_to have_link 'next'
       end
 
       it 'check if there is no back button if the expression is the first one' do
@@ -377,7 +377,7 @@ RSpec.describe 'Expressions' do
 
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path "/expressions/#{first_expression_items[0].expression.id}", ignore_query: true
-        expect(page).not_to have_link '１つ前の英単語・フレーズへ'
+        expect(page).not_to have_link 'previous'
       end
 
       it 'check if there is no back and next button when expression is one in a list' do
@@ -391,8 +391,8 @@ RSpec.describe 'Expressions' do
 
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true
-        expect(page).not_to have_link '１つ前の英単語・フレーズへ'
-        expect(page).not_to have_link '次の英単語・フレーズへ'
+        expect(page).not_to have_link 'previous'
+        expect(page).not_to have_link 'next'
       end
     end
   end

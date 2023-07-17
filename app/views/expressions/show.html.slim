@@ -1,48 +1,58 @@
-.specific-expression
-  p style="color: green" = notice
+.specific-expression.py-20.px-2.max-w-800.w-full.mx-auto
+  p.text-green-700.pl-5.font-bold
+    = notice
 
-  .title
-    h1
+  .title.bg-lavender-50.p-2.rounded-md
+    h1.text-lg
       = t('.title')
-    div
+    .font-semibold.text-lg
       - @expression.expression_items.order(:created_at, :id).each_with_index do |expression_item, i|
         p #{i + 1}. #{expression_item.content}
-  .details
+  .details.bg-lavender-600.mt-10.p-2.rounded-md
     - @expression.expression_items.order(:created_at, :id).each_with_index do |expression_item, i|
-      div class="expression#{i}"
-        p.content
+      div class="expression#{i} bg-white p-3 my-3 rounded-md"
+        p.content.font-bold.text-lg.border-b-2.border-neutral-400.mb-3.5
           = expression_item.content
-        p
+        p.underline
           = t('.explanation')
         p.explanation
           = expression_item.explanation
         - if expression_item.examples.present?
-          p
+          p.mt-3.underline
             = t('.example')
           - expression_item.examples.order(:created_at, :id).each do |example|
-            p.example
+            p.example.border-b.border-neutral-400
               = example.content
-  - if @expression.note.present?
-    .note
-      p
-        = t('.note')
-      p
-        = @expression.note
-  - if @expression.tags.present?
-    .tag
-      p
-        = t('.tag')
-      - @expression.tags.order('taggings.created_at').each do |tag|
-        p
-          = tag.name
+  - if @expression.note.present? || @expression.tags.present?
+    .border-2.border-lavender-600.rounded-md.mt-6.p-2
+      - if @expression.note.present?
+        .note.my-1.bg-golden-yellow-50.p-2
+          p.font-semibold
+            = t('.note')
+          p
+            = @expression.note
+      - if @expression.tags.present?
+        .tag.mt-2
+          p
+            = t('.tag')
+          .flex.flex-row.flex-wrap
+            - @expression.tags.order('taggings.created_at').each do |tag|
+              p.m-1.px-2.bg-golden-yellow-400.rounded.w-fit
+                = tag.name
 
-  div
+  .flex.flex-row.justify-end.p-3.text-neutral-700
     - if logged_in? && @expression.user_id == current_user.id
-      = link_to t('.edit'), edit_expression_path(@expression)
-      = button_to t('.delete'), @expression, method: :delete, data: { turbo_confirm: t('.confirm_deletion_of_expression') }
-
-  - if @expression.previous(@user)
-    = link_to t('.back'), expression_path(@expression.previous(@user))
-  - if @expression.next(@user)
-    = link_to t('.next'), expression_path(@expression.next(@user))
-  = link_to t('.go_to_index'), home_path
+      = link_to t('.edit'), edit_expression_path(@expression), class: 'mr-4 hover:text-neutral-400'
+      = button_to t('.delete'), @expression, method: :delete, data: { turbo_confirm: t('.confirm_deletion_of_expression') }, class: 'hover:text-neutral-400'
+  .grid.grid-cols-2.mt-10.h-6.relative
+    - if @expression.previous(@user)
+      .text-center
+        = link_to expression_path(@expression.previous(@user)), id: 'previous', class: 'hover:text-neutral-400' do
+          i class="fa-solid fa-angle-left fa-2xl"
+    - if @expression.next(@user)
+      .absolute.right-0.top-0.w-1/2
+        .text-center
+          = link_to expression_path(@expression.next(@user)), id: 'next', class: 'hover:text-neutral-400' do
+            i class="fa-solid fa-angle-right fa-2xl"
+  .text-center.pt-10
+    = link_to t('.go_to_index'), home_path, class: 'hover:text-neutral-400'
