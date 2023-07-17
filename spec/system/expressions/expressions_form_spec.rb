@@ -11,7 +11,7 @@ RSpec.describe 'Expressions' do
     describe 'authority' do
       it 'check if the link is not shown when user has not logged in' do
         visit '/'
-        click_link '使ってみる'
+        click_link '試してみる(機能に制限あり)'
         expect(page).not_to have_link '新規作成'
         expect(page).to have_content '新規作成'
         expect(page).not_to have_content 'ログインすると英単語やフレーズの登録が可能です'

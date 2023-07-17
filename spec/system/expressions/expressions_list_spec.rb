@@ -16,7 +16,7 @@ RSpec.describe 'Expressions' do
       end
 
       visit '/'
-      click_link '使ってみる'
+      click_link '試してみる(機能に制限あり)'
     end
 
     it 'check the header link' do
@@ -77,9 +77,9 @@ RSpec.describe 'Expressions' do
 
     it 'check a quiz button' do
       expect(page).to have_current_path home_path
-      expect(page).to have_link 'クイズを試してみる'
+      expect(page).to have_link 'クイズを試す'
       expect(find('.try-quiz').hover).to have_content 'ログイン後に挑戦すると英単語・フレーズをブックマークや覚えた語彙リストに保存可能となります'
-      click_link 'クイズを試してみる'
+      click_link 'クイズを試す'
       expect(page).to have_current_path '/quiz'
       expect(page).to have_selector 'p.content-of-question'
     end

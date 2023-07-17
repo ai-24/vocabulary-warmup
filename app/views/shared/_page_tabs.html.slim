@@ -1,8 +1,8 @@
-.page_tabs.px-7.pt-4
-  ul.flex.flex-row.font-semibold.text-center
-    li.w-40.tracking-wider.mr-1.5
-      = link_to t('words_and_phrases'), home_path, class: "words-and-phrases-link inline-block py-1.5 h-full w-full bg-golden-yellow-200 hover:bg-golden-yellow-400 rounded-t #{current_page_tab_or_not('home')}"
-    li.w-40.tracking-wider.mr-1.5
-      = link_to t('bookmark'), bookmarked_expressions_path, class: "inline-block py-1.5 h-full w-full bg-golden-yellow-200 hover:bg-golden-yellow-400 rounded-t #{current_page_tab_or_not('bookmarked_expressions')}"
-    li.w-40.tracking-wider
-      = link_to t('memorised_list'), memorised_expressions_path, class: "memorised-list-link inline-block py-1.5 h-full w-full bg-golden-yellow-200 hover:bg-golden-yellow-400 rounded-t #{current_page_tab_or_not('memorised_expressions')}"
+.page_tabs.px-2.sm:px-7.pb-4
+  ul.flex.flex-row.font-semibold.text-center.text-sm.sm:text-base
+    li.sm:w-40.sm:tracking-wider.mr-2
+      = link_to t('words_and_phrases'), home_path, class: "words-and-phrases-link inline-block px-2 py-1 h-full w-full bg-lavender-50 xl:hover:bg-lavender-600 rounded-full #{current_page_tab_or_not('home')}"
+    li.sm:w-40.sm:tracking-wider.mr-2
+      = link_to t('bookmark'), bookmarked_expressions_path, class: "inline-block px-2 py-1 h-full w-full bg-lavender-50 xl:hover:bg-lavender-600 rounded-full #{current_page_tab_or_not('bookmarked_expressions')}"
+    li.sm:w-40.sm:tracking-wider
+      = link_to t('memorised_list'), memorised_expressions_path, class: "memorised-list-link inline-block px-2 py-1 h-full w-full bg-lavender-50 rounded-full xl:hover:bg-lavender-600 #{current_page_tab_or_not('memorised_expressions')}"

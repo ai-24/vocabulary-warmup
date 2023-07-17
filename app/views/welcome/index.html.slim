@@ -1,54 +1,80 @@
-.welcome.bg-white.py-16.rounded-sm.max-w-800.mx-auto
-  p.text-green-700.pl-8.pb-5.font-bold
+.welcome.bg-white.py-16.mx-auto
+  p.text-green-700.pl-8.pb-5.font-bold.text-lg.max-w-800.mx-auto
     = notice
   - if alert
-    .error.text-center.pb-16
-      i class="fa-solid fa-circle-exclamation fa-xl pr-1 text-red-600"
-      p.font-semibold.inline-block.text-xl
-        = alert
-      - if alert == 'ログインが必要です'
-        = button_to 'Sign up/Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }, class: 'text-lavender-800 hover:bg-lavender-50 border-2 border-lavender-800 rounded-full font-bold px-3 mt-1.5'
+    .error.text-center.pb-16.flex.justify-center
+      .max-w-800
+        i class="fa-solid fa-circle-exclamation fa-xl pr-1 text-red-600"
+        p.font-semibold.inline-block.text-xl
+          = alert
+        - if alert == 'ログインが必要です'
+          = button_to 'Sign up/Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }, class: 'text-lavender-800 hover:bg-lavender-50 border-2 border-lavender-800 rounded-full font-bold px-3 mt-1.5'
 
   div class=error_or_not(alert)
-    h1.text-2xl.font-bold.w-2/3.pb-14.pl-8.max-w-lg
-      = t('.target')
-      i class="fa-solid fa-earth-asia pr-0.5"
-      i class="fa-regular fa-comments"
-    .w-4/5.mx-auto.border-lavender-600.border-2.rounded.py-9.px-12
-      .pb-4
-        .rounded-t.bg-golden-yellow-800.w-2/5.grid.justify-items-center
-          h2.text-lg.font-semibold.mx-5
-            = t('.about_word_warmup')
-        .py-3.px-4.bg-golden-yellow-50.rounded-r.rounded-bl.border.border-golden-yellow-800
-          p.font-semibold
-            = t('.description')
-          .py-1.pl-3
-            i class="fa-solid fa-asterisk fa-xs"
-            p.text-sm.inline
-              = t('.note1')
-            p.text-sm.pl-2
-              = t('.note2')
-      .px-6.pt-2
-        p.font-medium.underline.decoration-golden-yellow-800
+    .max-w-800.mx-auto
+      h1.font-bold.px-5.pb-14.md:pl-10.max-w-lg.text-2xl
+        = t('.target')
+        i class="fa-solid fa-earth-asia pr-0.5"
+        i class="fa-regular fa-comments"
+
+    .py-14.bg-lavender-50.flex.justify-center
+      .max-w-800
+        h2.text-2xl.font-semibold.mx-2.bg-golden-yellow-50.rounded.py-1.text-center
+          = t('.about_word_warmup')
+        ol.font-semibold.px-5.lg:mx-10
+          li.mt-11
+            p.text-xl.flex.justify-center
+              | 1.
+              = t('.function1')
+            .flex.justify-center.py-4
+              i class="fa-solid fa-pen-to-square fa-4x" style="color: #ffd12a;"
+            p.font-normal
+              = t('.detail_of_function1')
+          li.mt-11
+            p.text-xl.flex.justify-center
+              | 2.
+              = t('.function2')
+            .flex.justify-center.py-4
+              i class="fa-solid fa-spell-check fa-4x" style="color: #ffd12a;"
+            p.font-normal.sm:text-center
+              = t('.detail_of_function2')
+          li.mt-11
+            p.text-xl.flex.justify-center
+              | 3.
+              = t('.function3')
+            .flex.justify-center.py-4
+              i class="fa-solid fa-book-bookmark fa-4x" style="color: #ffd12a;"
+            p.font-normal
+              = t('.detail_of_function3')
+          li.mt-11
+            .md:text-center.flex.justify-center
+              p.inline-block.text-xl.max-w-xl
+                | 4.
+                = t('.function4')
+            .flex.justify-center.py-4
+              i class="fa-solid fa-book-open fa-4x" style="color: #ffd12a;"
+            p.font-normal
+              = t('.detail_of_function4')
+            p.font-normal
+              = t('.after_login')
+    .grid
+      .md:border-lavender-600.md:border-2.md:rounded.py-10.px-5.md:mx-10.md:mt-16.max-w-800.justify-self-center
+        p.text-xl.font-semibold.text-center
           = t('.target_user')
-        ul.list-disc.pl-4
-          li
+        ul.list-disc.pl-4.my-5
+          li.mb-2
             = t('.user1')
-          li
+          li.mb-2
             = t('.user2')
-          li
+          li.mb-2
             = t('.user3')
-      .pt-6
-        .bg-golden-yellow-800.rounded.w-2/5.grid.justify-items-center
-          p.font-medium.mx-5
-            = t('.after_login')
-        ul.list-disc.pl-5.pt-2
           li
-            = t('.function1')
-          li
-            = t('.function2')
-    .w-4/5.flex.flex-row.mx-auto.mx-40.mt-6
-      .basis-1/2.text-center.ml-7.mr-3
+            = t('.user4')
+
+    .w-11/12.md:flex.md:flex-row.mx-auto.md:mt-10.max-w-800.md:pt-5
+      .md:basis-1/2.text-center.md:ml-7.md:mr-3
+        p.font-semibold.text-sm
+          = t('.cost')
         = button_to 'Sign up/Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }, class: 'w-full font-bold text-lg py-2 rounded-full bg-lavender-800 hover:bg-lavender-600 text-white'
-      .basis-1/2.text-center.tracking-widest.ml-3.mr-7
+      .md:basis-1/2.text-center.tracking-widest.mt-5.md:mt-0.md:ml-3.md:mr-7.flex.items-end
         = link_to t('.try_app'), home_path, class: 'inline-block w-full font-bold text-lg py-2 rounded-full bg-lavender-800 hover:bg-lavender-600 text-white'

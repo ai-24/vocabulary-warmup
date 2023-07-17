@@ -21,7 +21,7 @@ RSpec.describe 'Welcome' do
   end
 
   it 'check 使ってみる link' do
-    click_link '使ってみる'
+    click_link '試してみる(機能に制限あり)'
     expect(page).to have_current_path home_path
   end
 

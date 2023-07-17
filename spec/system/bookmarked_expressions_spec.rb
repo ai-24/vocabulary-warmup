@@ -200,7 +200,7 @@ RSpec.describe 'Bookmarked expressions' do
 
     it 'show message that is not logged in' do
       expect(page).to have_content 'ログアウトしました'
-      click_link '使ってみる'
+      click_link '試してみる(機能に制限あり)'
       expect(page).to have_current_path home_path
       click_link 'ブックマーク'
       expect(page).to have_current_path bookmarked_expressions_path
@@ -211,7 +211,7 @@ RSpec.describe 'Bookmarked expressions' do
 
     it 'check tabs' do
       expect(page).to have_content 'ログアウトしました'
-      click_link '使ってみる'
+      click_link '試してみる(機能に制限あり)'
       expect(page).to have_current_path home_path
       click_link 'ブックマーク'
 
@@ -233,7 +233,7 @@ RSpec.describe 'Bookmarked expressions' do
 
     it 'check if there is no incremental search' do
       expect(page).to have_content 'ログアウトしました'
-      click_link '使ってみる'
+      click_link '試してみる(機能に制限あり)'
       expect(page).to have_current_path home_path
       click_link 'ブックマーク'
       expect(page).not_to have_selector '.incremental-search'

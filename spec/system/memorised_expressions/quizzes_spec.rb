@@ -295,7 +295,7 @@ RSpec.describe 'MemorisedExpressions Quiz' do
   context 'when user has not logged in' do
     it 'check if the page is memorised list' do
       visit '/'
-      click_link '使ってみる'
+      click_link '試してみる(機能に制限あり)'
       click_link '覚えた語彙'
       expect(page).not_to have_link 'クイズに挑戦'
 
