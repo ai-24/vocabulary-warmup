@@ -1,6 +1,6 @@
 <template>
   <div class="flex justify-center">
-    <div class="w-10/12">
+    <div class="w-full px-2.5 sm:w-10/12">
       <WordQuizResult
         v-if="isResult"
         :number-of-quiz-resources="numberOfResources"
@@ -10,13 +10,13 @@
         <p class="font-bold text-lg tracking-widest">
           {{ $t('quiz.question') }}
         </p>
-        <div class="h-36">
+        <div class="h-56">
           <template
             v-for="(quizResource, index) in quizResources"
             :key="quizResource">
             <p
               v-if="currentIndex === index"
-              class="content-of-question font-bold border-2 border-lavender-800 bg-lavender-50 rounded py-2 px-4 mt-2 max-h-24 h-auto overflow-y-auto">
+              class="content-of-question font-bold border-2 border-lavender-800 bg-lavender-50 rounded py-2 px-4 mt-2 h-44 overflow-y-auto">
               {{ quizResource.explanation }}
             </p>
           </template>
@@ -52,7 +52,7 @@
             <p class="font-semibold text-sm pb-1">{{ $t('quiz.completed') }}</p>
             <button
               @click="getResult"
-              class="rounded-full font-bold py-1 px-5 bg-golden-yellow-400 hover:bg-golden-yellow-800">
+              class="rounded-full font-bold py-1 px-3 sm:px-5 bg-golden-yellow-400 hover:bg-golden-yellow-800">
               {{ $t('quiz.resultButton') }}
             </button>
           </div>

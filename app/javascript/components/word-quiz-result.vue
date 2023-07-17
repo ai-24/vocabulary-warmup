@@ -18,7 +18,7 @@
   </div>
   <div
     v-if="!isSaved && movableExpressionExists"
-    class="move-to-bookmark-or-memorised-list mb-12 py-3 px-4 border-lavender-800 border-2 bg-lavender-50 rounded-md">
+    class="move-to-bookmark-or-memorised-list mb-12 py-3 px-2 sm:px-4 border-lavender-800 border-2 bg-lavender-50 rounded-md">
     <div
       v-if="
         listOfWrongItems.length > 0 && !isSavedBookmark && !isBookmarkedList
@@ -33,7 +33,7 @@
       <label for="move-to-bookmark" class="font-semibold pl-2">{{
         $t('quiz.result.bookmark')
       }}</label>
-      <details class="my-1 mx-auto w-96 bg-white px-3 rounded-md py-0.5">
+      <details class="my-1 mx-auto sm:w-96 bg-white px-3 rounded-md py-0.5">
         <summary class="hover:cursor-pointer text-sm text-center">
           {{ $t('quiz.result.bookmarkList') }}
         </summary>
@@ -70,7 +70,7 @@
       <label for="move-to-memorised-list" class="font-semibold pl-2">{{
         $t('quiz.result.moveToMemorisedWordsList')
       }}</label>
-      <details class="mt-1 mx-auto w-96 bg-white px-3 rounded-md py-0.5">
+      <details class="mt-1 mx-auto sm:w-96 bg-white px-3 rounded-md py-0.5">
         <summary class="hover:cursor-pointer text-sm text-center">
           {{ $t('quiz.result.memorisedWordsList') }}
         </summary>
@@ -133,15 +133,17 @@
   </details>
   <div
     :class="{
-      flex: !movableExpressionExists,
-      'flex-row': !movableExpressionExists
+      'md:flex': !movableExpressionExists,
+      'md:flex-row': !movableExpressionExists
     }">
     <div
-      class="mb-8 py-3 rounded-md bg-white"
+      class="mb-8 rounded-md bg-white"
       :class="{
+        'py-3': movableExpressionExists,
         'border-2': movableExpressionExists,
         'border-lavender-800': movableExpressionExists,
-        'px-4': movableExpressionExists,
+        'px-2': movableExpressionExists,
+        'sm:px-4': movableExpressionExists,
         'basis-1/2': !movableExpressionExists
       }">
       <div v-if="movableExpressionExists">
@@ -171,8 +173,8 @@
       </div>
     </div>
     <div
-      class="py-3"
       :class="{
+        'py-3': movableExpressionExists,
         flex: movableExpressionExists,
         'justify-center': movableExpressionExists,
         'basis-1/2': !movableExpressionExists,
