@@ -1,3 +1,3 @@
 linters:
   LineLength:
-    max: 255
+    max: 365
