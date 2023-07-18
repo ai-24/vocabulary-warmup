@@ -1,115 +1,93 @@
 <template>
-  <ol class="flex flex-row">
-    <div v-if="previousPage === 2 && currentPage === 1">
-      <li
-        class="inline-block p-2 bg-yellow-200 border-y-2 border-l-2 border-yellow-200">
-        <h1>
-          <font-awesome-icon icon="fa-regular fa-circle-check" size="xl" />Step1
-        </h1>
-        <p>{{ $t('stepNavigation.wordsOrPhrases') }}</p>
-      </li>
-      <div v-if="!completedStep2" class="inline-block">
-        <li class="p-2 border-y-2 border-r-2 border-gray-300 text-gray-400">
-          <h1>
-            <font-awesome-icon
-              icon="fa-regular fa-pen-to-square"
-              size="xl" />Step2
-          </h1>
-          <p>{{ $t('stepNavigation.explanationAndExamples') }}</p>
+  <ol>
+    <div class="inline" v-if="previousPage === 2 && currentPage === 1">
+      <div class="inline-block w-1/3 text-center">
+        <li
+          class="w-full inline-block px-0.5 sm:px-2 border-b-4 border-golden-yellow-400">
+          <p><font-awesome-icon icon="fa-regular fa-circle-check" />Step1</p>
+          <p class="text-sm">{{ $t('stepNavigation.wordsOrPhrases') }}</p>
         </li>
       </div>
-      <div v-else class="inline-block">
-        <li class="p-2 border-y-2 border-r-2 border-gray-300">
-          <h1>
+      <div v-if="!completedStep2" class="inline-block w-1/3 text-center">
+        <li
+          class="w-full px-0.5 sm:px-2 border-b-4 border-gray-300 text-gray-400">
+          <p><font-awesome-icon icon="fa-regular fa-pen-to-square" />Step2</p>
+          <p class="text-sm">
+            {{ $t('stepNavigation.explanationAndExamples') }}
+          </p>
+        </li>
+      </div>
+      <div v-else class="inline-block w-1/3 text-center">
+        <li class="w-full px-0.5 sm:px-2 border-b-4 border-gray-300">
+          <p>
             <font-awesome-icon
               icon="fa-regular fa-circle-check"
-              class="text-yellow-400"
-              size="xl" />Step2
-          </h1>
-          <p>{{ $t('stepNavigation.explanationAndExamples') }}</p>
+              class="text-golden-yellow-400" />Step2
+          </p>
+          <p class="text-sm">
+            {{ $t('stepNavigation.explanationAndExamples') }}
+          </p>
         </li>
       </div>
     </div>
-    <div v-else-if="currentPage === 1">
+    <div class="inline-block w-2/3 text-center" v-else-if="currentPage === 1">
       <li
-        class="inline-block p-2 bg-yellow-200 border-y-2 border-r-2 border-yellow-200">
-        <h1>
-          <font-awesome-icon
-            icon="fa-regular fa-pen-to-square"
-            size="xl" />Step1
-        </h1>
-        <p>{{ $t('stepNavigation.wordsOrPhrases') }}</p>
+        class="w-1/2 inline-block px-0.5 sm:px-2 border-b-4 border-golden-yellow-400">
+        <p><font-awesome-icon icon="fa-regular fa-pen-to-square" />Step1</p>
+        <p class="text-sm">{{ $t('stepNavigation.wordsOrPhrases') }}</p>
       </li>
       <li
-        class="inline-block p-2 border-y-2 border-r-2 border-gray-300 text-gray-400">
-        <h1>
-          <font-awesome-icon
-            icon="fa-regular fa-pen-to-square"
-            size="xl" />Step2
-        </h1>
-        <p>{{ $t('stepNavigation.explanationAndExamples') }}</p>
+        class="w-1/2 inline-block px-0.5 sm:px-2 border-b-4 border-gray-300 text-gray-400">
+        <p><font-awesome-icon icon="fa-regular fa-pen-to-square" />Step2</p>
+        <p class="text-sm">{{ $t('stepNavigation.explanationAndExamples') }}</p>
       </li>
     </div>
-    <div v-else>
-      <li class="inline-block p-2 border-y-2 border-l-2 border-gray-300">
-        <h1>
+    <div class="inline-block w-1/3 text-center" v-else>
+      <li class="w-full inline-block px-0.5 sm:px-2 border-b-4 border-gray-300">
+        <p>
           <font-awesome-icon
             icon="fa-regular fa-circle-check"
-            class="text-yellow-400"
-            size="xl" />Step1
-        </h1>
-        <p>{{ $t('stepNavigation.wordsOrPhrases') }}</p>
+            class="text-golden-yellow-400" />Step1
+        </p>
+        <p class="text-sm">{{ $t('stepNavigation.wordsOrPhrases') }}</p>
       </li>
     </div>
-    <div v-if="currentPage === 7">
-      <li class="inline-block p-2 border-y-2 border-l-2 border-gray-300">
-        <h1>
+    <div class="inline-block w-2/3 text-center" v-if="currentPage === 7">
+      <li class="w-1/2 inline-block px-0.5 sm:px-2 border-b-4 border-gray-300">
+        <p>
           <font-awesome-icon
             icon="fa-regular fa-circle-check"
-            class="text-yellow-400"
-            size="xl" />Step2
-        </h1>
-        <p>{{ $t('stepNavigation.explanationAndExamples') }}</p>
+            class="text-golden-yellow-400" />Step2
+        </p>
+        <p class="text-sm">{{ $t('stepNavigation.explanationAndExamples') }}</p>
       </li>
       <li
-        class="inline-block p-2 bg-yellow-200 border-y-2 border-r-2 border-yellow-200">
-        <h1>
-          <font-awesome-icon
-            icon="fa-regular fa-pen-to-square"
-            size="xl" />Step3
-        </h1>
-        <p>{{ $t('stepNavigation.noteAndTags') }}</p>
+        class="w-1/2 inline-block px-0.5 sm:px-2 border-b-4 border-golden-yellow-400">
+        <p><font-awesome-icon icon="fa-regular fa-pen-to-square" />Step3</p>
+        <p class="text-sm">{{ $t('stepNavigation.noteAndTags') }}</p>
       </li>
     </div>
-    <div v-else-if="currentPage !== 1 && completedStep2">
+    <div
+      class="inline-block w-1/3 text-center"
+      v-else-if="currentPage !== 1 && completedStep2">
       <li
-        class="inline-block bg-yellow-200 p-2 border-y-2 border-l-2 border-yellow-200">
-        <h1>
-          <font-awesome-icon icon="fa-regular fa-circle-check" size="xl" />Step2
-        </h1>
-        <p>{{ $t('stepNavigation.explanationAndExamples') }}</p>
+        class="w-full inline-block px-0.5 sm:px-2 border-b-4 border-golden-yellow-400">
+        <p><font-awesome-icon icon="fa-regular fa-circle-check" />Step2</p>
+        <p class="text-sm">{{ $t('stepNavigation.explanationAndExamples') }}</p>
       </li>
     </div>
-    <div v-else-if="currentPage !== 1">
+    <div class="inline-block w-1/3 text-center" v-else-if="currentPage !== 1">
       <li
-        class="inline-block p-2 bg-yellow-200 border-y-2 border-r-2 border-yellow-200">
-        <h1>
-          <font-awesome-icon
-            icon="fa-regular fa-pen-to-square"
-            size="xl" />Step2
-        </h1>
-        <p>{{ $t('stepNavigation.explanationAndExamples') }}</p>
+        class="w-full inline-block px-0.5 sm:px-2 border-b-4 border-golden-yellow-400">
+        <p><font-awesome-icon icon="fa-regular fa-pen-to-square" />Step2</p>
+        <p class="text-sm">{{ $t('stepNavigation.explanationAndExamples') }}</p>
       </li>
     </div>
-    <div v-if="currentPage < 7">
+    <div class="inline-block w-1/3 text-center" v-if="currentPage < 7">
       <li
-        class="inline-block p-2 border-y-2 border-r-2 border-gray-300 text-gray-400">
-        <h1>
-          <font-awesome-icon
-            icon="fa-regular fa-pen-to-square"
-            size="xl" />Step3
-        </h1>
-        <p>{{ $t('stepNavigation.noteAndTags') }}</p>
+        class="w-full inline-block px-0.5 sm:px-2 border-b-4 border-gray-300 text-gray-400">
+        <p><font-awesome-icon icon="fa-regular fa-pen-to-square" />Step3</p>
+        <p class="text-sm">{{ $t('stepNavigation.noteAndTags') }}</p>
       </li>
     </div>
   </ol>

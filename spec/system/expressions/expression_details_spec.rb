@@ -88,17 +88,17 @@ RSpec.describe 'Expressions' do
       end
 
       click_link '新規作成'
-      fill_in('１つ目の英単語 / フレーズ', with: 'on the beach')
-      fill_in('２つ目の英単語 / フレーズ', with: 'at the beach')
-      fill_in('３つ目の英単語 / フレーズ', with: 'around the beach')
+      fill_in('英単語 / フレーズ１', with: 'on the beach')
+      fill_in('英単語 / フレーズ２', with: 'at the beach')
+      fill_in('英単語 / フレーズ３(任意)', with: 'around the beach')
       click_button '次へ'
-      fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of on the beach')
+      fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of on the beach')
       fill_in('例文１', with: 'example of on the beach')
       click_button '次へ'
-      fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of at the beach')
+      fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of at the beach')
       fill_in('例文２', with: 'example of at the beach')
       click_button '次へ'
-      fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of around the beach')
+      fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of around the beach')
       click_button '次へ'
       fill_in('メモ（任意）', with: 'note')
       fill_in('タグ（任意）', with: 'preposition')

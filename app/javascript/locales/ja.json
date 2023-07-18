@@ -32,15 +32,15 @@
     },
     "form": {
         "expressions": "意味の違いや使い分けを学習したい英単語又はフレーズを入力してください",
-        "firstExpression": "１つ目の英単語 / フレーズ",
-        "secondExpression": "２つ目の英単語 / フレーズ",
-        "thirdExpression": "３つ目の英単語 / フレーズ",
-        "fourthExpression": "４つ目の英単語 / フレーズ",
-        "fifthExpression": "５つ目の英単語 / フレーズ",
+        "firstExpression": "英単語 / フレーズ１",
+        "secondExpression": "英単語 / フレーズ２",
+        "thirdExpression": "英単語 / フレーズ３(任意)",
+        "fourthExpression": "英単語 / フレーズ４(任意)",
+        "fifthExpression": "英単語 / フレーズ５(任意)",
         "about": "{word}について",
         "next": "次へ",
-        "explanation": "{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。",
-        "notice": "ここで入力する内容はこのアプリで行えるクイズの問題として出題されます。\n前ページで登録した英単語やフレーズを含めた内容は後に出てくるメモに記載するのがオススメです",
+        "explanation": "{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください",
+        "notice": "ここで入力する内容はこのアプリで行えるテストの問題として出題されます。\n前ページで登録した英単語やフレーズ自体を含めると答えが問題の一部として出力されてしまうので注意してください。",
         "example": "例文を入力してください",
         "firstExample": "例文１",
         "secondExample": "例文２",
@@ -55,7 +55,7 @@
     "stepNavigation": {
         "wordsOrPhrases": "単語又はフレーズ",
         "explanationAndExamples": "意味・例文",
-        "noteAndTags": "メモ・タグ（任意）"
+        "noteAndTags": "メモ・タグ(任意)"
     },
     "incrementalSearch": {
         "placeholder": "英単語・フレーズ、メモまたはタグ",
