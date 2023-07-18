@@ -1,8 +1,6 @@
-div(data-vue='ExpressionsForm' data-vue-expression-id:number="#{params[:id]}")
+.pt-20.pb-12.lg:pt-14.max-w-800.w-full.mx-auto
+  div(data-vue='ExpressionsForm' data-vue-expression-id:number="#{params[:id]}")
 
-br
-
-div
-  = link_to t('.go_to_show'), @expression
-  '|
-  = link_to t('.go_to_index'), home_path
+.mb-12
+  = link_to t('.go_to_show'), @expression, class: 'block mb-3 w-fit mx-auto hover:text-neutral-400'
+  = link_to t('.go_to_index'), home_path, class: 'block w-fit mx-auto hover:text-neutral-400'

@@ -132,30 +132,30 @@ RSpec.describe 'Expressions' do
       has_text? 'ログインしました'
 
       visit '/expressions/new'
-      fill_in('１つ目の英単語 / フレーズ', with: 'on the beach')
-      fill_in('２つ目の英単語 / フレーズ', with: 'at the beach')
-      fill_in('３つ目の英単語 / フレーズ', with: 'around the beach')
-      fill_in('４つ目の英単語 / フレーズ', with: 'of the beach')
-      fill_in('５つ目の英単語 / フレーズ', with: 'in the beach')
+      fill_in('英単語 / フレーズ１', with: 'on the beach')
+      fill_in('英単語 / フレーズ２', with: 'at the beach')
+      fill_in('英単語 / フレーズ３(任意)', with: 'around the beach')
+      fill_in('英単語 / フレーズ４(任意)', with: 'of the beach')
+      fill_in('英単語 / フレーズ５(任意)', with: 'in the beach')
       click_button '次へ'
-      fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of on the beach')
+      fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of on the beach')
       fill_in('例文１', with: 'example1 of on the beach')
       fill_in('例文２', with: 'example2 of on the beach')
       fill_in('例文３', with: 'example3 of on the beach')
       click_button '次へ'
-      fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of at the beach')
+      fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of at the beach')
       fill_in('例文１', with: 'example1 of at the beach')
       fill_in('例文２', with: 'example2 of at the beach')
       fill_in('例文３', with: 'example3 of at the beach')
       click_button '次へ'
-      fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of around the beach')
+      fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of around the beach')
       fill_in('例文１', with: 'example1 of around the beach')
       fill_in('例文２', with: 'example2 of around the beach')
       fill_in('例文３', with: 'example3 of around the beach')
       click_button '次へ'
-      fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of of the beach')
+      fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of of the beach')
       click_button '次へ'
-      fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of in the beach')
+      fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of in the beach')
       click_button '次へ'
       fill_in('メモ（任意）', with: 'note')
       fill_in('タグ（任意）', with: 'preposition')
@@ -166,16 +166,16 @@ RSpec.describe 'Expressions' do
     end
 
     it 'check if data of expression_items content is on the first page' do
-      expect(page).to have_field('１つ目の英単語 / フレーズ', with: 'on the beach')
-      expect(page).to have_field('２つ目の英単語 / フレーズ', with: 'at the beach')
-      expect(page).to have_field('３つ目の英単語 / フレーズ', with: 'around the beach')
-      expect(page).to have_field('４つ目の英単語 / フレーズ', with: 'of the beach')
-      expect(page).to have_field('５つ目の英単語 / フレーズ', with: 'in the beach')
+      expect(page).to have_field('英単語 / フレーズ１', with: 'on the beach')
+      expect(page).to have_field('英単語 / フレーズ２', with: 'at the beach')
+      expect(page).to have_field('英単語 / フレーズ３(任意)', with: 'around the beach')
+      expect(page).to have_field('英単語 / フレーズ４(任意)', with: 'of the beach')
+      expect(page).to have_field('英単語 / フレーズ５(任意)', with: 'in the beach')
     end
 
     it 'check if explanation and examples are on the second page' do
       click_button '次へ'
-      expect(page).to have_field('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。',
+      expect(page).to have_field('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください',
                                  with: 'explanation of on the beach')
       expect(page).to have_field('例文１', with: 'example1 of on the beach')
       expect(page).to have_field('例文２', with: 'example2 of on the beach')
@@ -185,7 +185,7 @@ RSpec.describe 'Expressions' do
     it 'check if explanation and examples are on the third page' do
       2.times { click_button '次へ' }
 
-      expect(page).to have_field('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of at the beach')
+      expect(page).to have_field('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of at the beach')
       expect(page).to have_field('例文１', with: 'example1 of at the beach')
       expect(page).to have_field('例文２', with: 'example2 of at the beach')
       expect(page).to have_field('例文３', with: 'example3 of at the beach')
@@ -194,7 +194,7 @@ RSpec.describe 'Expressions' do
     it 'check if explanation and examples are on the fourth page' do
       3.times { click_button '次へ' }
 
-      expect(page).to have_field('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of around the beach')
+      expect(page).to have_field('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of around the beach')
       expect(page).to have_field('例文１', with: 'example1 of around the beach')
       expect(page).to have_field('例文２', with: 'example2 of around the beach')
       expect(page).to have_field('例文３', with: 'example3 of around the beach')
@@ -203,13 +203,13 @@ RSpec.describe 'Expressions' do
     it 'check if data of explanation is on the fifth page' do
       4.times { click_button '次へ' }
 
-      expect(page).to have_field('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of of the beach')
+      expect(page).to have_field('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of of the beach')
     end
 
     it 'check if data of explanation is on the sixth page' do
       5.times { click_button '次へ' }
 
-      expect(page).to have_field('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of in the beach')
+      expect(page).to have_field('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of in the beach')
     end
 
     it 'check if date of note and the tag are on the last page' do
@@ -239,9 +239,9 @@ RSpec.describe 'Expressions' do
         expression_item = ExpressionItem.where('content = ?', 'balcony').last
         visit "/expressions/#{expression_item.expression.id}"
         click_link '編集'
-        fill_in('１つ目の英単語 / フレーズ', with: 'journey')
+        fill_in('英単語 / フレーズ１', with: 'journey')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'Travelling but this word means more broad.')
+        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'Travelling but this word means more broad.')
         fill_in('例文１', with: 'The journey was tiring.')
         2.times { click_button '次へ' }
         click_button '編集する'
@@ -251,21 +251,21 @@ RSpec.describe 'Expressions' do
       it 'check if content of expression_items are correct order on editing page after it is edited' do
         click_link '編集'
 
-        expect(page).to have_field('１つ目の英単語 / フレーズ', with: 'journey')
-        expect(page).to have_field('２つ目の英単語 / フレーズ', with: 'Veranda')
+        expect(page).to have_field('英単語 / フレーズ１', with: 'journey')
+        expect(page).to have_field('英単語 / フレーズ２', with: 'Veranda')
       end
 
       it 'check if explanations are correct order on editing page after it is edited' do
         click_link '編集'
         click_button '次へ'
 
-        expect(page).to have_field('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。',
+        expect(page).to have_field('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください',
                                    with: 'Travelling but this word means more broad.')
         expect(page).to have_field('例文１', with: 'The journey was tiring.')
         click_button '次へ'
 
         expect(page).to have_field(
-          '{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。',
+          '{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください',
           with: 'A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.'
         )
       end
@@ -285,15 +285,15 @@ RSpec.describe 'Expressions' do
         has_text? 'ログインしました'
 
         click_link '新規作成'
-        fill_in('１つ目の英単語 / フレーズ', with: 'on the beach')
-        fill_in('２つ目の英単語 / フレーズ', with: 'at the beach')
+        fill_in('英単語 / フレーズ１', with: 'on the beach')
+        fill_in('英単語 / フレーズ２', with: 'at the beach')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of on the beach')
+        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of on the beach')
         fill_in('例文１', with: 'example1 of on the beach')
         fill_in('例文２', with: 'example2 of on the beach')
         fill_in('例文３', with: 'example3 of on the beach')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of at the beach')
+        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of at the beach')
         click_button '次へ'
         click_button '登録'
 
@@ -333,9 +333,9 @@ RSpec.describe 'Expressions' do
 
         click_link 'balcony and Veranda'
         click_link '編集'
-        fill_in('１つ目の英単語 / フレーズ', with: 'journey')
+        fill_in('英単語 / フレーズ１', with: 'journey')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'Travelling but this word means more broad.')
+        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'Travelling but this word means more broad.')
         fill_in('例文１', with: 'The journey was tiring.')
         2.times { click_button '次へ' }
       end
@@ -396,9 +396,9 @@ RSpec.describe 'Expressions' do
 
         click_link 'balcony and Veranda'
         click_link '編集'
-        fill_in('２つ目の英単語 / フレーズ', with: 'veranda')
+        fill_in('英単語 / フレーズ２', with: 'veranda')
         2.times { click_button '次へ' }
-        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。',
+        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください',
                 with: 'normally on the ground floor and generally quite ornate or fancy, with room to sit. This sentence is added.')
         fill_in('例文１', with: 'test1')
         fill_in('例文２', with: 'test2')
@@ -462,15 +462,15 @@ RSpec.describe 'Expressions' do
         has_text? 'ログインしました'
         click_link '新規作成'
 
-        fill_in('１つ目の英単語 / フレーズ', with: 'on the beach')
-        fill_in('２つ目の英単語 / フレーズ', with: 'at the beach')
-        fill_in('３つ目の英単語 / フレーズ', with: 'around the beach')
+        fill_in('英単語 / フレーズ１', with: 'on the beach')
+        fill_in('英単語 / フレーズ２', with: 'at the beach')
+        fill_in('英単語 / フレーズ３(任意)', with: 'around the beach')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of on the beach')
+        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of on the beach')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of at the beach')
+        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of at the beach')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of around the beach')
+        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of around the beach')
         fill_in('例文１', with: 'example1 of around the beach')
         fill_in('例文２', with: 'example2 of around the beach')
         fill_in('例文３', with: 'example3 of around the beach')
@@ -480,9 +480,9 @@ RSpec.describe 'Expressions' do
         click_button '登録'
 
         click_link '編集'
-        fill_in('３つ目の英単語 / フレーズ', with: 'test3')
+        fill_in('英単語 / フレーズ３(任意)', with: 'test3')
         3.times { click_button '次へ' }
-        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of test3')
+        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of test3')
         fill_in('例文１', with: 'test1')
         fill_in('例文２', with: 'test2')
         click_button '次へ'
@@ -564,21 +564,21 @@ RSpec.describe 'Expressions' do
 
         click_link 'balcony and Veranda'
         click_link '編集'
-        fill_in('３つ目の英単語 / フレーズ', with: 'test3')
-        fill_in('４つ目の英単語 / フレーズ', with: 'test4')
-        fill_in('５つ目の英単語 / フレーズ', with: 'test5')
+        fill_in('英単語 / フレーズ３(任意)', with: 'test3')
+        fill_in('英単語 / フレーズ４(任意)', with: 'test4')
+        fill_in('英単語 / フレーズ５(任意)', with: 'test5')
         3.times { click_button '次へ' }
-        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of test3')
+        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of test3')
         fill_in('例文１', with: 'test3 example1')
         fill_in('例文２', with: 'test3 example2')
         fill_in('例文３', with: 'test3 example3')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of test4')
+        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of test4')
         fill_in('例文１', with: 'test4 example1')
         fill_in('例文２', with: 'test4 example2')
         fill_in('例文３', with: 'test4 example3')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した英単語 / フレーズ（{comparison}）との違いを入力してください。', with: 'explanation of test5')
+        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of test5')
         fill_in('例文１', with: 'test5 example1')
         fill_in('例文２', with: 'test5 example2')
         fill_in('例文３', with: 'test5 example3')

@@ -1,18 +1,22 @@
 <template>
-  <div class="grid justify-items-stretch place-content-center">
+  <div class="grid justify-items-stretch">
     <ExpressionsFormStepNavigation
       :current-page="currentPage"
       :previous-page="previousPage"
       :completed-step2="completedStep2"></ExpressionsFormStepNavigation>
-    <form accept-charset="UTF-8" :action="url" method="POST">
+    <form
+      accept-charset="UTF-8"
+      :action="url"
+      method="POST"
+      class="mt-10 bg-lavender-600 p-2">
       <input v-if="expressionId" name="_method" type="hidden" value="put" />
-      <div v-show="currentPage === 1">
-        <p>{{ $t('form.expressions') }}</p>
+      <div v-show="currentPage === 1" class="bg-white p-2 sm:p-5">
+        <h1 class="mb-7 font-bold text-lg">{{ $t('form.expressions') }}</h1>
         <p v-if="expressionsError" class="text-red-600">
           {{ $t('form.expressionsError') }}
         </p>
         <ul>
-          <li>
+          <li class="pb-6">
             <label for="first-expression">{{
               $t('form.firstExpression')
             }}</label>
@@ -23,11 +27,12 @@
               :value="expressionItemId[0].firstExpression" />
             <input
               id="first-expression"
+              class="outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block w-full mt-1 pl-2 py-1"
               name="expression[expression_items_attributes][0][content]"
               v-model="firstExpression"
               placeholder="First word" />
           </li>
-          <li>
+          <li class="pb-6">
             <label for="second-expression">{{
               $t('form.secondExpression')
             }}</label>
@@ -38,11 +43,12 @@
               :value="expressionItemId[1].secondExpression" />
             <input
               id="second-expression"
+              class="outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block w-full mt-1 pl-2 py-1"
               name="expression[expression_items_attributes][1][content]"
               v-model="secondExpression"
               placeholder="Second word" />
           </li>
-          <li>
+          <li class="pb-6">
             <label for="third-expression">{{
               $t('form.thirdExpression')
             }}</label>
@@ -53,11 +59,12 @@
               :value="expressionItemId[2].thirdExpression" />
             <input
               id="third-expression"
+              class="outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block w-full mt-1 pl-2 py-1"
               name="expression[expression_items_attributes][2][content]"
               v-model="thirdExpression"
-              placeholder="Third word (Optional)" />
+              placeholder="Third word" />
           </li>
-          <li>
+          <li class="pb-6">
             <label for="fourth-expression">{{
               $t('form.fourthExpression')
             }}</label>
@@ -68,11 +75,12 @@
               :value="expressionItemId[3].fourthExpression" />
             <input
               id="fourth-expression"
+              class="outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block w-full mt-1 pl-2 py-1"
               name="expression[expression_items_attributes][3][content]"
               v-model="fourthExpression"
-              placeholder="Fourth word (Optional)" />
+              placeholder="Fourth word" />
           </li>
-          <li>
+          <li class="pb-6">
             <label for="fifth-expression">{{
               $t('form.fifthExpression')
             }}</label>
@@ -83,18 +91,28 @@
               :value="expressionItemId[4].fifthExpression" />
             <input
               id="fifth-expression"
+              class="outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block w-full mt-1 pl-2 py-1"
               name="expression[expression_items_attributes][4][content]"
               v-model="fifthExpression"
-              placeholder="Fifth word (Optional)" />
+              placeholder="Fifth word" />
           </li>
         </ul>
-        <button type="button" @click="getSecondPage">
-          {{ $t('form.next') }}
-        </button>
+        <div class="flex justify-end">
+          <div class="w-1/2 text-center">
+            <button
+              type="button"
+              @click="getSecondPage"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50">
+              {{ $t('form.next') }}
+            </button>
+          </div>
+        </div>
       </div>
-      <div v-show="currentPage === 2">
-        <h1>{{ $t('form.about', { word: firstExpression }) }}</h1>
-        <div v-if="explanationError" class="text-red-600">
+      <div v-show="currentPage === 2" class="bg-white p-2 sm:p-5">
+        <h2 class="font-bold text-lg border-b border-lavender-600">
+          {{ $t('form.about', { word: firstExpression }) }}
+        </h2>
+        <div v-if="explanationError" class="text-red-600 mt-8 font-semibold">
           <label for="explanation-of-first-expression">{{
             $t('form.explanation', {
               word: firstExpression,
@@ -102,7 +120,7 @@
             })
           }}</label>
         </div>
-        <div v-else>
+        <div v-else class="mt-8 font-semibold">
           <label for="explanation-of-first-expression">{{
             $t('form.explanation', {
               word: firstExpression,
@@ -114,12 +132,12 @@
           id="explanation-of-first-expression"
           name="expression[expression_items_attributes][0][explanation]"
           rows="3"
-          class="w-full"
+          class="w-full mt-2 h-40 px-2 outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block"
           v-model="firstExpressionDetails.explanation"
           :placeholder="$t('form.notice')"></textarea>
-        <p>{{ $t('form.example') }}</p>
-        <ul>
-          <li>
+        <p class="pt-10 font-semibold">{{ $t('form.example') }}</p>
+        <ul class="pb-6">
+          <li class="pt-1">
             <label for="first-example-of-first-expression">{{
               $t('form.firstExample')
             }}</label>
@@ -131,10 +149,10 @@
             <input
               id="first-example-of-first-expression"
               name="expression[expression_items_attributes][0][examples_attributes][0][content]"
-              class="w-full"
+              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
               v-model="firstExpressionDetails.firstExample" />
           </li>
-          <li>
+          <li class="pt-1.5">
             <label for="second-example-of-first-expression">{{
               $t('form.secondExample')
             }}</label>
@@ -146,10 +164,10 @@
             <input
               id="second-example-of-first-expression"
               name="expression[expression_items_attributes][0][examples_attributes][1][content]"
-              class="w-full"
+              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
               v-model="firstExpressionDetails.secondExample" />
           </li>
-          <li>
+          <li class="pt-1.5">
             <label for="third-example-of-first-expression">{{
               $t('form.thirdExample')
             }}</label>
@@ -161,18 +179,34 @@
             <input
               id="third-example-of-first-expression"
               name="expression[expression_items_attributes][0][examples_attributes][2][content]"
-              class="w-full"
+              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
               v-model="firstExpressionDetails.thirdExample" />
           </li>
         </ul>
-        <button type="button" @click="getFirstPage">{{ $t('back') }}</button>
-        <button type="button" @click="getThirdPage">
-          {{ $t('form.next') }}
-        </button>
+        <div class="flex flex-row">
+          <div class="basis-1/2 text-center">
+            <button
+              type="button"
+              @click="getFirstPage"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50">
+              {{ $t('back') }}
+            </button>
+          </div>
+          <div class="basis-1/2 text-center">
+            <button
+              type="button"
+              @click="getThirdPage"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50">
+              {{ $t('form.next') }}
+            </button>
+          </div>
+        </div>
       </div>
-      <div v-show="currentPage === 3">
-        <h1>{{ $t('form.about', { word: secondExpression }) }}</h1>
-        <div v-if="explanationError" class="text-red-600">
+      <div v-show="currentPage === 3" class="bg-white p-2 sm:p-5">
+        <h2 class="font-bold text-lg border-b border-lavender-600">
+          {{ $t('form.about', { word: secondExpression }) }}
+        </h2>
+        <div v-if="explanationError" class="text-red-600 mt-8 font-semibold">
           <label for="explanation-of-second-expression">{{
             $t('form.explanation', {
               word: secondExpression,
@@ -180,7 +214,7 @@
             })
           }}</label>
         </div>
-        <div v-else>
+        <div v-else class="mt-8 font-semibold">
           <label for="explanation-of-second-expression">{{
             $t('form.explanation', {
               word: secondExpression,
@@ -192,12 +226,12 @@
           id="explanation-of-second-expression"
           name="expression[expression_items_attributes][1][explanation]"
           rows="3"
-          class="w-full"
+          class="w-full mt-2 h-40 px-2 outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block"
           v-model="secondExpressionDetails.explanation"
           :placeholder="$t('form.notice')"></textarea>
-        <p>{{ $t('form.example') }}</p>
-        <ul>
-          <li>
+        <p class="pt-10 font-semibold">{{ $t('form.example') }}</p>
+        <ul class="pb-6">
+          <li class="pt-1">
             <label for="first-example-of-second-expression">{{
               $t('form.firstExample')
             }}</label>
@@ -209,10 +243,10 @@
             <input
               id="first-example-of-second-expression"
               name="expression[expression_items_attributes][1][examples_attributes][0][content]"
-              class="w-full"
+              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
               v-model="secondExpressionDetails.firstExample" />
           </li>
-          <li>
+          <li class="pt-1.5">
             <label for="second-example-of-second-expression">{{
               $t('form.secondExample')
             }}</label>
@@ -224,10 +258,10 @@
             <input
               id="second-example-of-second-expression"
               name="expression[expression_items_attributes][1][examples_attributes][1][content]"
-              class="w-full"
+              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
               v-model="secondExpressionDetails.secondExample" />
           </li>
-          <li>
+          <li class="pt-1.5">
             <label for="third-example-of-second-expression">{{
               $t('form.thirdExample')
             }}</label>
@@ -239,27 +273,42 @@
             <input
               id="third-example-of-second-expression"
               name="expression[expression_items_attributes][1][examples_attributes][2][content]"
-              class="w-full"
+              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
               v-model="secondExpressionDetails.thirdExample" />
           </li>
         </ul>
-        <button type="button" @click="getSecondPage">{{ $t('back') }}</button>
-        <button
-          v-if="expressionsAmount > 2"
-          type="button"
-          @click="getFourthPage">
-          {{ $t('form.next') }}
-        </button>
-        <button
-          v-else
-          type="button"
-          @click="getSevenPage(secondExpressionDetails.explanation)">
-          {{ $t('form.next') }}
-        </button>
+        <div class="flex flex-row">
+          <div class="basis-1/2 text-center">
+            <button
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getSecondPage">
+              {{ $t('back') }}
+            </button>
+          </div>
+          <div class="basis-1/2 text-center">
+            <button
+              v-if="expressionsAmount > 2"
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getFourthPage">
+              {{ $t('form.next') }}
+            </button>
+            <button
+              v-else
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getSevenPage(secondExpressionDetails.explanation)">
+              {{ $t('form.next') }}
+            </button>
+          </div>
+        </div>
       </div>
-      <div v-show="currentPage === 4">
-        <h1>{{ $t('form.about', { word: thirdExpression }) }}</h1>
-        <div v-if="explanationError" class="text-red-600">
+      <div v-show="currentPage === 4" class="bg-white p-2 sm:p-5">
+        <h2 class="font-bold text-lg border-b border-lavender-600">
+          {{ $t('form.about', { word: thirdExpression }) }}
+        </h2>
+        <div v-if="explanationError" class="text-red-600 mt-8 font-semibold">
           <label for="explanation-of-third-expression">{{
             $t('form.explanation', {
               word: thirdExpression,
@@ -267,7 +316,7 @@
             })
           }}</label>
         </div>
-        <div v-else>
+        <div v-else class="mt-8 font-semibold">
           <label for="explanation-of-third-expression">{{
             $t('form.explanation', {
               word: thirdExpression,
@@ -279,12 +328,12 @@
           id="explanation-of-third-expression"
           name="expression[expression_items_attributes][2][explanation]"
           rows="3"
-          class="w-full"
+          class="w-full mt-2 h-40 px-2 outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block"
           v-model="thirdExpressionDetails.explanation"
           :placeholder="$t('form.notice')"></textarea>
-        <p>{{ $t('form.example') }}</p>
-        <ul>
-          <li>
+        <p class="pt-10 font-semibold">{{ $t('form.example') }}</p>
+        <ul class="pb-6">
+          <li class="pt-1">
             <label for="first-example-of-third-expression">{{
               $t('form.firstExample')
             }}</label>
@@ -296,10 +345,10 @@
             <input
               id="first-example-of-third-expression"
               name="expression[expression_items_attributes][2][examples_attributes][0][content]"
-              class="w-full"
+              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
               v-model="thirdExpressionDetails.firstExample" />
           </li>
-          <li>
+          <li class="pt-1.5">
             <label for="second-example-of-third-expression">{{
               $t('form.secondExample')
             }}</label>
@@ -311,10 +360,10 @@
             <input
               id="second-example-of-third-expression"
               name="expression[expression_items_attributes][2][examples_attributes][1][content]"
-              class="w-full"
+              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
               v-model="thirdExpressionDetails.secondExample" />
           </li>
-          <li>
+          <li class="pt-1.5">
             <label for="third-example-of-third-expression">{{
               $t('form.thirdExample')
             }}</label>
@@ -326,27 +375,42 @@
             <input
               id="third-example-of-third-expression"
               name="expression[expression_items_attributes][2][examples_attributes][2][content]"
-              class="w-full"
+              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
               v-model="thirdExpressionDetails.thirdExample" />
           </li>
         </ul>
-        <button type="button" @click="getThirdPage">{{ $t('back') }}</button>
-        <button
-          v-if="expressionsAmount > 3"
-          type="button"
-          @click="getFifthPage">
-          {{ $t('form.next') }}
-        </button>
-        <button
-          v-else
-          type="button"
-          @click="getSevenPage(thirdExpressionDetails.explanation)">
-          {{ $t('form.next') }}
-        </button>
+        <div class="flex flex-row">
+          <div class="basis-1/2 text-center">
+            <button
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getThirdPage">
+              {{ $t('back') }}
+            </button>
+          </div>
+          <div class="basis-1/2 text-center">
+            <button
+              v-if="expressionsAmount > 3"
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getFifthPage">
+              {{ $t('form.next') }}
+            </button>
+            <button
+              v-else
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getSevenPage(thirdExpressionDetails.explanation)">
+              {{ $t('form.next') }}
+            </button>
+          </div>
+        </div>
       </div>
-      <div v-show="currentPage === 5">
-        <h1>{{ $t('form.about', { word: fourthExpression }) }}</h1>
-        <div v-if="explanationError" class="text-red-600">
+      <div v-show="currentPage === 5" class="bg-white p-2 sm:p-5">
+        <h2 class="font-bold text-lg border-b border-lavender-600">
+          {{ $t('form.about', { word: fourthExpression }) }}
+        </h2>
+        <div v-if="explanationError" class="text-red-600 mt-8 font-semibold">
           <label for="explanation-of-fourth-expression">{{
             $t('form.explanation', {
               word: fourthExpression,
@@ -354,7 +418,7 @@
             })
           }}</label>
         </div>
-        <div v-else>
+        <div v-else class="mt-8 font-semibold">
           <label for="explanation-of-fourth-expression">{{
             $t('form.explanation', {
               word: fourthExpression,
@@ -366,12 +430,12 @@
           id="explanation-of-fourth-expression"
           name="expression[expression_items_attributes][3][explanation]"
           rows="3"
-          class="w-full"
+          class="w-full mt-2 h-40 px-2 outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block"
           v-model="fourthExpressionDetails.explanation"
           :placeholder="$t('form.notice')"></textarea>
-        <p>{{ $t('form.example') }}</p>
-        <ul>
-          <li>
+        <p class="pt-10 font-semibold">{{ $t('form.example') }}</p>
+        <ul class="pb-6">
+          <li class="pt-1">
             <label for="first-example-of-fourth-expression">{{
               $t('form.firstExample')
             }}</label>
@@ -383,10 +447,10 @@
             <input
               id="first-example-of-fourth-expression"
               name="expression[expression_items_attributes][3][examples_attributes][0][content]"
-              class="w-full"
+              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
               v-model="fourthExpressionDetails.firstExample" />
           </li>
-          <li>
+          <li class="pt-1.5">
             <label for="second-example-of-fourth-expression">{{
               $t('form.secondExample')
             }}</label>
@@ -398,10 +462,10 @@
             <input
               id="second-example-of-fourth-expression"
               name="expression[expression_items_attributes][3][examples_attributes][1][content]"
-              class="w-full"
+              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
               v-model="fourthExpressionDetails.secondExample" />
           </li>
-          <li>
+          <li class="pt-1.5">
             <label for="third-example-of-fourth-expression">{{
               $t('form.thirdExample')
             }}</label>
@@ -413,24 +477,42 @@
             <input
               id="third-example-of-fourth-expression"
               name="expression[expression_items_attributes][3][examples_attributes][2][content]"
-              class="w-full"
+              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
               v-model="fourthExpressionDetails.thirdExample" />
           </li>
         </ul>
-        <button type="button" @click="getFourthPage">{{ $t('back') }}</button>
-        <button v-if="fifthExpression" type="button" @click="getSixPage">
-          {{ $t('form.next') }}
-        </button>
-        <button
-          v-else
-          type="button"
-          @click="getSevenPage(fourthExpressionDetails.explanation)">
-          {{ $t('form.next') }}
-        </button>
+        <div class="flex flex-row">
+          <div class="basis-1/2 text-center">
+            <button
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getFourthPage">
+              {{ $t('back') }}
+            </button>
+          </div>
+          <div class="basis-1/2 text-center">
+            <button
+              v-if="fifthExpression"
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getSixPage">
+              {{ $t('form.next') }}
+            </button>
+            <button
+              v-else
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getSevenPage(fourthExpressionDetails.explanation)">
+              {{ $t('form.next') }}
+            </button>
+          </div>
+        </div>
       </div>
-      <div v-show="currentPage === 6">
-        <h1>{{ $t('form.about', { word: fifthExpression }) }}</h1>
-        <div v-if="explanationError" class="text-red-600">
+      <div v-show="currentPage === 6" class="bg-white p-2 sm:p-5">
+        <h2 class="font-bold text-lg border-b border-lavender-600">
+          {{ $t('form.about', { word: fifthExpression }) }}
+        </h2>
+        <div v-if="explanationError" class="text-red-600 mt-8 font-semibold">
           <label for="explanation-of-fifth-expression">{{
             $t('form.explanation', {
               word: fifthExpression,
@@ -438,7 +520,7 @@
             })
           }}</label>
         </div>
-        <div v-else>
+        <div v-else class="mt-8 font-semibold">
           <label for="explanation-of-fifth-expression">{{
             $t('form.explanation', {
               word: fifthExpression,
@@ -450,12 +532,12 @@
           id="explanation-of-fifth-expression"
           name="expression[expression_items_attributes][4][explanation]"
           rows="3"
-          class="w-full"
+          class="w-full mt-2 h-40 px-2 outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block"
           v-model="fifthExpressionDetails.explanation"
           :placeholder="$t('form.notice')"></textarea>
-        <p>{{ $t('form.example') }}</p>
-        <ul>
-          <li>
+        <p class="pt-10 font-semibold">{{ $t('form.example') }}</p>
+        <ul class="pb-6">
+          <li class="pt-1">
             <label for="first-example-of-fifth-expression">{{
               $t('form.firstExample')
             }}</label>
@@ -467,10 +549,10 @@
             <input
               id="first-example-of-fifth-expression"
               name="expression[expression_items_attributes][4][examples_attributes][0][content]"
-              class="w-full"
+              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
               v-model="fifthExpressionDetails.firstExample" />
           </li>
-          <li>
+          <li class="pt-1.5">
             <label for="second-example-of-fifth-expression">{{
               $t('form.secondExample')
             }}</label>
@@ -482,10 +564,10 @@
             <input
               id="second-example-of-fifth-expression"
               name="expression[expression_items_attributes][4][examples_attributes][1][content]"
-              class="w-full"
+              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
               v-model="fifthExpressionDetails.secondExample" />
           </li>
-          <li>
+          <li class="pt-1.5">
             <label for="third-example-of-fifth-expression">{{
               $t('form.thirdExample')
             }}</label>
@@ -497,34 +579,47 @@
             <input
               id="third-example-of-fifth-expression"
               name="expression[expression_items_attributes][4][examples_attributes][2][content]"
-              class="w-full"
+              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
               v-model="fifthExpressionDetails.thirdExample" />
           </li>
         </ul>
-        <button type="button" @click="getFifthPage">{{ $t('back') }}</button>
-        <button
-          type="button"
-          @click="getSevenPage(fifthExpressionDetails.explanation)">
-          {{ $t('form.next') }}
-        </button>
+        <div class="flex flex-row">
+          <div class="basis-1/2 text-center">
+            <button
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getFifthPage">
+              {{ $t('back') }}
+            </button>
+          </div>
+          <div class="basis-1/2 text-center">
+            <button
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getSevenPage(fifthExpressionDetails.explanation)">
+              {{ $t('form.next') }}
+            </button>
+          </div>
+        </div>
       </div>
-      <div v-show="currentPage === 7">
-        <ul>
+      <div v-show="currentPage === 7" class="bg-white p-2 sm:p-5">
+        <ul class="pb-6">
           <li>
-            <label for="note">{{ $t('form.note') }}</label>
+            <label for="note" class="font-bold">{{ $t('form.note') }}</label>
             <textarea
               id="note"
               name="expression[note]"
-              class="w-full"
+              class="w-full h-40 outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
               v-model="note"></textarea>
           </li>
-          <li class="tags">
-            <label for="tags">{{ $t('form.tags') }}</label>
+          <li class="tags mt-10">
+            <label for="tags" class="font-bold">{{ $t('form.tags') }}</label>
             <div>
               <vue-tags-input
                 id="tags"
                 v-model="tag"
                 :tags="tags"
+                class="w-full"
                 @tags-changed="(newTags) => (tags = newTags)"
                 :placeholder="$t('form.howToUseTagInput')"></vue-tags-input>
               <ul>
@@ -538,31 +633,52 @@
             </div>
           </li>
         </ul>
-        <button v-if="previousPage === 3" type="button" @click="getThirdPage">
-          {{ $t('back') }}
-        </button>
-        <button
-          v-else-if="previousPage === 4"
-          type="button"
-          @click="getFourthPage">
-          {{ $t('back') }}
-        </button>
-        <button
-          v-else-if="previousPage === 5"
-          type="button"
-          @click="getFifthPage">
-          {{ $t('back') }}
-        </button>
-        <button
-          v-else-if="previousPage === 6"
-          type="button"
-          @click="getSixPage">
-          {{ $t('back') }}
-        </button>
-        <button v-if="expressionId" type="submit" name="button">
-          {{ $t('form.edit') }}
-        </button>
-        <button v-else>{{ $t('form.create') }}</button>
+        <div class="flex flex-row">
+          <div class="basis-1/2 text-center">
+            <button
+              v-if="previousPage === 3"
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getThirdPage">
+              {{ $t('back') }}
+            </button>
+            <button
+              v-else-if="previousPage === 4"
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getFourthPage">
+              {{ $t('back') }}
+            </button>
+            <button
+              v-else-if="previousPage === 5"
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getFifthPage">
+              {{ $t('back') }}
+            </button>
+            <button
+              v-else-if="previousPage === 6"
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getSixPage">
+              {{ $t('back') }}
+            </button>
+          </div>
+          <div class="basis-1/2 text-center">
+            <button
+              v-if="expressionId"
+              type="submit"
+              name="button"
+              class="border-2 border-lavender-800 bg-lavender-800 rounded-md px-4 hover:bg-lavender-50 text-white hover:text-black font-bold tracking-wide">
+              {{ $t('form.edit') }}
+            </button>
+            <button
+              v-else
+              class="border-2 border-lavender-800 bg-lavender-800 rounded-md px-4 hover:bg-lavender-50 text-white hover:text-black font-bold tracking-wide">
+              {{ $t('form.create') }}
+            </button>
+          </div>
+        </div>
       </div>
     </form>
   </div>
