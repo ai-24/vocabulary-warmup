@@ -114,6 +114,81 @@ RSpec.describe 'Quiz' do
     end
   end
 
+  describe 'count questions' do
+    let!(:user) { FactoryBot.build(:user) }
+
+    before do
+      FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note))
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+      visit '/'
+      within '.button-on-header' do
+        click_button 'Sign up/Log in with Google'
+      end
+    end
+
+    it 'check the function of counting questions' do
+      expect(page).to have_content 'ログインしました'
+      click_link 'クイズに挑戦'
+      expect(page).to have_current_path '/quiz'
+      within '.count-questions' do
+        expect(page).to have_content '1 / 5'
+      end
+      click_button 'クイズに解答する'
+      within '.count-questions' do
+        expect(page).to have_content '1 / 5'
+      end
+      click_button '次へ'
+      within '.count-questions' do
+        expect(page).to have_content '2 / 5'
+      end
+      click_button 'クイズに解答する'
+      within '.count-questions' do
+        expect(page).to have_content '2 / 5'
+      end
+      click_button '次へ'
+      within '.count-questions' do
+        expect(page).to have_content '3 / 5'
+      end
+      click_button 'クイズに解答する'
+      within '.count-questions' do
+        expect(page).to have_content '3 / 5'
+      end
+      click_button '次へ'
+      within '.count-questions' do
+        expect(page).to have_content '4 / 5'
+      end
+    end
+
+    it 'check if the function of counting questions are not on the result page' do
+      expect(page).to have_content 'ログインしました'
+      click_link 'クイズに挑戦'
+      expect(page).to have_current_path '/quiz'
+
+      3.times do
+        click_button 'クイズに解答する'
+        click_button '次へ'
+      end
+
+      click_button 'クイズに解答する'
+      within '.count-questions' do
+        expect(page).to have_content '4 / 5'
+      end
+      click_button '次へ'
+      within '.count-questions' do
+        expect(page).to have_content '5 / 5'
+      end
+      click_button 'クイズに解答する'
+      within '.count-questions' do
+        expect(page).to have_content '5 / 5'
+      end
+      click_button 'クイズの結果を確認する'
+      expect(page).to have_content 'クイズお疲れ様でした'
+      expect(page).not_to have_selector '.count-questions'
+    end
+  end
+
   describe 'quiz result' do
     describe 'check if screens change' do
       before do
