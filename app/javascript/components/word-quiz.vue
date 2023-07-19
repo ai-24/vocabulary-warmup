@@ -7,6 +7,9 @@
         :raw-quiz-resources="rawQuizResources"
         :userAnswers="userAnswersList"></WordQuizResult>
       <div v-else>
+        <p class="count-questions text-right mr-5 tracking-wide">
+          {{ currentQuestion }} / {{ numberOfResources }}
+        </p>
         <p class="font-bold text-lg tracking-widest">
           {{ $t('quiz.question') }}
         </p>
@@ -91,6 +94,7 @@ export default {
   },
   data() {
     return {
+      currentQuestion: 1,
       userAnswer: '',
       userAnswersList: [],
       quizResources: [],
@@ -115,6 +119,7 @@ export default {
     getNextQuestion() {
       this.answered = false
       this.currentIndex = this.currentIndex + 1
+      this.currentQuestion = this.currentIndex + 1
       this.checkQuestionIndex()
       this.userAnswer = ''
       this.correctAnswer = ''
