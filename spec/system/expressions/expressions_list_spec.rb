@@ -139,7 +139,7 @@ RSpec.describe 'Expressions' do
       click_button '編集する'
       expect(page).to have_content '英単語またはフレーズを編集しました'
 
-      click_link '英単語・フレーズ一覧に戻る'
+      click_link '一覧に戻る'
       expression_item = ExpressionItem.where('content = ?', 'balcony').last
 
       expect(first('li.expression')).to have_link 'balcony and Veranda', href: expression_path(expression_item.expression)

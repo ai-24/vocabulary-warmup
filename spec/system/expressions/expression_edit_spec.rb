@@ -23,7 +23,7 @@ RSpec.describe 'Expressions' do
 
     it 'check links' do
       expect(page).to have_current_path edit_expression_path(first_expression_items[0].expression)
-      click_link '英単語・フレーズ一覧に戻る'
+      click_link '一覧に戻る'
       expect(page).to have_current_path home_path
       expect(page).to have_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}",
                                 href: expression_path(first_expression_items[0].expression)

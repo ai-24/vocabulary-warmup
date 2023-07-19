@@ -3,6 +3,32 @@
 require 'rails_helper'
 
 RSpec.describe 'Bookmarked expressions' do
+  context 'when user who already has a bookmark logged in' do
+    let!(:user) { FactoryBot.create(:user) }
+    let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+
+    before do
+      FactoryBot.create(:bookmarking, user:, expression: first_expression_items[0].expression)
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+      visit '/'
+      within '.button-on-header' do
+        click_button 'Sign up/Log in with Google'
+      end
+    end
+
+    it 'check the link that goes to bookmark list on expression detail page' do
+      expect(page).to have_content 'ログインしました'
+      click_link 'ブックマーク'
+      click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+      expect(page).to have_content '下記の英単語・フレーズの違いについて'
+      expect(page).to have_link '一覧に戻る'
+      click_link '一覧に戻る'
+      expect(page).to have_current_path bookmarked_expressions_path
+    end
+  end
+
   context 'when user logged in' do
     let!(:user) { FactoryBot.create(:user) }
     let!(:expression) { FactoryBot.create(:empty_note, user_id: user.id) }
