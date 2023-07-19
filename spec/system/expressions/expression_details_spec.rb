@@ -64,7 +64,7 @@ RSpec.describe 'Expressions' do
       end
 
       visit '/expressions/1'
-      click_link '英単語・フレーズ一覧に戻る'
+      click_link '一覧に戻る'
       expect(all('li.expression').count).to eq 21
       expect(first('li.expression')).to have_link 'balcony and Veranda', href: expression_path(1)
     end
@@ -394,6 +394,38 @@ RSpec.describe 'Expressions' do
         expect(page).not_to have_link 'previous'
         expect(page).not_to have_link 'next'
       end
+    end
+  end
+
+  describe 'a link that goes to index' do
+    let(:user) { FactoryBot.build(:user) }
+
+    before do
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+      visit '/'
+    end
+
+    it 'check the link that goes to home page when user has not logged in' do
+      click_link '試してみる(機能に制限あり)'
+      click_link 'balcony and Veranda'
+      expect(page).to have_content '下記の英単語・フレーズの違いについて'
+      expect(page).to have_link '一覧に戻る'
+      click_link '一覧に戻る'
+      expect(page).to have_current_path home_path
+    end
+
+    it 'check the link that goes to home page when user has logged in' do
+      within '.button-on-header' do
+        click_button 'Sign up/Log in with Google'
+      end
+      expect(page).to have_content 'ログインしました'
+      click_link 'balcony and Veranda'
+      expect(page).to have_content '下記の英単語・フレーズの違いについて'
+      expect(page).to have_link '一覧に戻る'
+      click_link '一覧に戻る'
+      expect(page).to have_current_path home_path
     end
   end
 

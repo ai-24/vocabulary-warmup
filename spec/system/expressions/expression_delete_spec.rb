@@ -91,7 +91,7 @@ RSpec.describe 'Expressions' do
         within '.title' do
           expect(page).to have_content first_expression_items[0].content
         end
-        click_link '英単語・フレーズ一覧に戻る'
+        click_link '一覧に戻る'
       end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(0)
 
       expect(page).to have_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"

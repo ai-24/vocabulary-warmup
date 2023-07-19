@@ -126,6 +126,16 @@ RSpec.describe 'Memorised expressions' do
         expect(page).to have_current_path memorised_expressions_path
         expect(page).to have_selector '.incremental-search'
       end
+
+      it 'check the link that goes to memorised words list' do
+        expect(page).to have_content 'ログインしました'
+        click_link '覚えた語彙'
+        click_link "#{first_expression_items[0].content}, #{first_expression_items[1].content} and #{first_expression_items[2].content}"
+        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        expect(page).to have_link '一覧に戻る'
+        click_link '一覧に戻る'
+        expect(page).to have_current_path memorised_expressions_path
+      end
     end
 
     context 'when memorisings were made by two different times' do

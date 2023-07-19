@@ -55,4 +55,9 @@
           = link_to expression_path(@expression.next(@user)), id: 'next', class: 'hover:text-neutral-400' do
             i class="fa-solid fa-angle-right fa-2xl"
   .text-center.pt-10
-    = link_to t('.go_to_index'), home_path, class: 'hover:text-neutral-400'
+    - if @expression.bookmarking?
+      = link_to t('.go_to_index'), bookmarked_expressions_path, class: 'hover:text-neutral-400'
+    - elsif @expression.memorising?
+      = link_to t('.go_to_index'), memorised_expressions_path, class: 'hover:text-neutral-400'
+    - else
+      = link_to t('.go_to_index'), home_path, class: 'hover:text-neutral-400'
