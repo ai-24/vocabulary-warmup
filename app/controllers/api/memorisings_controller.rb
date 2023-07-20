@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::MemorisingsController < ApplicationController
+class API::MemorisingsController < ApplicationController
   def index
     @memorisings = current_user.memorisings.order(:created_at, :id)
   end

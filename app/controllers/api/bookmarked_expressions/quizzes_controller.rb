@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::BookmarkedExpressions::QuizzesController < ApplicationController
+class API::BookmarkedExpressions::QuizzesController < ApplicationController
   def show
     @quiz = []
 
