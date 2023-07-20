@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::ExpressionsController < ApplicationController
+class API::ExpressionsController < ApplicationController
   before_action :set_expression, only: %i[edit]
 
   def index

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::BookmarkingsController < ApplicationController
+class API::BookmarkingsController < ApplicationController
   def index
     @bookmarkings = current_user.bookmarkings.order(:created_at, :id)
   end
