@@ -145,7 +145,7 @@ RSpec.describe 'Expressions' do
     end
   end
 
-  describe 'delete last expression in a list' do
+  describe 'delete last expression in a default list' do
     let(:user) { FactoryBot.build(:user) }
 
     it 'check if home page is on the screen when the last expression is deleted' do
@@ -168,6 +168,58 @@ RSpec.describe 'Expressions' do
       expect(Expression.where('user_id = ?', user.id).count).to eq 0
       expect(page).to have_current_path home_path, ignore_query: true
       expect(page).to have_content 'このリストに登録されている英単語またはフレーズはありません'
+    end
+  end
+
+  describe 'delete last expression in a bookmark list' do
+    let!(:user) { FactoryBot.create(:user) }
+    let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+
+    it 'check if the bookmark list is on the screen when the last expression is deleted' do
+      FactoryBot.create(:bookmarking, user:, expression: first_expression_items[0].expression)
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+      visit '/'
+      within '.welcome' do
+        click_button 'Sign up/Log in with Google'
+      end
+      expect(page).to have_content 'ログインしました'
+      click_link 'ブックマーク'
+      click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+      accept_confirm do
+        within '.specific-expression' do
+          click_button '削除'
+        end
+      end
+      expect(page).to have_content '英単語又はフレーズを削除しました'
+      expect(page).to have_current_path bookmarked_expressions_path
+    end
+  end
+
+  describe 'delete last expression in a memorised words list' do
+    let!(:user) { FactoryBot.create(:user) }
+    let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+
+    it 'check if the memorised words list is on the screen when the last expression is deleted' do
+      FactoryBot.create(:memorising, user:, expression: first_expression_items[0].expression)
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+      visit '/'
+      within '.welcome' do
+        click_button 'Sign up/Log in with Google'
+      end
+      expect(page).to have_content 'ログインしました'
+      click_link '覚えた語彙'
+      click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
+      accept_confirm do
+        within '.specific-expression' do
+          click_button '削除'
+        end
+      end
+      expect(page).to have_content '英単語又はフレーズを削除しました'
+      expect(page).to have_current_path memorised_expressions_path
     end
   end
 end
