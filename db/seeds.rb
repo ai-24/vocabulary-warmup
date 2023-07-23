@@ -165,7 +165,7 @@ unless Rails.env.test?
         expression_item_id: 13
       },
       {
-        content: 'Shinzo Abe was a former prime minister (of all people who used to be prime minister, Abe is one).',
+        content: 'Yukio Hatoyama was a former prime minister (of all people who used to be prime minister, Hatoyama is one).',
         expression_item_id: 14
       },
       {
