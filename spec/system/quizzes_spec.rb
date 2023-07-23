@@ -357,11 +357,11 @@ RSpec.describe 'Quiz' do
 
         find('summary', text: '覚えた語彙リストに保存する英単語・フレーズ').click
         if answers.count == 2
-          expect(page).to have_content 'balcony and Veranda'
+          expect(page).to have_content 'balcony and veranda'
           expect(page).not_to have_content "#{first_expression_item.content} and #{second_expression_item.content}"
         else
           expect(page).to have_content "#{first_expression_item.content} and #{second_expression_item.content}"
-          expect(page).not_to have_content 'balcony and Veranda'
+          expect(page).not_to have_content 'balcony and veranda'
         end
 
         expect(all('ul.list-of-correct-answers li').count).to eq 1
@@ -373,9 +373,9 @@ RSpec.describe 'Quiz' do
         find('summary', text: 'ブックマークする英単語・フレーズ').click
         if answers.count == 2
           expect(page).to have_content "#{first_expression_item.content} and #{second_expression_item.content}"
-          expect(page).not_to have_content 'balcony and Veranda'
+          expect(page).not_to have_content 'balcony and veranda'
         else
-          expect(page).to have_content 'balcony and Veranda'
+          expect(page).to have_content 'balcony and veranda'
           expect(page).not_to have_content "#{first_expression_item.content} and #{second_expression_item.content}"
         end
 
