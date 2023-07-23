@@ -39,7 +39,7 @@ RSpec.describe 'Expressions' do
       visit '/'
       click_link '試してみる(機能に制限あり)'
       expect(page).to have_current_path home_path
-      click_link 'balcony and Veranda'
+      click_link 'balcony and veranda'
       expect(page).not_to have_link '編集'
     end
 
@@ -252,7 +252,7 @@ RSpec.describe 'Expressions' do
         click_link '編集'
 
         expect(page).to have_field('英単語 / フレーズ１', with: 'journey')
-        expect(page).to have_field('英単語 / フレーズ２', with: 'Veranda')
+        expect(page).to have_field('英単語 / フレーズ２', with: 'veranda')
       end
 
       it 'check if explanations are correct order on editing page after it is edited' do
@@ -266,7 +266,7 @@ RSpec.describe 'Expressions' do
 
         expect(page).to have_field(
           '{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください',
-          with: 'A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.'
+          with: '(noun) A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.'
         )
       end
     end
@@ -331,7 +331,7 @@ RSpec.describe 'Expressions' do
         end
         has_text? 'ログインしました'
 
-        click_link 'balcony and Veranda'
+        click_link 'balcony and veranda'
         click_link '編集'
         fill_in('英単語 / フレーズ１', with: 'journey')
         click_button '次へ'
@@ -394,9 +394,9 @@ RSpec.describe 'Expressions' do
         end
         has_text? 'ログインしました'
 
-        click_link 'balcony and Veranda'
+        click_link 'balcony and veranda'
         click_link '編集'
-        fill_in('英単語 / フレーズ２', with: 'veranda')
+        fill_in('英単語 / フレーズ２', with: 'Veranda')
         2.times { click_button '次へ' }
         fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください',
                 with: 'normally on the ground floor and generally quite ornate or fancy, with room to sit. This sentence is added.')
@@ -418,12 +418,12 @@ RSpec.describe 'Expressions' do
         has_text? '英単語またはフレーズを編集しました'
 
         within '.title div' do
-          expect(page).to have_content '2. veranda'
-          expect(page).not_to have_content 'Veranda'
+          expect(page).to have_content '2. Veranda'
+          expect(page).not_to have_content 'veranda'
         end
 
         within '.details div.expression1' do
-          expect(page).to have_content 'veranda'
+          expect(page).to have_content 'Veranda'
         end
       end
 
@@ -562,7 +562,7 @@ RSpec.describe 'Expressions' do
         end
         has_text? 'ログインしました'
 
-        click_link 'balcony and Veranda'
+        click_link 'balcony and veranda'
         click_link '編集'
         fill_in('英単語 / フレーズ３(任意)', with: 'test3')
         fill_in('英単語 / フレーズ４(任意)', with: 'test4')

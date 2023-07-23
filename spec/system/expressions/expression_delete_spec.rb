@@ -8,7 +8,7 @@ RSpec.describe 'Expressions' do
       visit '/'
       click_link '試してみる(機能に制限あり)'
       expect(page).to have_current_path home_path
-      click_link 'balcony and Veranda'
+      click_link 'balcony and veranda'
       within '.specific-expression' do
         expect(page).not_to have_button '削除'
       end
@@ -157,7 +157,7 @@ RSpec.describe 'Expressions' do
         click_button 'Sign up/Log in with Google'
       end
       expect(page).to have_content 'ログインしました'
-      click_link 'balcony and Veranda'
+      click_link 'balcony and veranda'
       accept_confirm do
         within '.specific-expression' do
           click_button '削除'

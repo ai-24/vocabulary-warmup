@@ -236,7 +236,7 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
         n < 8 ? click_button('次へ') : click_button('クイズの結果を確認する')
       end
       find('summary', text: 'ブックマークする英単語・フレーズ').click
-      find('label', text: 'balcony and Veranda').click
+      find('label', text: 'balcony and veranda').click
       find('label', text: "#{second_expression_items[0].content}, #{second_expression_items[1].content} and #{second_expression_items[2].content}").click
       click_button '保存する'
       expect(page).to have_content 'ブックマークしました！'

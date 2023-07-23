@@ -22,7 +22,7 @@ RSpec.describe 'Quiz' do
       end
       expect(all('.move-to-bookmark-or-memorised-list li', visible: false).count).to eq 1
       find('summary', text: 'ブックマークする英単語・フレーズ').click
-      expect(page).to have_field 'balcony and Veranda'
+      expect(page).to have_field 'balcony and veranda'
     end
 
     it 'check questions when user has logged in' do
@@ -273,7 +273,7 @@ RSpec.describe 'Quiz' do
       it 'show 無解答 if the user answer is blank' do
         find('summary', text: '自分の解答を表示').click
         expect(page).to have_content '× 無解答 ( Answer: balcony )'
-        expect(page).to have_content '× 無解答 ( Answer: Veranda )'
+        expect(page).to have_content '× 無解答 ( Answer: veranda )'
       end
     end
 
@@ -357,11 +357,11 @@ RSpec.describe 'Quiz' do
 
         find('summary', text: '覚えた語彙リストに保存する英単語・フレーズ').click
         if answers.count == 2
-          expect(page).to have_content 'balcony and Veranda'
+          expect(page).to have_content 'balcony and veranda'
           expect(page).not_to have_content "#{first_expression_item.content} and #{second_expression_item.content}"
         else
           expect(page).to have_content "#{first_expression_item.content} and #{second_expression_item.content}"
-          expect(page).not_to have_content 'balcony and Veranda'
+          expect(page).not_to have_content 'balcony and veranda'
         end
 
         expect(all('ul.list-of-correct-answers li').count).to eq 1
@@ -373,9 +373,9 @@ RSpec.describe 'Quiz' do
         find('summary', text: 'ブックマークする英単語・フレーズ').click
         if answers.count == 2
           expect(page).to have_content "#{first_expression_item.content} and #{second_expression_item.content}"
-          expect(page).not_to have_content 'balcony and Veranda'
+          expect(page).not_to have_content 'balcony and veranda'
         else
-          expect(page).to have_content 'balcony and Veranda'
+          expect(page).to have_content 'balcony and veranda'
           expect(page).not_to have_content "#{first_expression_item.content} and #{second_expression_item.content}"
         end
 
@@ -415,7 +415,7 @@ RSpec.describe 'Quiz' do
 
         find('summary', text: '覚えた語彙リストに保存する英単語・フレーズ').click
 
-        expect(first('ul.list-of-correct-answers li')).to have_content 'balcony and Veranda'
+        expect(first('ul.list-of-correct-answers li')).to have_content 'balcony and veranda'
         expect(all('ul.list-of-correct-answers li')[1]).to have_content(
           "#{first_expression_item.content}, #{second_expression_item.content} and #{third_expression_item.content}"
         )
@@ -449,7 +449,7 @@ RSpec.describe 'Quiz' do
         expect(all('ul.list-of-wrong-answers li').count).to eq 0
 
         find('summary', text: 'ブックマークする英単語・フレーズ').click
-        expect(first('ul.list-of-wrong-answers li')).to have_content 'balcony and Veranda'
+        expect(first('ul.list-of-wrong-answers li')).to have_content 'balcony and veranda'
         expect(all('ul.list-of-wrong-answers li')[1]).to have_content(
           "#{first_expression_items[0].content}, #{first_expression_items[1].content} and #{first_expression_items[2].content}"
         )
@@ -486,26 +486,26 @@ RSpec.describe 'Quiz' do
       it 'check if all checkbox is checked' do
         expect(page).to have_checked_field 'move-to-memorised-list'
         find('summary', text: '覚えた語彙リストに保存する英単語・フレーズ').click
-        expect(page).to have_checked_field 'balcony and Veranda'
+        expect(page).to have_checked_field 'balcony and veranda'
         expect(page).to have_checked_field "#{first_expression_item.content} and #{second_expression_item.content}"
       end
 
       it 'check if the parents checkbox is unchecked when one expression is unchecked' do
         expect(page).to have_checked_field 'move-to-memorised-list'
         find('summary', text: '覚えた語彙リストに保存する英単語・フレーズ').click
-        find('label', text: 'balcony and Veranda').click
-        expect(page).to have_unchecked_field 'balcony and Veranda'
+        find('label', text: 'balcony and veranda').click
+        expect(page).to have_unchecked_field 'balcony and veranda'
         expect(page).to have_unchecked_field 'move-to-memorised-list'
         expect(page).to have_checked_field "#{first_expression_item.content} and #{second_expression_item.content}"
       end
 
       it 'check if parents checkbox is checked after one child checkbox is unchecked and then it is checked again' do
         find('summary', text: '覚えた語彙リストに保存する英単語・フレーズ').click
-        find('label', text: 'balcony and Veranda').click
-        expect(page).to have_unchecked_field 'balcony and Veranda'
+        find('label', text: 'balcony and veranda').click
+        expect(page).to have_unchecked_field 'balcony and veranda'
         expect(page).to have_unchecked_field 'move-to-memorised-list'
-        find('label', text: 'balcony and Veranda').click
-        expect(page).to have_checked_field 'balcony and Veranda'
+        find('label', text: 'balcony and veranda').click
+        expect(page).to have_checked_field 'balcony and veranda'
         expect(page).to have_checked_field 'move-to-memorised-list'
       end
 
@@ -513,7 +513,7 @@ RSpec.describe 'Quiz' do
         find('input#move-to-memorised-list').click
         expect(page).to have_unchecked_field 'move-to-memorised-list'
         find('summary', text: '覚えた語彙リストに保存する英単語・フレーズ').click
-        expect(page).to have_unchecked_field 'balcony and Veranda'
+        expect(page).to have_unchecked_field 'balcony and veranda'
         expect(page).to have_unchecked_field "#{first_expression_item.content} and #{second_expression_item.content}"
       end
     end
@@ -535,26 +535,26 @@ RSpec.describe 'Quiz' do
       it 'check if all checkbox is checked' do
         expect(page).to have_checked_field 'move-to-bookmark'
         find('summary', text: 'ブックマークする英単語・フレーズ').click
-        expect(page).to have_checked_field 'balcony and Veranda'
+        expect(page).to have_checked_field 'balcony and veranda'
         expect(page).to have_checked_field "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
       end
 
       it 'check if the parents checkbox is unchecked when one expression is unchecked' do
         expect(page).to have_checked_field 'move-to-bookmark'
         find('summary', text: 'ブックマークする英単語・フレーズ').click
-        find('label', text: 'balcony and Veranda').click
-        expect(page).to have_unchecked_field 'balcony and Veranda'
+        find('label', text: 'balcony and veranda').click
+        expect(page).to have_unchecked_field 'balcony and veranda'
         expect(page).to have_unchecked_field 'move-to-bookmark'
         expect(page).to have_checked_field "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
       end
 
       it 'check if parents checkbox is checked after one child checkbox is unchecked and then it is checked again' do
         find('summary', text: 'ブックマークする英単語・フレーズ').click
-        find('label', text: 'balcony and Veranda').click
-        expect(page).to have_unchecked_field 'balcony and Veranda'
+        find('label', text: 'balcony and veranda').click
+        expect(page).to have_unchecked_field 'balcony and veranda'
         expect(page).to have_unchecked_field 'move-to-bookmark'
-        find('label', text: 'balcony and Veranda').click
-        expect(page).to have_checked_field 'balcony and Veranda'
+        find('label', text: 'balcony and veranda').click
+        expect(page).to have_checked_field 'balcony and veranda'
         expect(page).to have_checked_field 'move-to-bookmark'
       end
 
@@ -562,7 +562,7 @@ RSpec.describe 'Quiz' do
         find('input#move-to-bookmark').click
         expect(page).to have_unchecked_field 'move-to-bookmark'
         find('summary', text: 'ブックマークする英単語・フレーズ').click
-        expect(page).to have_unchecked_field 'balcony and Veranda'
+        expect(page).to have_unchecked_field 'balcony and veranda'
         expect(page).to have_unchecked_field "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
       end
     end
@@ -597,12 +597,12 @@ RSpec.describe 'Quiz' do
         expect(page).to have_unchecked_field 'move-to-bookmark'
         expect(page).to have_checked_field 'move-to-memorised-list'
         find('summary', text: '覚えた語彙リストに保存する英単語・フレーズ').click
-        expect(page).to have_checked_field 'balcony and Veranda'
+        expect(page).to have_checked_field 'balcony and veranda'
       end
 
       it 'check if checkbox for memorised words list does not affect bookmark' do
         find('summary', text: '覚えた語彙リストに保存する英単語・フレーズ').click
-        find('label', text: 'balcony and Veranda').click
+        find('label', text: 'balcony and veranda').click
         expect(page).to have_unchecked_field 'move-to-memorised-list'
         expect(page).to have_checked_field 'move-to-bookmark'
         find('summary', text: 'ブックマークする英単語・フレーズ').click
@@ -645,8 +645,8 @@ RSpec.describe 'Quiz' do
 
       it 'check if selected expression is bookmarked' do
         find('summary', text: 'ブックマークする英単語・フレーズ').click
-        find('label', text: 'balcony and Veranda').click
-        expect(page).to have_unchecked_field 'balcony and Veranda'
+        find('label', text: 'balcony and veranda').click
+        expect(page).to have_unchecked_field 'balcony and veranda'
         expect(page).to have_checked_field "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
         expect do
           click_button '保存する'
@@ -680,13 +680,13 @@ RSpec.describe 'Quiz' do
       it 'check if expression is bookmarked after failing to save another one' do
         ExpressionItem.where(content: first_expression_items[0].content).last.expression.destroy
         find('summary', text: 'ブックマークする英単語・フレーズ').click
-        find('label', text: 'balcony and Veranda').click
-        expect(page).to have_unchecked_field 'balcony and Veranda'
+        find('label', text: 'balcony and veranda').click
+        expect(page).to have_unchecked_field 'balcony and veranda'
         click_button '保存する'
         expect(page).to have_content 'ブックマークできませんでした'
 
-        find('label', text: 'balcony and Veranda').click
-        expect(page).to have_checked_field 'balcony and Veranda'
+        find('label', text: 'balcony and veranda').click
+        expect(page).to have_checked_field 'balcony and veranda'
         expect do
           click_button '保存する'
           expect(page).not_to have_selector 'div.move-to-bookmark-or-memorised-list'
@@ -696,7 +696,7 @@ RSpec.describe 'Quiz' do
 
       it 'check quiz questions after bookmarking' do
         find('summary', text: 'ブックマークする英単語・フレーズ').click
-        find('label', text: 'balcony and Veranda').click
+        find('label', text: 'balcony and veranda').click
 
         click_button '保存する'
         expect(page).to have_content 'ブックマークしました！'
@@ -709,7 +709,7 @@ RSpec.describe 'Quiz' do
         end
 
         find('summary', text: 'ブックマークする英単語・フレーズ').click
-        expect(page).to have_content 'balcony and Veranda'
+        expect(page).to have_content 'balcony and veranda'
         expect(page).not_to have_content "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
       end
     end
@@ -759,8 +759,8 @@ RSpec.describe 'Quiz' do
 
       it 'check if selected expression is saved to memorised words list' do
         find('summary', text: '覚えた語彙リストに保存する英単語・フレーズ').click
-        find('label', text: 'balcony and Veranda').click
-        expect(page).to have_unchecked_field 'balcony and Veranda'
+        find('label', text: 'balcony and veranda').click
+        expect(page).to have_unchecked_field 'balcony and veranda'
         expect(page).to have_checked_field "#{first_expression_item.content} and #{second_expression_item.content}"
         expect do
           click_button '保存する'
@@ -796,13 +796,13 @@ RSpec.describe 'Quiz' do
       it 'check if expression is saved to memorised words list after failing to save another one' do
         ExpressionItem.where(content: first_expression_item.content).last.expression.destroy
         find('summary', text: '覚えた語彙リストに保存する英単語・フレーズ').click
-        find('label', text: 'balcony and Veranda').click
-        expect(page).to have_unchecked_field 'balcony and Veranda'
+        find('label', text: 'balcony and veranda').click
+        expect(page).to have_unchecked_field 'balcony and veranda'
         click_button '保存する'
         expect(page).to have_content '覚えた語彙リストに保存できませんでした'
 
-        find('label', text: 'balcony and Veranda').click
-        expect(page).to have_checked_field 'balcony and Veranda'
+        find('label', text: 'balcony and veranda').click
+        expect(page).to have_checked_field 'balcony and veranda'
         expect do
           click_button '保存する'
           expect(page).not_to have_selector 'div.move-to-bookmark-or-memorised-list'
@@ -812,7 +812,7 @@ RSpec.describe 'Quiz' do
 
       it 'check quiz questions after saving expressions to memorised words list' do
         find('summary', text: '覚えた語彙リストに保存する英単語・フレーズ').click
-        find('label', text: 'balcony and Veranda').click
+        find('label', text: 'balcony and veranda').click
         click_button '保存する'
         expect(page).to have_content '覚えた語彙リストに保存しました！'
         click_button 'クイズに再挑戦'
@@ -823,7 +823,7 @@ RSpec.describe 'Quiz' do
         end
 
         find('summary', text: 'ブックマークする英単語・フレーズ').click
-        expect(page).to have_content 'balcony and Veranda'
+        expect(page).to have_content 'balcony and veranda'
         expect(page).not_to have_content "#{first_expression_item.content} and #{second_expression_item.content}"
       end
     end
@@ -1008,7 +1008,7 @@ RSpec.describe 'Quiz' do
           n < 7 ? click_button('次へ') : click_button('クイズの結果を確認する')
         end
         find('summary', text: '覚えた語彙リストに保存する英単語・フレーズ').click
-        find('label', text: 'balcony and Veranda').click
+        find('label', text: 'balcony and veranda').click
 
         find('summary', text: 'ブックマークする英単語・フレーズ').click
         find('label', text: "#{second_expression_items[0].content} and #{second_expression_items[1].content}").click
@@ -1024,7 +1024,7 @@ RSpec.describe 'Quiz' do
 
       it 'check what questions were in the last quiz' do
         find('summary', text: 'ブックマークする英単語・フレーズ').click
-        expect(page).to have_content 'balcony and Veranda'
+        expect(page).to have_content 'balcony and veranda'
         expect(page).to have_content "#{second_expression_items[0].content} and #{second_expression_items[1].content}"
       end
     end
