@@ -8,7 +8,7 @@ RSpec.describe 'Expressions' do
       visit '/'
       click_link '試してみる(機能に制限あり)'
       expect(page).to have_current_path home_path
-      click_link 'balcony and Veranda'
+      click_link 'balcony and veranda'
       expect(page).to have_content '下記の英単語・フレーズの違いについて'
       expect(page).to have_current_path expression_path(1), ignore_query: true
     end
@@ -17,10 +17,10 @@ RSpec.describe 'Expressions' do
       visit '/'
       click_link '試してみる(機能に制限あり)'
       expect(page).to have_current_path home_path
-      click_link 'balcony and Veranda'
+      click_link 'balcony and veranda'
       within '.title' do
         expect(page).to have_content '1. balcony'
-        expect(page).to have_content '2. Veranda'
+        expect(page).to have_content '2. veranda'
         expect(page).not_to have_content '4.'
       end
     end
@@ -29,7 +29,7 @@ RSpec.describe 'Expressions' do
       visit '/'
       click_link '試してみる(機能に制限あり)'
       expect(page).to have_current_path home_path
-      click_link 'balcony and Veranda'
+      click_link 'balcony and veranda'
       within '.expression0' do
         expect(page).to have_content 'balcony'
         expect(page).to have_content 'A platform on the side of a building, accessible from inside the building.'
@@ -42,9 +42,9 @@ RSpec.describe 'Expressions' do
       visit '/'
       click_link '試してみる(機能に制限あり)'
       expect(page).to have_current_path home_path
-      click_link 'balcony and Veranda'
+      click_link 'balcony and veranda'
       within '.expression1' do
-        expect(page).to have_content 'Veranda'
+        expect(page).to have_content 'veranda'
         expect(page).to have_content 'A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to si'
         expect(page).to have_content '例文'
         expect(page).to have_content 'The postman left my parcel on the veranda.'
@@ -66,7 +66,7 @@ RSpec.describe 'Expressions' do
       visit '/expressions/1'
       click_link '一覧に戻る'
       expect(all('li.expression').count).to eq 21
-      expect(first('li.expression')).to have_link 'balcony and Veranda', href: expression_path(1)
+      expect(first('li.expression')).to have_link 'balcony and veranda', href: expression_path(1)
     end
 
     it 'check if there is no incremental search' do
@@ -176,7 +176,7 @@ RSpec.describe 'Expressions' do
         visit '/'
         click_link '試してみる(機能に制限あり)'
         expect(page).to have_current_path home_path
-        click_link 'balcony and Veranda'
+        click_link 'balcony and veranda'
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path '/expressions/1'
         expect(page).to have_link 'next', href: "/expressions/#{expression_items[0].expression.id}"
@@ -187,7 +187,7 @@ RSpec.describe 'Expressions' do
         visit '/'
         click_link '試してみる(機能に制限あり)'
         expect(page).to have_current_path home_path
-        click_link 'balcony and Veranda'
+        click_link 'balcony and veranda'
         expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path '/expressions/1'
         expect(page).not_to have_link 'previous'
@@ -409,7 +409,7 @@ RSpec.describe 'Expressions' do
 
     it 'check the link that goes to home page when user has not logged in' do
       click_link '試してみる(機能に制限あり)'
-      click_link 'balcony and Veranda'
+      click_link 'balcony and veranda'
       expect(page).to have_content '下記の英単語・フレーズの違いについて'
       expect(page).to have_link '一覧に戻る'
       click_link '一覧に戻る'
@@ -421,7 +421,7 @@ RSpec.describe 'Expressions' do
         click_button 'Sign up/Log in with Google'
       end
       expect(page).to have_content 'ログインしました'
-      click_link 'balcony and Veranda'
+      click_link 'balcony and veranda'
       expect(page).to have_content '下記の英単語・フレーズの違いについて'
       expect(page).to have_link '一覧に戻る'
       click_link '一覧に戻る'

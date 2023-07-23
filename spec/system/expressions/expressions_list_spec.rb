@@ -127,12 +127,12 @@ RSpec.describe 'Expressions' do
       expect(page).to have_content 'ログインしました'
       expression_item = ExpressionItem.where('content = ?', 'balcony').last
 
-      expect(first('li.expression')).to have_link 'balcony and Veranda', href: expression_path(expression_item.expression)
+      expect(first('li.expression')).to have_link 'balcony and veranda', href: expression_path(expression_item.expression)
     end
 
     it 'check if the data is at the same place after the note has been edited' do
       expect(page).to have_content 'ログインしました'
-      click_link 'balcony and Veranda'
+      click_link 'balcony and veranda'
       click_link '編集'
       3.times { click_button '次へ' }
       fill_in('メモ（任意）', with: 'note is added')
@@ -142,7 +142,7 @@ RSpec.describe 'Expressions' do
       click_link '一覧に戻る'
       expression_item = ExpressionItem.where('content = ?', 'balcony').last
 
-      expect(first('li.expression')).to have_link 'balcony and Veranda', href: expression_path(expression_item.expression)
+      expect(first('li.expression')).to have_link 'balcony and veranda', href: expression_path(expression_item.expression)
     end
 
     it 'check tabs' do
@@ -205,7 +205,7 @@ RSpec.describe 'Expressions' do
       end
       find('input#move-to-bookmark').click
       find('summary', text: 'ブックマークする英単語・フレーズ').click
-      find('label', text: 'balcony and Veranda').click
+      find('label', text: 'balcony and veranda').click
       find('label', text: "#{two_expression_items[0].content} and #{two_expression_items[1].content}").click
 
       click_button '保存する'
@@ -238,7 +238,7 @@ RSpec.describe 'Expressions' do
       end
       find('input#move-to-bookmark').click
       find('summary', text: 'ブックマークする英単語・フレーズ').click
-      find('label', text: 'balcony and Veranda').click
+      find('label', text: 'balcony and veranda').click
       find('label', text: "#{two_expression_items[0].content} and #{two_expression_items[1].content}").click
 
       click_button '保存する'

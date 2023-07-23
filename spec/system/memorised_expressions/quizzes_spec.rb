@@ -259,7 +259,7 @@ RSpec.describe 'MemorisedExpressions Quiz' do
       find('summary', text: '自分の解答を表示').click
       expect(all('ul.user-answer-list li').count).to eq 4
       expect(page).to have_content 'Answer: balcony'
-      expect(page).to have_content 'Answer: Veranda'
+      expect(page).to have_content 'Answer: veranda'
       expect(page).to have_content "Answer: #{first_expression_item.content}"
       expect(page).to have_content "Answer: #{second_expression_item.content}"
     end
