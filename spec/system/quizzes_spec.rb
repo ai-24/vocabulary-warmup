@@ -248,7 +248,7 @@ RSpec.describe 'Quiz' do
         find('summary', text: '自分の解答を表示').click
 
         if answers[0] == 'Balcony'
-          expect(page).to have_content '× wrong answer ( Answer: Veranda )'
+          expect(page).to have_content '× wrong answer ( Answer: veranda )'
           expect(page).to have_content('◯ Balcony')
         elsif answers[0] == 'veranda'
           expect(page).to have_content '× wrong answer ( Answer: balcony )'
