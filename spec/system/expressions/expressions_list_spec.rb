@@ -111,9 +111,8 @@ RSpec.describe 'Expressions' do
       expect(page).to have_content 'ログインしました'
       click_link 'ブックマーク'
       expect(page).to have_current_path bookmarked_expressions_path
-      within 'header' do
-        click_link 'Word Warmup'
-      end
+
+      find('.logo').click
       expect(page).to have_current_path '/home'
     end
 
