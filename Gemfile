@@ -47,6 +47,7 @@ gem 'bootsnap', require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
+gem 'meta-tags'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-rails_csrf_protection'
 gem 'ransack'
@@ -84,3 +85,5 @@ group :test do
   gem 'selenium-webdriver'
   gem 'webdrivers', '~> 5.0', require: false
 end
+
+gem "dockerfile-rails", ">= 1.5", :group => :development
