@@ -5,12 +5,6 @@ class ExpressionsController < ApplicationController
   before_action :require_login, only: %i[new create]
   before_action :require_authority, only: %i[edit update destroy]
 
-  # GET /expressions or /expressions.json
-  # def index
-  #   @expressions = Expression.all
-  # end
-
-  # GET /expressions/1 or /expressions/1.json
   def show
     if @expression.user_id.nil?
       @user = current_user
@@ -27,13 +21,10 @@ class ExpressionsController < ApplicationController
     end
   end
 
-  # GET /expressions/new
   def new; end
 
-  # GET /expressions/1/edit
   def edit; end
 
-  # POST /expressions or /expressions.json
   def create
     @expression = Expression.new(expression_params)
     @expression.user_id = current_user.id
@@ -46,7 +37,6 @@ class ExpressionsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /expressions/1 or /expressions/1.json
   def update
     params = expression_params
     @expression.destroy_taggings(params)
@@ -59,7 +49,6 @@ class ExpressionsController < ApplicationController
     end
   end
 
-  # DELETE /expressions/1 or /expressions/1.json
   def destroy
     expression = @expression.next(current_user) || @expression.previous(current_user)
     path = unless expression
@@ -113,7 +102,6 @@ class ExpressionsController < ApplicationController
     @expression = Expression.find(params[:id])
   end
 
-  # Only allow a list of trusted parameters through.
   def expression_params
     params.require(:expression).permit(:id, :note, expression_items_attributes: [:id, :content, :explanation, { examples_attributes: %i[id content] }],
                                                    tags_attributes: %i[id name])

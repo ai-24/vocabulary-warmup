@@ -17,7 +17,7 @@
     "format:prettier": "prettier --write 'app/javascript/**/*.{js,vue}'",
     "check:prettier": "prettier --check 'app/javascript/**/*.{js,vue}'",
     "lint:eslint": "eslint 'app/javascript/**/*.{js,vue}' --max-warnings=0",
-    "build": "esbuild app/javascript/*.* --bundle --sourcemap --outdir=app/assets/builds --public-path=assets",
+    "build": "vite:build",
     "build:css": "tailwindcss -i ./app/assets/stylesheets/application.tailwind.css -o ./app/assets/builds/application.css --minify"
   },
   "devDependencies": {
