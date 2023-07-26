@@ -7,14 +7,7 @@
     <p>
       {{ $t('quiz.result.wellDone') }}
     </p>
-    <p>
-      {{
-        $t('quiz.result.numberOfCorrectAnswers', {
-          totalQuestions: this.numberOfQuizResources,
-          numberOfCorrectAnswers: this.numberOfCorrectAnswers
-        })
-      }}
-    </p>
+    <p>{{ numberOfQuizResources }}問中{{ numberOfCorrectAnswers }}問正解です</p>
   </div>
   <div
     v-if="!isSaved && movableExpressionExists"

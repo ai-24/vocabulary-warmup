@@ -86,19 +86,33 @@ RSpec.describe 'Quiz' do
 
     it 'check if the incorrect answer is judged as wrong one' do
       click_link 'クイズを試す'
+
+      correct_answers = []
+      correct_answers.push 'balcony' if has_text?('A platform on the side of a building, accessible from inside the building.')
       fill_in('解答を入力', with: 'terrace')
       click_button 'クイズに解答する'
       expect(page).not_to have_content '◯ 正解!'
       expect(page).to have_content '× 不正解'
-      expect(page).to have_content '正解は{answer}です' # answerの値が取れているかはVue側でテストする
+      if correct_answers[0] == 'balcony'
+        expect(page).to have_content '正解はbalconyです'
+      else
+        expect(page).to have_content '正解はverandaです'
+      end
     end
 
     it 'check the feedback message if answer is not given by a user' do
       click_link 'クイズを試す'
+
+      correct_answers = []
+      correct_answers.push 'balcony' if has_text?('A platform on the side of a building, accessible from inside the building.')
       click_button 'クイズに解答する'
       expect(page).not_to have_content '◯ 正解!'
       expect(page).not_to have_content '× 不正解'
-      expect(page).to have_content '× 正解は{answer}です'
+      if correct_answers[0] == 'balcony'
+        expect(page).to have_content '× 正解はbalconyです'
+      else
+        expect(page).to have_content '× 正解はverandaです'
+      end
     end
 
     it 'check the button and message on the last screen' do
@@ -220,6 +234,37 @@ RSpec.describe 'Quiz' do
         click_button 'クイズに再挑戦'
         expect(page).not_to have_content '{totalQuestions}問中{numberOfCorrectAnswers}問正解です'
         expect(page).to have_content '問題'
+      end
+    end
+
+    describe "show amount of user's correct answers" do
+      before do
+        visit '/'
+        click_link '試してみる(機能に制限あり)'
+        click_link 'クイズを試す'
+      end
+
+      it 'check the message when user got no correct answers' do
+        click_button 'クイズに解答する'
+        click_button '次へ'
+        click_button 'クイズに解答する'
+        click_button 'クイズの結果を確認する'
+
+        expect(page).to have_content '2問中0問正解です'
+      end
+
+      it 'check the message when user got one correct answer' do
+        if has_text?('A platform on the side of a building, accessible from inside the building.')
+          fill_in('解答を入力', with: 'Balcony')
+        else
+          fill_in('解答を入力', with: 'veranda')
+        end
+        click_button 'クイズに解答する'
+        click_button '次へ'
+        click_button 'クイズに解答する'
+        click_button 'クイズの結果を確認する'
+
+        expect(page).to have_content '2問中1問正解です'
       end
     end
 

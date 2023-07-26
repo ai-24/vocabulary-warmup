@@ -92,13 +92,13 @@ RSpec.describe 'Expressions' do
       fill_in('英単語 / フレーズ２', with: 'at the beach')
       fill_in('英単語 / フレーズ３(任意)', with: 'around the beach')
       click_button '次へ'
-      fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of on the beach')
+      fill_in('on the beachの意味や前ページで登録した他の英単語 / フレーズ（at the beach, around the beach）との違いを入力してください', with: 'explanation of on the beach')
       fill_in('例文１', with: 'example of on the beach')
       click_button '次へ'
-      fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of at the beach')
+      fill_in('at the beachの意味や前ページで登録した他の英単語 / フレーズ（on the beach, around the beach）との違いを入力してください', with: 'explanation of at the beach')
       fill_in('例文２', with: 'example of at the beach')
       click_button '次へ'
-      fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of around the beach')
+      fill_in('around the beachの意味や前ページで登録した他の英単語 / フレーズ（on the beach, at the beach）との違いを入力してください', with: 'explanation of around the beach')
       click_button '次へ'
       fill_in('メモ（任意）', with: 'note')
       fill_in('タグ（任意）', with: 'preposition')

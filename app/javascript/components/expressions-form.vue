@@ -110,23 +110,15 @@
       </div>
       <div v-show="currentPage === 2" class="bg-white p-2 sm:p-5">
         <h2 class="font-bold text-lg border-b border-lavender-600">
-          {{ $t('form.about', { word: firstExpression }) }}
+          {{ firstExpression }}について
         </h2>
-        <div v-if="explanationError" class="text-red-600 mt-8 font-semibold">
-          <label for="explanation-of-first-expression">{{
-            $t('form.explanation', {
-              word: firstExpression,
-              comparison: comparedExpressions
-            })
-          }}</label>
-        </div>
-        <div v-else class="mt-8 font-semibold">
-          <label for="explanation-of-first-expression">{{
-            $t('form.explanation', {
-              word: firstExpression,
-              comparison: comparedExpressions
-            })
-          }}</label>
+        <div
+          :class="{ 'text-red-600': explanationError }"
+          class="mt-8 font-semibold">
+          <label for="explanation-of-first-expression">
+            {{ firstExpression }}の意味や前ページで登録した他の英単語 /
+            フレーズ（{{ comparedExpressions }}）との違いを入力してください
+          </label>
         </div>
         <textarea
           id="explanation-of-first-expression"
@@ -204,23 +196,15 @@
       </div>
       <div v-show="currentPage === 3" class="bg-white p-2 sm:p-5">
         <h2 class="font-bold text-lg border-b border-lavender-600">
-          {{ $t('form.about', { word: secondExpression }) }}
+          {{ secondExpression }}について
         </h2>
-        <div v-if="explanationError" class="text-red-600 mt-8 font-semibold">
-          <label for="explanation-of-second-expression">{{
-            $t('form.explanation', {
-              word: secondExpression,
-              comparison: comparedExpressions
-            })
-          }}</label>
-        </div>
-        <div v-else class="mt-8 font-semibold">
-          <label for="explanation-of-second-expression">{{
-            $t('form.explanation', {
-              word: secondExpression,
-              comparison: comparedExpressions
-            })
-          }}</label>
+        <div
+          :class="{ 'text-red-600': explanationError }"
+          class="mt-8 font-semibold">
+          <label for="explanation-of-second-expression">
+            {{ secondExpression }}の意味や前ページで登録した他の英単語 /
+            フレーズ（{{ comparedExpressions }}）との違いを入力してください
+          </label>
         </div>
         <textarea
           id="explanation-of-second-expression"
@@ -306,23 +290,15 @@
       </div>
       <div v-show="currentPage === 4" class="bg-white p-2 sm:p-5">
         <h2 class="font-bold text-lg border-b border-lavender-600">
-          {{ $t('form.about', { word: thirdExpression }) }}
+          {{ thirdExpression }}について
         </h2>
-        <div v-if="explanationError" class="text-red-600 mt-8 font-semibold">
-          <label for="explanation-of-third-expression">{{
-            $t('form.explanation', {
-              word: thirdExpression,
-              comparison: comparedExpressions
-            })
-          }}</label>
-        </div>
-        <div v-else class="mt-8 font-semibold">
-          <label for="explanation-of-third-expression">{{
-            $t('form.explanation', {
-              word: thirdExpression,
-              comparison: comparedExpressions
-            })
-          }}</label>
+        <div
+          :class="{ 'text-red-600': explanationError }"
+          class="mt-8 font-semibold">
+          <label for="explanation-of-third-expression">
+            {{ thirdExpression }}の意味や前ページで登録した他の英単語 /
+            フレーズ（{{ comparedExpressions }}）との違いを入力してください
+          </label>
         </div>
         <textarea
           id="explanation-of-third-expression"
@@ -408,23 +384,15 @@
       </div>
       <div v-show="currentPage === 5" class="bg-white p-2 sm:p-5">
         <h2 class="font-bold text-lg border-b border-lavender-600">
-          {{ $t('form.about', { word: fourthExpression }) }}
+          {{ fourthExpression }}について
         </h2>
-        <div v-if="explanationError" class="text-red-600 mt-8 font-semibold">
-          <label for="explanation-of-fourth-expression">{{
-            $t('form.explanation', {
-              word: fourthExpression,
-              comparison: comparedExpressions
-            })
-          }}</label>
-        </div>
-        <div v-else class="mt-8 font-semibold">
-          <label for="explanation-of-fourth-expression">{{
-            $t('form.explanation', {
-              word: fourthExpression,
-              comparison: comparedExpressions
-            })
-          }}</label>
+        <div
+          :class="{ 'text-red-600': explanationError }"
+          class="mt-8 font-semibold">
+          <label for="explanation-of-fourth-expression"
+            >{{ fourthExpression }}の意味や前ページで登録した他の英単語 /
+            フレーズ（{{ comparedExpressions }}）との違いを入力してください
+          </label>
         </div>
         <textarea
           id="explanation-of-fourth-expression"
@@ -510,23 +478,15 @@
       </div>
       <div v-show="currentPage === 6" class="bg-white p-2 sm:p-5">
         <h2 class="font-bold text-lg border-b border-lavender-600">
-          {{ $t('form.about', { word: fifthExpression }) }}
+          {{ fifthExpression }}について
         </h2>
-        <div v-if="explanationError" class="text-red-600 mt-8 font-semibold">
-          <label for="explanation-of-fifth-expression">{{
-            $t('form.explanation', {
-              word: fifthExpression,
-              comparison: comparedExpressions
-            })
-          }}</label>
-        </div>
-        <div v-else class="mt-8 font-semibold">
-          <label for="explanation-of-fifth-expression">{{
-            $t('form.explanation', {
-              word: fifthExpression,
-              comparison: comparedExpressions
-            })
-          }}</label>
+        <div
+          :class="{ 'text-red-600': explanationError }"
+          class="mt-8 font-semibold">
+          <label for="explanation-of-fifth-expression"
+            >{{ fifthExpression }}の意味や前ページで登録した他の英単語 /
+            フレーズ（{{ comparedExpressions }}）との違いを入力してください
+          </label>
         </div>
         <textarea
           id="explanation-of-fifth-expression"
