@@ -1,15 +1,7 @@
 doctype html
 html
   head
-    / Google tag (gtag.js)
-    javascript:
-      async src="https://www.googletagmanager.com/gtag/js?id=G-T7PQXXVB9Z"
-    javascript:
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-T7PQXXVB9Z');
+    = render 'shared/google_analytics' if Rails.env.production?
     title
       | WordWarmup
     meta[name='viewport' content='width=device-width,initial-scale=1']
