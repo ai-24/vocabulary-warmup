@@ -41,11 +41,11 @@
           </p>
           <p v-else-if="answered && !this.userAnswer">
             <span class="text-red-600 text-xl">×</span>
-            {{ $t('quiz.answer', { answer: this.correctAnswer }) }}
+            正解は{{ correctAnswer }}です
           </p>
           <p v-else-if="answered && !isCorrect">
-            <span class="text-red-600 text-xl">×</span> {{ $t('quiz.wrong') }}
-            {{ $t('quiz.answer', { answer: this.correctAnswer }) }}
+            <span class="text-red-600 text-xl">×</span>
+            {{ $t('quiz.wrong') }} 正解は{{ correctAnswer }}です
           </p>
         </div>
         <div class="flex justify-center">

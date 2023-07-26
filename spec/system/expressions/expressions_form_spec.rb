@@ -96,10 +96,10 @@ RSpec.describe 'Expressions' do
         fill_in('英単語 / フレーズ１', with: 'on the beach')
         fill_in('英単語 / フレーズ２', with: 'at the beach')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of on the beach')
+        fill_in('on the beachの意味や前ページで登録した他の英単語 / フレーズ（at the beach）との違いを入力してください', with: 'explanation of on the beach')
         fill_in('例文１', with: 'example of on the beach')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of at the beach')
+        fill_in('at the beachの意味や前ページで登録した他の英単語 / フレーズ（on the beach）との違いを入力してください', with: 'explanation of at the beach')
         fill_in('例文２', with: 'example of at the beach')
         click_button '次へ'
         fill_in('メモ（任意）', with: 'note')
@@ -136,12 +136,12 @@ RSpec.describe 'Expressions' do
         fill_in('英単語 / フレーズ２', with: 'word2')
         fill_in('英単語 / フレーズ３(任意)', with: 'word3')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word1')
+        fill_in('word1の意味や前ページで登録した他の英単語 / フレーズ（word2, word3）との違いを入力してください', with: 'explanation of word1')
         fill_in('例文１', with: 'example of word1')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word2')
+        fill_in('word2の意味や前ページで登録した他の英単語 / フレーズ（word1, word3）との違いを入力してください', with: 'explanation of word2')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word3')
+        fill_in('word3の意味や前ページで登録した他の英単語 / フレーズ（word1, word2）との違いを入力してください', with: 'explanation of word3')
         click_button '次へ'
         fill_in('タグ（任意）', with: 'test')
         find('input#tags').send_keys :return
@@ -175,19 +175,19 @@ RSpec.describe 'Expressions' do
         fill_in('英単語 / フレーズ３(任意)', with: 'word3')
         fill_in('英単語 / フレーズ４(任意)', with: 'word4')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word1')
+        fill_in('word1の意味や前ページで登録した他の英単語 / フレーズ（word2, word3, word4）との違いを入力してください', with: 'explanation of word1')
         fill_in('例文１', with: 'first example of word1')
         fill_in('例文２', with: 'second example of word1')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word2')
+        fill_in('word2の意味や前ページで登録した他の英単語 / フレーズ（word1, word3, word4）との違いを入力してください', with: 'explanation of word2')
         fill_in('例文１', with: 'first example of word2')
         fill_in('例文２', with: 'second example of word2')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word3')
+        fill_in('word3の意味や前ページで登録した他の英単語 / フレーズ（word1, word2, word4）との違いを入力してください', with: 'explanation of word3')
         fill_in('例文１', with: 'first example of word3')
         fill_in('例文２', with: 'second example of word3')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word4')
+        fill_in('word4の意味や前ページで登録した他の英単語 / フレーズ（word1, word2, word3）との違いを入力してください', with: 'explanation of word4')
         fill_in('例文１', with: 'first example of word4')
         fill_in('例文２', with: 'second example of word4')
         click_button '次へ'
@@ -226,18 +226,18 @@ RSpec.describe 'Expressions' do
         fill_in('英単語 / フレーズ４(任意)', with: 'word4')
         fill_in('英単語 / フレーズ５(任意)', with: 'word5')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word1')
+        fill_in('word1の意味や前ページで登録した他の英単語 / フレーズ（word2, word3, word4, word5）との違いを入力してください', with: 'explanation of word1')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word2')
+        fill_in('word2の意味や前ページで登録した他の英単語 / フレーズ（word1, word3, word4, word5）との違いを入力してください', with: 'explanation of word2')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word3')
+        fill_in('word3の意味や前ページで登録した他の英単語 / フレーズ（word1, word2, word4, word5）との違いを入力してください', with: 'explanation of word3')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word4')
+        fill_in('word4の意味や前ページで登録した他の英単語 / フレーズ（word1, word2, word3, word5）との違いを入力してください', with: 'explanation of word4')
         fill_in('例文１', with: 'first example of word4')
         fill_in('例文２', with: 'second example of word4')
         fill_in('例文３', with: 'third example of word4')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word5')
+        fill_in('word5の意味や前ページで登録した他の英単語 / フレーズ（word1, word2, word3, word4）との違いを入力してください', with: 'explanation of word5')
         fill_in('例文１', with: 'first example of word5')
         fill_in('例文２', with: 'second example of word5')
         fill_in('例文３', with: 'third example of word5')
@@ -292,7 +292,7 @@ RSpec.describe 'Expressions' do
         fill_in('英単語 / フレーズ２', with: 'word2')
         click_button '次へ'
         expect(page).not_to have_content '英単語又はフレーズを２つ以上入力してください'
-        expect(page).to have_content '{word}について'
+        expect(page).to have_content 'word1について'
       end
     end
 
@@ -304,7 +304,7 @@ RSpec.describe 'Expressions' do
       end
 
       it 'show validation error if the explanation is not given' do
-        expect(page).to have_content '{word}について'
+        expect(page).to have_content 'on the beachについて'
         expect(page).not_to have_css '.text-red-600'
         click_button '次へ'
         expect(page).to have_css '.text-red-600'
@@ -314,18 +314,18 @@ RSpec.describe 'Expressions' do
         click_button '次へ'
         expect(page).to have_css '.text-red-600'
 
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of on the beach')
+        fill_in('on the beachの意味や前ページで登録した他の英単語 / フレーズ（at the beach）との違いを入力してください', with: 'explanation of on the beach')
         click_button '次へ'
         expect(page).not_to have_css '.text-red-600'
       end
 
       it 'go to the next page once users input the explanation after validation error on the third page' do
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of on the beach')
+        fill_in('on the beachの意味や前ページで登録した他の英単語 / フレーズ（at the beach）との違いを入力してください', with: 'explanation of on the beach')
         click_button '次へ'
         click_button '次へ'
         expect(page).to have_css '.text-red-600'
 
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of at the beach')
+        fill_in('at the beachの意味や前ページで登録した他の英単語 / フレーズ（on the beach）との違いを入力してください', with: 'explanation of at the beach')
         click_button '次へ'
         expect(page).not_to have_css '.text-red-600'
         expect(page).to have_content 'メモ（任意）'
@@ -337,12 +337,12 @@ RSpec.describe 'Expressions' do
         fill_in('英単語 / フレーズ１', with: 'word1')
         fill_in('英単語 / フレーズ２', with: 'word2')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word1')
+        fill_in('word1の意味や前ページで登録した他の英単語 / フレーズ（word2）との違いを入力してください', with: 'explanation of word1')
         click_button '次へ'
       end
 
       it 'no validation error when examples are not given' do
-        expect(page).to have_content '{word}について'
+        expect(page).to have_content 'word2について'
         expect(page).not_to have_css '.text-red-600'
       end
     end
@@ -352,9 +352,9 @@ RSpec.describe 'Expressions' do
         fill_in('英単語 / フレーズ１', with: 'word1')
         fill_in('英単語 / フレーズ２', with: 'word2')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word1')
+        fill_in('word1の意味や前ページで登録した他の英単語 / フレーズ（word2）との違いを入力してください', with: 'explanation of word1')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word2')
+        fill_in('word2の意味や前ページで登録した他の英単語 / フレーズ（word1）との違いを入力してください', with: 'explanation of word2')
         click_button '次へ'
         fill_in('タグ（任意）', with: 'English')
         find('input#tags').send_keys :return
@@ -419,7 +419,7 @@ RSpec.describe 'Expressions' do
         fill_in('英単語 / フレーズ１', with: 'on the beach')
         fill_in('英単語 / フレーズ２', with: 'at the beach')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of on the beach')
+        fill_in('on the beachの意味や前ページで登録した他の英単語 / フレーズ（at the beach）との違いを入力してください', with: 'explanation of on the beach')
         click_button '次へ'
       end
 
@@ -452,16 +452,16 @@ RSpec.describe 'Expressions' do
         fill_in('英単語 / フレーズ１', with: 'word1')
         fill_in('英単語 / フレーズ２', with: 'word2')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word1')
+        fill_in('word1の意味や前ページで登録した他の英単語 / フレーズ（word2）との違いを入力してください', with: 'explanation of word1')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word2')
+        fill_in('word2の意味や前ページで登録した他の英単語 / フレーズ（word1）との違いを入力してください', with: 'explanation of word2')
         click_button '次へ'
       end
 
       it 'check if the page goes back to right one after clicking the back button' do
         expect(page).to have_content 'メモ（任意）'
         click_button '戻る'
-        expect(page).to have_field('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word2')
+        expect(page).to have_field('word2の意味や前ページで登録した他の英単語 / フレーズ（word1）との違いを入力してください', with: 'explanation of word2')
       end
     end
 
@@ -471,18 +471,18 @@ RSpec.describe 'Expressions' do
         fill_in('英単語 / フレーズ２', with: 'word2')
         fill_in('英単語 / フレーズ３(任意)', with: 'word3')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word1')
+        fill_in('word1の意味や前ページで登録した他の英単語 / フレーズ（word2, word3）との違いを入力してください', with: 'explanation of word1')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word2')
+        fill_in('word2の意味や前ページで登録した他の英単語 / フレーズ（word1, word3）との違いを入力してください', with: 'explanation of word2')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word3')
+        fill_in('word3の意味や前ページで登録した他の英単語 / フレーズ（word1, word2）との違いを入力してください', with: 'explanation of word3')
         click_button '次へ'
       end
 
       it 'check if the page goes back to right one after clicking the back button' do
         expect(page).to have_content 'メモ（任意）'
         click_button '戻る'
-        expect(page).to have_field('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word3')
+        expect(page).to have_field('word3の意味や前ページで登録した他の英単語 / フレーズ（word1, word2）との違いを入力してください', with: 'explanation of word3')
       end
     end
 
@@ -493,20 +493,20 @@ RSpec.describe 'Expressions' do
         fill_in('英単語 / フレーズ３(任意)', with: 'word3')
         fill_in('英単語 / フレーズ４(任意)', with: 'word4')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word1')
+        fill_in('word1の意味や前ページで登録した他の英単語 / フレーズ（word2, word3, word4）との違いを入力してください', with: 'explanation of word1')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word2')
+        fill_in('word2の意味や前ページで登録した他の英単語 / フレーズ（word1, word3, word4）との違いを入力してください', with: 'explanation of word2')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word3')
+        fill_in('word3の意味や前ページで登録した他の英単語 / フレーズ（word1, word2, word4）との違いを入力してください', with: 'explanation of word3')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word4')
+        fill_in('word4の意味や前ページで登録した他の英単語 / フレーズ（word1, word2, word3）との違いを入力してください', with: 'explanation of word4')
         click_button '次へ'
       end
 
       it 'check if the page goes back to right one after clicking the back button' do
         expect(page).to have_content 'メモ（任意）'
         click_button '戻る'
-        expect(page).to have_field('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word4')
+        expect(page).to have_field('word4の意味や前ページで登録した他の英単語 / フレーズ（word1, word2, word3）との違いを入力してください', with: 'explanation of word4')
       end
     end
 
@@ -518,22 +518,22 @@ RSpec.describe 'Expressions' do
         fill_in('英単語 / フレーズ４(任意)', with: 'word4')
         fill_in('英単語 / フレーズ５(任意)', with: 'word5')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word1')
+        fill_in('word1の意味や前ページで登録した他の英単語 / フレーズ（word2, word3, word4, word5）との違いを入力してください', with: 'explanation of word1')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word2')
+        fill_in('word2の意味や前ページで登録した他の英単語 / フレーズ（word1, word3, word4, word5）との違いを入力してください', with: 'explanation of word2')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word3')
+        fill_in('word3の意味や前ページで登録した他の英単語 / フレーズ（word1, word2, word4, word5）との違いを入力してください', with: 'explanation of word3')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word4')
+        fill_in('word4の意味や前ページで登録した他の英単語 / フレーズ（word1, word2, word3, word5）との違いを入力してください', with: 'explanation of word4')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word5')
+        fill_in('word5の意味や前ページで登録した他の英単語 / フレーズ（word1, word2, word3, word4）との違いを入力してください', with: 'explanation of word5')
         click_button '次へ'
       end
 
       it 'check if the page goes back to right one after clicking the back button' do
         expect(page).to have_content 'メモ（任意）'
         click_button '戻る'
-        expect(page).to have_field('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word5')
+        expect(page).to have_field('word5の意味や前ページで登録した他の英単語 / フレーズ（word1, word2, word3, word4）との違いを入力してください', with: 'explanation of word5')
       end
     end
   end
@@ -592,9 +592,9 @@ RSpec.describe 'Expressions' do
       end
 
       it 'show the check circle after completing the step2' do
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word1')
+        fill_in('word1の意味や前ページで登録した他の英単語 / フレーズ（word2）との違いを入力してください', with: 'explanation of word1')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word2')
+        fill_in('word2の意味や前ページで登録した他の英単語 / フレーズ（word1）との違いを入力してください', with: 'explanation of word2')
         click_button '次へ'
 
         expect(all('.fa-circle-check').length).to eq 2
@@ -608,23 +608,23 @@ RSpec.describe 'Expressions' do
         fill_in('英単語 / フレーズ２', with: 'word2')
         fill_in('英単語 / フレーズ３(任意)', with: 'word3')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word1')
+        fill_in('word1の意味や前ページで登録した他の英単語 / フレーズ（word2, word3）との違いを入力してください', with: 'explanation of word1')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word2')
+        fill_in('word2の意味や前ページで登録した他の英単語 / フレーズ（word1, word3）との違いを入力してください', with: 'explanation of word2')
         click_button '次へ'
       end
 
       it 'show the check circle after completing the step2' do
         within('.border-golden-yellow-400') { expect(page).to have_content 'Step2' }
 
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word3')
+        fill_in('word3の意味や前ページで登録した他の英単語 / フレーズ（word1, word2）との違いを入力してください', with: 'explanation of word3')
         click_button '次へ'
 
         expect(all('.fa-circle-check').length).to eq 2
       end
 
       it 'check background color when the page is on the note and tags' do
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word3')
+        fill_in('word3の意味や前ページで登録した他の英単語 / フレーズ（word1, word2）との違いを入力してください', with: 'explanation of word3')
         click_button '次へ'
 
         expect(page).to have_content 'メモ（任意）'
@@ -641,10 +641,10 @@ RSpec.describe 'Expressions' do
       end
 
       it 'check step2 icon after completing the step2 and then go back to the step from step3' do
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word3')
+        fill_in('word3の意味や前ページで登録した他の英単語 / フレーズ（word1, word2）との違いを入力してください', with: 'explanation of word3')
         click_button '次へ'
         click_button '戻る'
-        expect(page).to have_content '{word}について'
+        expect(page).to have_content 'word3について'
         within('.border-golden-yellow-400') do
           expect(page).to have_css '.fa-circle-check'
           expect(page).to have_content 'Step2'
@@ -652,7 +652,7 @@ RSpec.describe 'Expressions' do
       end
 
       it 'check step1 icon after completing the step2 and then go back to the step from step3' do
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word3')
+        fill_in('word3の意味や前ページで登録した他の英単語 / フレーズ（word1, word2）との違いを入力してください', with: 'explanation of word3')
         click_button '次へ'
         click_button '戻る'
         within first(:css, '.border-gray-300') do
@@ -668,11 +668,11 @@ RSpec.describe 'Expressions' do
         fill_in('英単語 / フレーズ２', with: 'word2')
         fill_in('英単語 / フレーズ３(任意)', with: 'word3')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word1')
+        fill_in('word1の意味や前ページで登録した他の英単語 / フレーズ（word2, word3）との違いを入力してください', with: 'explanation of word1')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word2')
+        fill_in('word2の意味や前ページで登録した他の英単語 / フレーズ（word1, word3）との違いを入力してください', with: 'explanation of word2')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word3')
+        fill_in('word3の意味や前ページで登録した他の英単語 / フレーズ（word1, word2）との違いを入力してください', with: 'explanation of word3')
         click_button '次へ'
         click_button '戻る'
         click_button '戻る'
@@ -698,15 +698,15 @@ RSpec.describe 'Expressions' do
         fill_in('英単語 / フレーズ４(任意)', with: 'word4')
         fill_in('英単語 / フレーズ５(任意)', with: 'word5')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word1')
+        fill_in('word1の意味や前ページで登録した他の英単語 / フレーズ（word2, word3, word4, word5）との違いを入力してください', with: 'explanation of word1')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word2')
+        fill_in('word2の意味や前ページで登録した他の英単語 / フレーズ（word1, word3, word4, word5）との違いを入力してください', with: 'explanation of word2')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word3')
+        fill_in('word3の意味や前ページで登録した他の英単語 / フレーズ（word1, word2, word4, word5）との違いを入力してください', with: 'explanation of word3')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word4')
+        fill_in('word4の意味や前ページで登録した他の英単語 / フレーズ（word1, word2, word3, word5）との違いを入力してください', with: 'explanation of word4')
         click_button '次へ'
-        fill_in('{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください', with: 'explanation of word5')
+        fill_in('word5の意味や前ページで登録した他の英単語 / フレーズ（word1, word2, word3, word4）との違いを入力してください', with: 'explanation of word5')
         click_button '次へ'
         click_button '戻る'
         click_button '戻る'
