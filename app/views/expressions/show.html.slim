@@ -8,9 +8,9 @@
     .font-semibold.text-lg
       - @expression.expression_items.order(:created_at, :id).each_with_index do |expression_item, i|
         p #{i + 1}. #{expression_item.content}
-  .details.bg-lavender-600.mt-10.p-2.rounded-md
+  .details.bg-lavender-600.mt-10.p-2
     - @expression.expression_items.order(:created_at, :id).each_with_index do |expression_item, i|
-      div class="expression#{i} bg-white p-3 my-3 rounded-md"
+      div class="expression#{i} bg-white p-3 my-3"
         p.content.font-bold.text-lg.border-b-2.border-neutral-400.mb-3.5
           = expression_item.content
         p.underline
