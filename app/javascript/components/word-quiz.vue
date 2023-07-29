@@ -27,6 +27,7 @@
         <input
           v-if="!answered"
           v-model="userAnswer"
+          ref="input"
           class="border-2 border-gray-400 rounded w-full h-9 pl-4 mb-3"
           :placeholder="$t('quiz.placeholder')" />
         <p
@@ -123,6 +124,7 @@ export default {
       this.checkQuestionIndex()
       this.userAnswer = ''
       this.correctAnswer = ''
+      this.$nextTick(() => this.$refs.input.focus({ preventScroll: true }))
     },
     getResult() {
       this.isResult = true
@@ -187,6 +189,7 @@ export default {
   },
   mounted() {
     this.setupQuiz()
+    this.$refs.input.focus({ preventScroll: true })
   }
 }
 </script>
