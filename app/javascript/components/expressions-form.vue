@@ -100,8 +100,37 @@
         <div class="flex justify-end">
           <div class="w-1/2 text-center">
             <button
+              v-if="firstExpression"
               type="button"
               @click="getSecondPage"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50">
+              {{ $t('form.next') }}
+            </button>
+            <button
+              v-else-if="secondExpression"
+              type="button"
+              @click="getThirdPage"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50">
+              {{ $t('form.next') }}
+            </button>
+            <button
+              v-else-if="thirdExpression"
+              type="button"
+              @click="getFourthPage"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50">
+              {{ $t('form.next') }}
+            </button>
+            <button
+              v-else-if="fourthExpression"
+              type="button"
+              @click="getFifthPage"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50">
+              {{ $t('form.next') }}
+            </button>
+            <button
+              v-else-if="fifthExpression"
+              type="button"
+              @click="getSixPage"
               class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50">
               {{ $t('form.next') }}
             </button>
@@ -159,8 +188,30 @@
           </div>
           <div class="basis-1/2 text-center">
             <button
+              v-if="secondExpression"
               type="button"
               @click="getThirdPage"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50">
+              {{ $t('form.next') }}
+            </button>
+            <button
+              v-else-if="thirdExpression"
+              type="button"
+              @click="getFourthPage"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50">
+              {{ $t('form.next') }}
+            </button>
+            <button
+              v-else-if="fourthExpression"
+              type="button"
+              @click="getFifthPage"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50">
+              {{ $t('form.next') }}
+            </button>
+            <button
+              v-else-if="fifthExpression"
+              type="button"
+              @click="getSixPage"
               class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50">
               {{ $t('form.next') }}
             </button>
@@ -210,18 +261,40 @@
         <div class="flex flex-row">
           <div class="basis-1/2 text-center">
             <button
+              v-if="firstExpression"
               type="button"
               class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
               @click="getSecondPage">
               {{ $t('back') }}
             </button>
+            <button
+              v-else
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getFirstPage">
+              {{ $t('back') }}
+            </button>
           </div>
           <div class="basis-1/2 text-center">
             <button
-              v-if="expressionsAmount > 2"
+              v-if="thirdExpression"
               type="button"
               class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
               @click="getFourthPage">
+              {{ $t('form.next') }}
+            </button>
+            <button
+              v-else-if="fourthExpression"
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getFifthPage">
+              {{ $t('form.next') }}
+            </button>
+            <button
+              v-else-if="fifthExpression"
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getSixPage">
               {{ $t('form.next') }}
             </button>
             <button
@@ -277,18 +350,40 @@
         <div class="flex flex-row">
           <div class="basis-1/2 text-center">
             <button
+              v-if="secondExpression"
               type="button"
               class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
               @click="getThirdPage">
               {{ $t('back') }}
             </button>
+            <button
+              v-else-if="firstExpression"
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getSecondPage">
+              {{ $t('back') }}
+            </button>
+            <button
+              v-else
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getFirstPage">
+              {{ $t('back') }}
+            </button>
           </div>
           <div class="basis-1/2 text-center">
             <button
-              v-if="expressionsAmount > 3"
+              v-if="fourthExpression"
               type="button"
               class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
               @click="getFifthPage">
+              {{ $t('form.next') }}
+            </button>
+            <button
+              v-else-if="fifthExpression"
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getSixPage">
               {{ $t('form.next') }}
             </button>
             <button
@@ -344,9 +439,31 @@
         <div class="flex flex-row">
           <div class="basis-1/2 text-center">
             <button
+              v-if="thirdExpression"
               type="button"
               class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
               @click="getFourthPage">
+              {{ $t('back') }}
+            </button>
+            <button
+              v-else-if="secondExpression"
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getThirdPage">
+              {{ $t('back') }}
+            </button>
+            <button
+              v-else-if="firstExpression"
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getSecondPage">
+              {{ $t('back') }}
+            </button>
+            <button
+              v-else
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getFirstPage">
               {{ $t('back') }}
             </button>
           </div>
@@ -411,9 +528,31 @@
         <div class="flex flex-row">
           <div class="basis-1/2 text-center">
             <button
+              v-if="fourthExpression"
               type="button"
               class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
               @click="getFifthPage">
+              {{ $t('back') }}
+            </button>
+            <button
+              v-else-if="thirdExpression"
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getFourthPage">
+              {{ $t('back') }}
+            </button>
+            <button
+              v-else-if="secondExpression"
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getThirdPage">
+              {{ $t('back') }}
+            </button>
+            <button
+              v-else-if="firstExpression"
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getSecondPage">
               {{ $t('back') }}
             </button>
           </div>
@@ -646,8 +785,8 @@ export default {
       ]
       expressions.forEach((expression) => {
         if (expression) this.expressionsList.push(expression)
-        this.expressionsAmount = this.expressionsList.length
       })
+      this.expressionsAmount = this.expressionsList.length
     },
     isExplanationError(explanation) {
       this.explanationError = false
@@ -669,10 +808,9 @@ export default {
         this.fifthExpression
       ])
       if (this.currentPage === 1) {
-        if (this.firstExpression === '' || this.secondExpression === '')
-          this.expressionsError = true
         const previousExpressionsAmount = this.expressionsAmount
         this.calculateExpressionsAmount()
+        if (this.expressionsAmount < 2) this.expressionsError = true
         if (
           this.completedStep2 &&
           this.expressionsAmount !== previousExpressionsAmount

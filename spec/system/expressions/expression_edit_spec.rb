@@ -890,4 +890,274 @@ RSpec.describe 'Expressions' do
       end
     end
   end
+
+  describe 'delete expression_items' do
+    let!(:user) { FactoryBot.create(:user) }
+    let!(:expression) { FactoryBot.create(:empty_note, user_id: user.id) }
+    let!(:first_expression_item) { FactoryBot.create(:expression_item, expression:) }
+    let!(:second_expression_item) { FactoryBot.create(:expression_item, content: 'balcony', expression:) }
+    let!(:third_expression_item) { FactoryBot.create(:expression_item, content: 'veranda', expression:) }
+
+    before do
+      FactoryBot.create(:example, expression_item: second_expression_item)
+      FactoryBot.create(:example, expression_item: third_expression_item)
+
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+      visit '/'
+      within '.button-on-header' do
+        click_button 'Sign up/Log in with Google'
+      end
+    end
+
+    it 'check if the third word is deleted' do
+      expect(page).to have_content 'ログインしました'
+      click_link "#{first_expression_item.content}, balcony and veranda"
+      click_link '編集'
+      fill_in('英単語 / フレーズ３(任意)', with: '')
+      3.times { click_button '次へ' }
+      expect do
+        click_button '編集する'
+        expect(page).to have_content '英単語またはフレーズを編集しました'
+      end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(-1).and change(Example, :count).by(-1)
+      expect(expression.expression_items.count).to eq 2
+      within '.title' do
+        expect(page).to have_content "1. #{first_expression_item.content}"
+        expect(page).to have_content '2. balcony'
+        expect(page).not_to have_content '3. veranda'
+      end
+    end
+
+    it 'check if the second word is deleted' do
+      expect(page).to have_content 'ログインしました'
+      click_link "#{first_expression_item.content}, balcony and veranda"
+      click_link '編集'
+      fill_in('英単語 / フレーズ２', with: '')
+      click_button '次へ'
+      expect(page).to have_content "#{first_expression_item.content}について"
+      click_button '次へ'
+      expect(page).not_to have_content 'balconyについて'
+      expect(page).to have_content 'verandaについて'
+      click_button '次へ'
+      expect do
+        click_button '編集する'
+        expect(page).to have_content '英単語またはフレーズを編集しました'
+      end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(-1).and change(Example, :count).by(-1)
+      expect(expression.expression_items.count).to eq 2
+    end
+  end
+
+  describe 'delete examples' do
+    let!(:user) { FactoryBot.create(:user) }
+    let!(:expression) { FactoryBot.create(:empty_note, user_id: user.id) }
+    let!(:first_expression_item) { FactoryBot.create(:expression_item, expression:) }
+    let!(:second_expression_item) { FactoryBot.create(:expression_item2, expression:) }
+
+    before do
+      FactoryBot.create(:example, expression_item: first_expression_item)
+
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+      visit '/'
+      within '.button-on-header' do
+        click_button 'Sign up/Log in with Google'
+      end
+    end
+
+    it 'check if the example is deleted' do
+      expect(page).to have_content 'ログインしました'
+      click_link "#{first_expression_item.content} and #{second_expression_item.content}"
+      click_link '編集'
+      click_button '次へ'
+      fill_in('例文１', with: '')
+      2.times { click_button '次へ' }
+      expect do
+        click_button '編集する'
+        expect(page).to have_content '英単語またはフレーズを編集しました'
+      end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(0).and change(Example, :count).by(-1)
+      expect(first_expression_item.examples.count).to eq 0
+    end
+  end
+
+  describe 'check next and back button' do
+    let!(:user) { FactoryBot.create(:user) }
+    let!(:expression) { FactoryBot.create(:empty_note, user_id: user.id) }
+    let!(:expression_item1) { FactoryBot.create(:expression_item, expression:) }
+    let!(:expression_item2) { FactoryBot.create(:expression_item2, expression:) }
+    let!(:expression_item3) { FactoryBot.create(:expression_item3, expression:) }
+    let!(:expression_item4) { FactoryBot.create(:expression_item4, expression:) }
+    let!(:expression_item5) { FactoryBot.create(:expression_item5, expression:) }
+
+    before do
+      FactoryBot.create(:example, expression_item: expression_item1)
+
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+      visit '/'
+      within '.button-on-header' do
+        click_button 'Sign up/Log in with Google'
+      end
+      has_text? 'ログインしました'
+      click_link(
+        "#{expression_item1.content}, #{expression_item2.content}, #{expression_item3.content}, #{expression_item4.content} and #{expression_item5.content}"
+      )
+      click_link '編集'
+    end
+
+    it 'check buttons' do
+      click_button '次へ'
+      expect(page).to have_content "#{expression_item1.content}について"
+      click_button '戻る'
+      expect(page).to have_content '意味の違いや使い分けを学習したい英単語又はフレーズを入力してください'
+      2.times { click_button '次へ' }
+      expect(page).to have_content "#{expression_item2.content}について"
+      click_button '戻る'
+      expect(page).to have_content "#{expression_item1.content}について"
+      2.times { click_button '次へ' }
+      expect(page).to have_content "#{expression_item3.content}について"
+      click_button '戻る'
+      expect(page).to have_content "#{expression_item2.content}について"
+      2.times { click_button '次へ' }
+      expect(page).to have_content "#{expression_item4.content}について"
+      click_button '戻る'
+      expect(page).to have_content "#{expression_item3.content}について"
+      2.times { click_button '次へ' }
+      expect(page).to have_content "#{expression_item5.content}について"
+      click_button '戻る'
+      expect(page).to have_content "#{expression_item4.content}について"
+      2.times { click_button '次へ' }
+      expect(page).to have_content 'メモ（任意）'
+    end
+
+    it 'check buttons when first word is deleted' do
+      fill_in('英単語 / フレーズ１', with: '')
+      click_button '次へ'
+      expect(page).to have_content "#{expression_item2.content}について"
+      click_button '戻る'
+      expect(page).to have_content '意味の違いや使い分けを学習したい英単語又はフレーズを入力してください'
+      2.times { click_button '次へ' }
+      expect(page).to have_content "#{expression_item3.content}について"
+      click_button '戻る'
+      expect(page).to have_content "#{expression_item2.content}について"
+      4.times { click_button '次へ' }
+      expect do
+        click_button '編集する'
+        expect(page).to have_content '英単語またはフレーズを編集しました'
+      end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(-1).and change(Example, :count).by(-1)
+      expect(expression.expression_items.count).to eq 4
+      expect(page).to have_content "1. #{expression_item2.content}"
+      expect(page).to have_content "2. #{expression_item3.content}"
+      expect(page).to have_content "3. #{expression_item4.content}"
+      expect(page).to have_content "4. #{expression_item5.content}"
+    end
+
+    it 'check buttons when second word is deleted' do
+      fill_in('英単語 / フレーズ２', with: '')
+      click_button '次へ'
+      expect(page).to have_content "#{expression_item1.content}について"
+      click_button '次へ'
+      expect(page).to have_content "#{expression_item3.content}について"
+      click_button '戻る'
+      expect(page).to have_content "#{expression_item1.content}について"
+      2.times { click_button '次へ' }
+      expect(page).to have_content "#{expression_item4.content}について"
+      2.times { click_button '次へ' }
+      expect do
+        click_button '編集する'
+        expect(page).to have_content '英単語またはフレーズを編集しました'
+      end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(-1).and change(Example, :count).by(0)
+      expect(expression.expression_items.count).to eq 4
+      expect(page).to have_content "1. #{expression_item1.content}"
+      expect(page).to have_content "2. #{expression_item3.content}"
+      expect(page).to have_content "3. #{expression_item4.content}"
+      expect(page).to have_content "4. #{expression_item5.content}"
+    end
+
+    it 'check buttons when third word is deleted' do
+      fill_in('英単語 / フレーズ３(任意)', with: '')
+      2.times { click_button '次へ' }
+      expect(page).to have_content "#{expression_item2.content}について"
+      click_button '次へ'
+      expect(page).to have_content "#{expression_item4.content}について"
+      click_button '戻る'
+      expect(page).to have_content "#{expression_item2.content}について"
+      2.times { click_button '次へ' }
+      expect(page).to have_content "#{expression_item5.content}について"
+      click_button '次へ'
+      expect do
+        click_button '編集する'
+        expect(page).to have_content '英単語またはフレーズを編集しました'
+      end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(-1).and change(Example, :count).by(0)
+      expect(expression.expression_items.count).to eq 4
+      expect(page).to have_content "1. #{expression_item1.content}"
+      expect(page).to have_content "2. #{expression_item2.content}"
+      expect(page).to have_content "3. #{expression_item4.content}"
+      expect(page).to have_content "4. #{expression_item5.content}"
+    end
+
+    it 'check buttons when fourth word is deleted' do
+      fill_in('英単語 / フレーズ４(任意)', with: '')
+      3.times { click_button '次へ' }
+      expect(page).to have_content "#{expression_item3.content}について"
+      click_button '次へ'
+      expect(page).to have_content "#{expression_item5.content}について"
+      click_button '戻る'
+      expect(page).to have_content "#{expression_item3.content}について"
+      2.times { click_button '次へ' }
+      expect do
+        click_button '編集する'
+        expect(page).to have_content '英単語またはフレーズを編集しました'
+      end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(-1).and change(Example, :count).by(0)
+      expect(expression.expression_items.count).to eq 4
+      expect(page).to have_content "1. #{expression_item1.content}"
+      expect(page).to have_content "2. #{expression_item2.content}"
+      expect(page).to have_content "3. #{expression_item3.content}"
+      expect(page).to have_content "4. #{expression_item5.content}"
+    end
+
+    it 'check buttons when fifth word is deleted' do
+      fill_in('英単語 / フレーズ５(任意)', with: '')
+      4.times { click_button '次へ' }
+      expect(page).to have_content "#{expression_item4.content}について"
+      click_button '次へ'
+      expect(page).to have_content 'メモ（任意）'
+      click_button '戻る'
+      expect(page).to have_content "#{expression_item4.content}について"
+      click_button '次へ'
+      expect do
+        click_button '編集する'
+        expect(page).to have_content '英単語またはフレーズを編集しました'
+      end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(-1).and change(Example, :count).by(0)
+      expect(expression.expression_items.count).to eq 4
+      expect(page).to have_content "1. #{expression_item1.content}"
+      expect(page).to have_content "2. #{expression_item2.content}"
+      expect(page).to have_content "3. #{expression_item3.content}"
+      expect(page).to have_content "4. #{expression_item4.content}"
+    end
+
+    it 'check buttons when second and third words are deleted' do
+      fill_in('英単語 / フレーズ２', with: '')
+      fill_in('英単語 / フレーズ３(任意)', with: '')
+      click_button '次へ'
+      expect(page).to have_content "#{expression_item1.content}について"
+      click_button '次へ'
+      expect(page).to have_content "#{expression_item4.content}について"
+      click_button '戻る'
+      expect(page).to have_content "#{expression_item1.content}について"
+      2.times { click_button '次へ' }
+      expect(page).to have_content "#{expression_item5.content}について"
+      click_button '次へ'
+      expect do
+        click_button '編集する'
+        expect(page).to have_content '英単語またはフレーズを編集しました'
+      end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(-2).and change(Example, :count).by(0)
+      expect(expression.expression_items.count).to eq 3
+      expect(page).to have_content "1. #{expression_item1.content}"
+      expect(page).to have_content "2. #{expression_item4.content}"
+      expect(page).to have_content "3. #{expression_item5.content}"
+    end
+  end
 end
