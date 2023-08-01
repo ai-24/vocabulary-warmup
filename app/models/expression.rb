@@ -122,12 +122,4 @@ class Expression < ApplicationRecord
       next_expression(user)
     end
   end
-
-  def destroy_taggings(params)
-    current_tags = tags.map(&:name)
-    new_tags = params[:tags_attributes].to_h.map { |tag| tag[1][:name] }
-    delete_tag_names = current_tags.difference(new_tags)
-    delete_tags = Tag.where(name: delete_tag_names)
-    delete_tags.each { |tag| Tagging.find_by(tag:, expression: self)&.destroy }
-  end
 end

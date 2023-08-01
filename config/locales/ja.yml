@@ -21,6 +21,7 @@ ja:
       try_app: 試してみる(機能に制限あり)
   home:
     index:
+      title: 一覧
       no_data: このリストに登録されている英単語またはフレーズはありません
       create: 新規作成
       start_quiz: クイズに挑戦
@@ -29,19 +30,23 @@ ja:
       how_to_create_data: ログインすると英単語やフレーズの登録が可能です
   bookmarked_expressions:
     index:
+      title: 一覧
       no_data: ブックマークしている英単語またはフレーズはありません
       unauthorized: ログインしていないため閲覧できません
       start_quiz: クイズに挑戦
     quizzes:
       show:
+        title: クイズ
         no_data: このリストのクイズに問題が存在しません
   memorised_expressions:
     index:
+      title: 一覧
       no_data: このリストに登録している英単語またはフレーズはありません
       unauthorized: ログインしていないため閲覧できません
       start_quiz: クイズに挑戦
     quizzes:
       show:
+        title: クイズ
         no_data: このリストのクイズに問題が存在しません
   users:
     confirm_deletion_of_account: "アカウントを削除しますか？\n \n重要:アカウントを削除すると、このアプリに登録した全てのデータは削除されます。"
@@ -70,11 +75,15 @@ ja:
       edit: 編集
       delete: 削除
       confirm_deletion_of_expression: この英単語又はフレーズを本当に削除しますか？
+    new:
+      title: 英単語・フレーズの新規作成フォーム
     edit:
+      title: 英単語・フレーズの編集フォーム
       go_to_show: 詳細画面に戻る
       go_to_index: 英単語・フレーズ一覧に戻る
   quizzes:
     show:
+      title: クイズ
       no_data: このリストのクイズに問題が存在しません
   no_authority: 権限がありません
   not_logged_in: ログインが必要です

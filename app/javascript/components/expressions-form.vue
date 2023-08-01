@@ -100,8 +100,37 @@
         <div class="flex justify-end">
           <div class="w-1/2 text-center">
             <button
+              v-if="firstExpression"
               type="button"
               @click="getSecondPage"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50">
+              {{ $t('form.next') }}
+            </button>
+            <button
+              v-else-if="secondExpression"
+              type="button"
+              @click="getThirdPage"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50">
+              {{ $t('form.next') }}
+            </button>
+            <button
+              v-else-if="thirdExpression"
+              type="button"
+              @click="getFourthPage"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50">
+              {{ $t('form.next') }}
+            </button>
+            <button
+              v-else-if="fourthExpression"
+              type="button"
+              @click="getFifthPage"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50">
+              {{ $t('form.next') }}
+            </button>
+            <button
+              v-else
+              type="button"
+              @click="expressionsError = true"
               class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50">
               {{ $t('form.next') }}
             </button>
@@ -109,72 +138,45 @@
         </div>
       </div>
       <div v-show="currentPage === 2" class="bg-white p-2 sm:p-5">
-        <h2 class="font-bold text-lg border-b border-lavender-600">
-          {{ firstExpression }}について
-        </h2>
-        <div
-          :class="{ 'text-red-600': explanationError }"
-          class="mt-8 font-semibold">
-          <label for="explanation-of-first-expression">
-            {{ firstExpression }}の意味や前ページで登録した他の英単語 /
-            フレーズ（{{ comparedExpressions }}）との違いを入力してください
-          </label>
-        </div>
-        <textarea
-          id="explanation-of-first-expression"
+        <ExpressionsFormExplanation
+          v-model:explanation="firstExpressionDetails.explanation"
+          v-model:first-example="firstExpressionDetails.firstExample"
+          v-model:second-example="firstExpressionDetails.secondExample"
+          v-model:third-example="firstExpressionDetails.thirdExample"
+          :compared-expressions="comparedExpressions"
+          :explanation-error="explanationError"
+          :expression="firstExpression"></ExpressionsFormExplanation>
+        <input
+          type="hidden"
           name="expression[expression_items_attributes][0][explanation]"
-          rows="3"
-          class="w-full mt-2 h-40 px-2 outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block"
-          v-model="firstExpressionDetails.explanation"
-          :placeholder="$t('form.notice')"></textarea>
-        <p class="pt-10 font-semibold">{{ $t('form.example') }}</p>
-        <ul class="pb-6">
-          <li class="pt-1">
-            <label for="first-example-of-first-expression">{{
-              $t('form.firstExample')
-            }}</label>
-            <input
-              v-if="exampleId.firstExpression[0]"
-              type="hidden"
-              name="expression[expression_items_attributes][0][examples_attributes][0][id]"
-              :value="exampleId.firstExpression[0].firstExample" />
-            <input
-              id="first-example-of-first-expression"
-              name="expression[expression_items_attributes][0][examples_attributes][0][content]"
-              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
-              v-model="firstExpressionDetails.firstExample" />
-          </li>
-          <li class="pt-1.5">
-            <label for="second-example-of-first-expression">{{
-              $t('form.secondExample')
-            }}</label>
-            <input
-              v-if="exampleId.firstExpression[1]"
-              type="hidden"
-              name="expression[expression_items_attributes][0][examples_attributes][1][id]"
-              :value="exampleId.firstExpression[1].secondExample" />
-            <input
-              id="second-example-of-first-expression"
-              name="expression[expression_items_attributes][0][examples_attributes][1][content]"
-              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
-              v-model="firstExpressionDetails.secondExample" />
-          </li>
-          <li class="pt-1.5">
-            <label for="third-example-of-first-expression">{{
-              $t('form.thirdExample')
-            }}</label>
-            <input
-              v-if="exampleId.firstExpression[2]"
-              type="hidden"
-              name="expression[expression_items_attributes][0][examples_attributes][2][id]"
-              :value="exampleId.firstExpression[2].thirdExample" />
-            <input
-              id="third-example-of-first-expression"
-              name="expression[expression_items_attributes][0][examples_attributes][2][content]"
-              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
-              v-model="firstExpressionDetails.thirdExample" />
-          </li>
-        </ul>
+          :value="firstExpressionDetails.explanation" />
+        <input
+          v-if="exampleId.firstExpression[0]"
+          type="hidden"
+          name="expression[expression_items_attributes][0][examples_attributes][0][id]"
+          :value="exampleId.firstExpression[0].firstExample" />
+        <input
+          type="hidden"
+          name="expression[expression_items_attributes][0][examples_attributes][0][content]"
+          :value="firstExpressionDetails.firstExample" />
+        <input
+          v-if="exampleId.firstExpression[1]"
+          type="hidden"
+          name="expression[expression_items_attributes][0][examples_attributes][1][id]"
+          :value="exampleId.firstExpression[1].secondExample" />
+        <input
+          type="hidden"
+          name="expression[expression_items_attributes][0][examples_attributes][1][content]"
+          :value="firstExpressionDetails.secondExample" />
+        <input
+          v-if="exampleId.firstExpression[2]"
+          type="hidden"
+          name="expression[expression_items_attributes][0][examples_attributes][2][id]"
+          :value="exampleId.firstExpression[2].thirdExample" />
+        <input
+          type="hidden"
+          name="expression[expression_items_attributes][0][examples_attributes][2][content]"
+          :value="firstExpressionDetails.thirdExample" />
         <div class="flex flex-row">
           <div class="basis-1/2 text-center">
             <button
@@ -186,8 +188,30 @@
           </div>
           <div class="basis-1/2 text-center">
             <button
+              v-if="secondExpression"
               type="button"
               @click="getThirdPage"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50">
+              {{ $t('form.next') }}
+            </button>
+            <button
+              v-else-if="thirdExpression"
+              type="button"
+              @click="getFourthPage"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50">
+              {{ $t('form.next') }}
+            </button>
+            <button
+              v-else-if="fourthExpression"
+              type="button"
+              @click="getFifthPage"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50">
+              {{ $t('form.next') }}
+            </button>
+            <button
+              v-else-if="fifthExpression"
+              type="button"
+              @click="getSixPage"
               class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50">
               {{ $t('form.next') }}
             </button>
@@ -195,87 +219,82 @@
         </div>
       </div>
       <div v-show="currentPage === 3" class="bg-white p-2 sm:p-5">
-        <h2 class="font-bold text-lg border-b border-lavender-600">
-          {{ secondExpression }}について
-        </h2>
-        <div
-          :class="{ 'text-red-600': explanationError }"
-          class="mt-8 font-semibold">
-          <label for="explanation-of-second-expression">
-            {{ secondExpression }}の意味や前ページで登録した他の英単語 /
-            フレーズ（{{ comparedExpressions }}）との違いを入力してください
-          </label>
-        </div>
-        <textarea
-          id="explanation-of-second-expression"
+        <ExpressionsFormExplanation
+          v-model:explanation="secondExpressionDetails.explanation"
+          v-model:first-example="secondExpressionDetails.firstExample"
+          v-model:second-example="secondExpressionDetails.secondExample"
+          v-model:third-example="secondExpressionDetails.thirdExample"
+          :compared-expressions="comparedExpressions"
+          :explanation-error="explanationError"
+          :expression="secondExpression"></ExpressionsFormExplanation>
+        <input
+          type="hidden"
           name="expression[expression_items_attributes][1][explanation]"
-          rows="3"
-          class="w-full mt-2 h-40 px-2 outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block"
-          v-model="secondExpressionDetails.explanation"
-          :placeholder="$t('form.notice')"></textarea>
-        <p class="pt-10 font-semibold">{{ $t('form.example') }}</p>
-        <ul class="pb-6">
-          <li class="pt-1">
-            <label for="first-example-of-second-expression">{{
-              $t('form.firstExample')
-            }}</label>
-            <input
-              v-if="exampleId.secondExpression[0]"
-              type="hidden"
-              name="expression[expression_items_attributes][1][examples_attributes][0][id]"
-              :value="exampleId.secondExpression[0].firstExample" />
-            <input
-              id="first-example-of-second-expression"
-              name="expression[expression_items_attributes][1][examples_attributes][0][content]"
-              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
-              v-model="secondExpressionDetails.firstExample" />
-          </li>
-          <li class="pt-1.5">
-            <label for="second-example-of-second-expression">{{
-              $t('form.secondExample')
-            }}</label>
-            <input
-              v-if="exampleId.secondExpression[1]"
-              type="hidden"
-              name="expression[expression_items_attributes][1][examples_attributes][1][id]"
-              :value="exampleId.secondExpression[1].secondExample" />
-            <input
-              id="second-example-of-second-expression"
-              name="expression[expression_items_attributes][1][examples_attributes][1][content]"
-              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
-              v-model="secondExpressionDetails.secondExample" />
-          </li>
-          <li class="pt-1.5">
-            <label for="third-example-of-second-expression">{{
-              $t('form.thirdExample')
-            }}</label>
-            <input
-              v-if="exampleId.secondExpression[2]"
-              type="hidden"
-              name="expression[expression_items_attributes][1][examples_attributes][2][id]"
-              :value="exampleId.secondExpression[2].thirdExample" />
-            <input
-              id="third-example-of-second-expression"
-              name="expression[expression_items_attributes][1][examples_attributes][2][content]"
-              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
-              v-model="secondExpressionDetails.thirdExample" />
-          </li>
-        </ul>
+          :value="secondExpressionDetails.explanation" />
+        <input
+          v-if="exampleId.secondExpression[0]"
+          type="hidden"
+          name="expression[expression_items_attributes][1][examples_attributes][0][id]"
+          :value="exampleId.secondExpression[0].firstExample" />
+        <input
+          type="hidden"
+          name="expression[expression_items_attributes][1][examples_attributes][0][content]"
+          :value="secondExpressionDetails.firstExample" />
+        <input
+          v-if="exampleId.secondExpression[1]"
+          type="hidden"
+          name="expression[expression_items_attributes][1][examples_attributes][1][id]"
+          :value="exampleId.secondExpression[1].secondExample" />
+        <input
+          type="hidden"
+          name="expression[expression_items_attributes][1][examples_attributes][1][content]"
+          :value="secondExpressionDetails.secondExample" />
+        <input
+          v-if="exampleId.secondExpression[2]"
+          type="hidden"
+          name="expression[expression_items_attributes][1][examples_attributes][2][id]"
+          :value="exampleId.secondExpression[2].thirdExample" />
+        <input
+          type="hidden"
+          name="expression[expression_items_attributes][1][examples_attributes][2][content]"
+          :value="secondExpressionDetails.thirdExample" />
         <div class="flex flex-row">
           <div class="basis-1/2 text-center">
             <button
+              v-if="firstExpression"
               type="button"
               class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
               @click="getSecondPage">
               {{ $t('back') }}
             </button>
+            <button
+              v-else
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getFirstPage">
+              {{ $t('back') }}
+            </button>
           </div>
           <div class="basis-1/2 text-center">
             <button
-              v-if="expressionsAmount > 2"
+              v-if="thirdExpression"
               type="button"
               class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
               @click="getFourthPage">
+              {{ $t('form.next') }}
+            </button>
+            <button
+              v-else-if="fourthExpression"
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getFifthPage">
+              {{ $t('form.next') }}
+            </button>
+            <button
+              v-else-if="fifthExpression"
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getSixPage">
               {{ $t('form.next') }}
             </button>
             <button
@@ -289,87 +308,82 @@
         </div>
       </div>
       <div v-show="currentPage === 4" class="bg-white p-2 sm:p-5">
-        <h2 class="font-bold text-lg border-b border-lavender-600">
-          {{ thirdExpression }}について
-        </h2>
-        <div
-          :class="{ 'text-red-600': explanationError }"
-          class="mt-8 font-semibold">
-          <label for="explanation-of-third-expression">
-            {{ thirdExpression }}の意味や前ページで登録した他の英単語 /
-            フレーズ（{{ comparedExpressions }}）との違いを入力してください
-          </label>
-        </div>
-        <textarea
-          id="explanation-of-third-expression"
+        <ExpressionsFormExplanation
+          v-model:explanation="thirdExpressionDetails.explanation"
+          v-model:first-example="thirdExpressionDetails.firstExample"
+          v-model:second-example="thirdExpressionDetails.secondExample"
+          v-model:third-example="thirdExpressionDetails.thirdExample"
+          :compared-expressions="comparedExpressions"
+          :explanation-error="explanationError"
+          :expression="thirdExpression"></ExpressionsFormExplanation>
+        <input
+          type="hidden"
           name="expression[expression_items_attributes][2][explanation]"
-          rows="3"
-          class="w-full mt-2 h-40 px-2 outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block"
-          v-model="thirdExpressionDetails.explanation"
-          :placeholder="$t('form.notice')"></textarea>
-        <p class="pt-10 font-semibold">{{ $t('form.example') }}</p>
-        <ul class="pb-6">
-          <li class="pt-1">
-            <label for="first-example-of-third-expression">{{
-              $t('form.firstExample')
-            }}</label>
-            <input
-              v-if="exampleId.thirdExpression[0]"
-              type="hidden"
-              name="expression[expression_items_attributes][2][examples_attributes][0][id]"
-              :value="exampleId.thirdExpression[0].firstExample" />
-            <input
-              id="first-example-of-third-expression"
-              name="expression[expression_items_attributes][2][examples_attributes][0][content]"
-              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
-              v-model="thirdExpressionDetails.firstExample" />
-          </li>
-          <li class="pt-1.5">
-            <label for="second-example-of-third-expression">{{
-              $t('form.secondExample')
-            }}</label>
-            <input
-              v-if="exampleId.thirdExpression[1]"
-              type="hidden"
-              name="expression[expression_items_attributes][2][examples_attributes][1][id]"
-              :value="exampleId.thirdExpression[1].secondExample" />
-            <input
-              id="second-example-of-third-expression"
-              name="expression[expression_items_attributes][2][examples_attributes][1][content]"
-              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
-              v-model="thirdExpressionDetails.secondExample" />
-          </li>
-          <li class="pt-1.5">
-            <label for="third-example-of-third-expression">{{
-              $t('form.thirdExample')
-            }}</label>
-            <input
-              v-if="exampleId.thirdExpression[2]"
-              type="hidden"
-              name="expression[expression_items_attributes][2][examples_attributes][2][id]"
-              :value="exampleId.thirdExpression[2].thirdExample" />
-            <input
-              id="third-example-of-third-expression"
-              name="expression[expression_items_attributes][2][examples_attributes][2][content]"
-              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
-              v-model="thirdExpressionDetails.thirdExample" />
-          </li>
-        </ul>
+          :value="thirdExpressionDetails.explanation" />
+        <input
+          v-if="exampleId.thirdExpression[0]"
+          type="hidden"
+          name="expression[expression_items_attributes][2][examples_attributes][0][id]"
+          :value="exampleId.thirdExpression[0].firstExample" />
+        <input
+          type="hidden"
+          name="expression[expression_items_attributes][2][examples_attributes][0][content]"
+          :value="thirdExpressionDetails.firstExample" />
+        <input
+          v-if="exampleId.thirdExpression[1]"
+          type="hidden"
+          name="expression[expression_items_attributes][2][examples_attributes][1][id]"
+          :value="exampleId.thirdExpression[1].secondExample" />
+        <input
+          type="hidden"
+          name="expression[expression_items_attributes][2][examples_attributes][1][content]"
+          :value="thirdExpressionDetails.secondExample" />
+        <input
+          v-if="exampleId.thirdExpression[2]"
+          type="hidden"
+          name="expression[expression_items_attributes][2][examples_attributes][2][id]"
+          :value="exampleId.thirdExpression[2].thirdExample" />
+        <input
+          type="hidden"
+          name="expression[expression_items_attributes][2][examples_attributes][2][content]"
+          :value="thirdExpressionDetails.thirdExample" />
         <div class="flex flex-row">
           <div class="basis-1/2 text-center">
             <button
+              v-if="secondExpression"
               type="button"
               class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
               @click="getThirdPage">
               {{ $t('back') }}
             </button>
+            <button
+              v-else-if="firstExpression"
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getSecondPage">
+              {{ $t('back') }}
+            </button>
+            <button
+              v-else
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getFirstPage">
+              {{ $t('back') }}
+            </button>
           </div>
           <div class="basis-1/2 text-center">
             <button
-              v-if="expressionsAmount > 3"
+              v-if="fourthExpression"
               type="button"
               class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
               @click="getFifthPage">
+              {{ $t('form.next') }}
+            </button>
+            <button
+              v-else-if="fifthExpression"
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getSixPage">
               {{ $t('form.next') }}
             </button>
             <button
@@ -383,78 +397,73 @@
         </div>
       </div>
       <div v-show="currentPage === 5" class="bg-white p-2 sm:p-5">
-        <h2 class="font-bold text-lg border-b border-lavender-600">
-          {{ fourthExpression }}について
-        </h2>
-        <div
-          :class="{ 'text-red-600': explanationError }"
-          class="mt-8 font-semibold">
-          <label for="explanation-of-fourth-expression"
-            >{{ fourthExpression }}の意味や前ページで登録した他の英単語 /
-            フレーズ（{{ comparedExpressions }}）との違いを入力してください
-          </label>
-        </div>
-        <textarea
-          id="explanation-of-fourth-expression"
+        <ExpressionsFormExplanation
+          v-model:explanation="fourthExpressionDetails.explanation"
+          v-model:first-example="fourthExpressionDetails.firstExample"
+          v-model:second-example="fourthExpressionDetails.secondExample"
+          v-model:third-example="fourthExpressionDetails.thirdExample"
+          :compared-expressions="comparedExpressions"
+          :explanation-error="explanationError"
+          :expression="fourthExpression"></ExpressionsFormExplanation>
+        <input
+          type="hidden"
           name="expression[expression_items_attributes][3][explanation]"
-          rows="3"
-          class="w-full mt-2 h-40 px-2 outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block"
-          v-model="fourthExpressionDetails.explanation"
-          :placeholder="$t('form.notice')"></textarea>
-        <p class="pt-10 font-semibold">{{ $t('form.example') }}</p>
-        <ul class="pb-6">
-          <li class="pt-1">
-            <label for="first-example-of-fourth-expression">{{
-              $t('form.firstExample')
-            }}</label>
-            <input
-              v-if="exampleId.fourthExpression[0]"
-              type="hidden"
-              name="expression[expression_items_attributes][3][examples_attributes][0][id]"
-              :value="exampleId.fourthExpression[0].firstExample" />
-            <input
-              id="first-example-of-fourth-expression"
-              name="expression[expression_items_attributes][3][examples_attributes][0][content]"
-              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
-              v-model="fourthExpressionDetails.firstExample" />
-          </li>
-          <li class="pt-1.5">
-            <label for="second-example-of-fourth-expression">{{
-              $t('form.secondExample')
-            }}</label>
-            <input
-              v-if="exampleId.fourthExpression[1]"
-              type="hidden"
-              name="expression[expression_items_attributes][3][examples_attributes][1][id]"
-              :value="exampleId.fourthExpression[1].secondExample" />
-            <input
-              id="second-example-of-fourth-expression"
-              name="expression[expression_items_attributes][3][examples_attributes][1][content]"
-              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
-              v-model="fourthExpressionDetails.secondExample" />
-          </li>
-          <li class="pt-1.5">
-            <label for="third-example-of-fourth-expression">{{
-              $t('form.thirdExample')
-            }}</label>
-            <input
-              v-if="exampleId.fourthExpression[2]"
-              type="hidden"
-              name="expression[expression_items_attributes][3][examples_attributes][2][id]"
-              :value="exampleId.fourthExpression[2].thirdExample" />
-            <input
-              id="third-example-of-fourth-expression"
-              name="expression[expression_items_attributes][3][examples_attributes][2][content]"
-              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
-              v-model="fourthExpressionDetails.thirdExample" />
-          </li>
-        </ul>
+          :value="fourthExpressionDetails.explanation" />
+        <input
+          v-if="exampleId.fourthExpression[0]"
+          type="hidden"
+          name="expression[expression_items_attributes][3][examples_attributes][0][id]"
+          :value="exampleId.fourthExpression[0].firstExample" />
+        <input
+          type="hidden"
+          name="expression[expression_items_attributes][3][examples_attributes][0][content]"
+          :value="fourthExpressionDetails.firstExample" />
+        <input
+          v-if="exampleId.fourthExpression[1]"
+          type="hidden"
+          name="expression[expression_items_attributes][3][examples_attributes][1][id]"
+          :value="exampleId.fourthExpression[1].secondExample" />
+        <input
+          type="hidden"
+          name="expression[expression_items_attributes][3][examples_attributes][1][content]"
+          :value="fourthExpressionDetails.secondExample" />
+        <input
+          v-if="exampleId.fourthExpression[2]"
+          type="hidden"
+          name="expression[expression_items_attributes][3][examples_attributes][2][id]"
+          :value="exampleId.fourthExpression[2].thirdExample" />
+        <input
+          type="hidden"
+          name="expression[expression_items_attributes][3][examples_attributes][2][content]"
+          :value="fourthExpressionDetails.thirdExample" />
         <div class="flex flex-row">
           <div class="basis-1/2 text-center">
             <button
+              v-if="thirdExpression"
               type="button"
               class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
               @click="getFourthPage">
+              {{ $t('back') }}
+            </button>
+            <button
+              v-else-if="secondExpression"
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getThirdPage">
+              {{ $t('back') }}
+            </button>
+            <button
+              v-else-if="firstExpression"
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getSecondPage">
+              {{ $t('back') }}
+            </button>
+            <button
+              v-else
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getFirstPage">
               {{ $t('back') }}
             </button>
           </div>
@@ -477,78 +486,73 @@
         </div>
       </div>
       <div v-show="currentPage === 6" class="bg-white p-2 sm:p-5">
-        <h2 class="font-bold text-lg border-b border-lavender-600">
-          {{ fifthExpression }}について
-        </h2>
-        <div
-          :class="{ 'text-red-600': explanationError }"
-          class="mt-8 font-semibold">
-          <label for="explanation-of-fifth-expression"
-            >{{ fifthExpression }}の意味や前ページで登録した他の英単語 /
-            フレーズ（{{ comparedExpressions }}）との違いを入力してください
-          </label>
-        </div>
-        <textarea
-          id="explanation-of-fifth-expression"
+        <ExpressionsFormExplanation
+          v-model:explanation="fifthExpressionDetails.explanation"
+          v-model:first-example="fifthExpressionDetails.firstExample"
+          v-model:second-example="fifthExpressionDetails.secondExample"
+          v-model:third-example="fifthExpressionDetails.thirdExample"
+          :compared-expressions="comparedExpressions"
+          :explanation-error="explanationError"
+          :expression="fifthExpression"></ExpressionsFormExplanation>
+        <input
+          type="hidden"
           name="expression[expression_items_attributes][4][explanation]"
-          rows="3"
-          class="w-full mt-2 h-40 px-2 outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block"
-          v-model="fifthExpressionDetails.explanation"
-          :placeholder="$t('form.notice')"></textarea>
-        <p class="pt-10 font-semibold">{{ $t('form.example') }}</p>
-        <ul class="pb-6">
-          <li class="pt-1">
-            <label for="first-example-of-fifth-expression">{{
-              $t('form.firstExample')
-            }}</label>
-            <input
-              v-if="exampleId.fifthExpression[0]"
-              type="hidden"
-              name="expression[expression_items_attributes][4][examples_attributes][0][id]"
-              :value="exampleId.fifthExpression[0].firstExample" />
-            <input
-              id="first-example-of-fifth-expression"
-              name="expression[expression_items_attributes][4][examples_attributes][0][content]"
-              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
-              v-model="fifthExpressionDetails.firstExample" />
-          </li>
-          <li class="pt-1.5">
-            <label for="second-example-of-fifth-expression">{{
-              $t('form.secondExample')
-            }}</label>
-            <input
-              v-if="exampleId.fifthExpression[1]"
-              type="hidden"
-              name="expression[expression_items_attributes][4][examples_attributes][1][id]"
-              :value="exampleId.fifthExpression[1].secondExample" />
-            <input
-              id="second-example-of-fifth-expression"
-              name="expression[expression_items_attributes][4][examples_attributes][1][content]"
-              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
-              v-model="fifthExpressionDetails.secondExample" />
-          </li>
-          <li class="pt-1.5">
-            <label for="third-example-of-fifth-expression">{{
-              $t('form.thirdExample')
-            }}</label>
-            <input
-              v-if="exampleId.fifthExpression[2]"
-              type="hidden"
-              name="expression[expression_items_attributes][4][examples_attributes][2][id]"
-              :value="exampleId.fifthExpression[2].thirdExample" />
-            <input
-              id="third-example-of-fifth-expression"
-              name="expression[expression_items_attributes][4][examples_attributes][2][content]"
-              class="w-full outline outline-offset-0 outline-1 outline-neutral-400 focus:outline-blue-600 block pl-2 py-1"
-              v-model="fifthExpressionDetails.thirdExample" />
-          </li>
-        </ul>
+          :value="fifthExpressionDetails.explanation" />
+        <input
+          v-if="exampleId.fifthExpression[0]"
+          type="hidden"
+          name="expression[expression_items_attributes][4][examples_attributes][0][id]"
+          :value="exampleId.fifthExpression[0].firstExample" />
+        <input
+          type="hidden"
+          name="expression[expression_items_attributes][4][examples_attributes][0][content]"
+          :value="fifthExpressionDetails.firstExample" />
+        <input
+          v-if="exampleId.fifthExpression[1]"
+          type="hidden"
+          name="expression[expression_items_attributes][4][examples_attributes][1][id]"
+          :value="exampleId.fifthExpression[1].secondExample" />
+        <input
+          type="hidden"
+          name="expression[expression_items_attributes][4][examples_attributes][1][content]"
+          :value="fifthExpressionDetails.secondExample" />
+        <input
+          v-if="exampleId.fifthExpression[2]"
+          type="hidden"
+          name="expression[expression_items_attributes][4][examples_attributes][2][id]"
+          :value="exampleId.fifthExpression[2].thirdExample" />
+        <input
+          type="hidden"
+          name="expression[expression_items_attributes][4][examples_attributes][2][content]"
+          :value="fifthExpressionDetails.thirdExample" />
         <div class="flex flex-row">
           <div class="basis-1/2 text-center">
             <button
+              v-if="fourthExpression"
               type="button"
               class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
               @click="getFifthPage">
+              {{ $t('back') }}
+            </button>
+            <button
+              v-else-if="thirdExpression"
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getFourthPage">
+              {{ $t('back') }}
+            </button>
+            <button
+              v-else-if="secondExpression"
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getThirdPage">
+              {{ $t('back') }}
+            </button>
+            <button
+              v-else-if="firstExpression"
+              type="button"
+              class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
+              @click="getSecondPage">
               {{ $t('back') }}
             </button>
           </div>
@@ -647,10 +651,12 @@
 <script>
 import VueTagsInput from '@sipec/vue3-tags-input'
 import ExpressionsFormStepNavigation from './expressions-form-step-navigation.vue'
+import ExpressionsFormExplanation from './expressions-form-explanation.vue'
 
 export default {
   name: 'ExpressionsForm',
   components: {
+    ExpressionsFormExplanation,
     ExpressionsFormStepNavigation,
     VueTagsInput
   },
@@ -779,8 +785,8 @@ export default {
       ]
       expressions.forEach((expression) => {
         if (expression) this.expressionsList.push(expression)
-        this.expressionsAmount = this.expressionsList.length
       })
+      this.expressionsAmount = this.expressionsList.length
     },
     isExplanationError(explanation) {
       this.explanationError = false
@@ -789,6 +795,17 @@ export default {
     getFirstPage() {
       this.previousPage = this.currentPage
       this.currentPage = 1
+    },
+    checkExpressionErrorAndCompletedStep2() {
+      const previousExpressionsAmount = this.expressionsAmount
+      this.calculateExpressionsAmount()
+      if (this.expressionsAmount < 2) this.expressionsError = true
+      if (
+        this.completedStep2 &&
+        this.expressionsAmount !== previousExpressionsAmount
+      ) {
+        this.completedStep2 = false
+      }
     },
     getSecondPage() {
       this.previousPage = this.currentPage
@@ -802,27 +819,21 @@ export default {
         this.fifthExpression
       ])
       if (this.currentPage === 1) {
-        if (this.firstExpression === '' || this.secondExpression === '')
-          this.expressionsError = true
-        const previousExpressionsAmount = this.expressionsAmount
-        this.calculateExpressionsAmount()
-        if (
-          this.completedStep2 &&
-          this.expressionsAmount !== previousExpressionsAmount
-        ) {
-          this.completedStep2 = false
-        }
+        this.checkExpressionErrorAndCompletedStep2()
       }
       if (!this.expressionsError) this.currentPage = 2
     },
     getThirdPage() {
       this.previousPage = this.currentPage
+      this.expressionsError = false
       if (this.currentPage === 2) {
         this.isExplanationError(this.firstExpressionDetails.explanation)
       } else if (this.currentPage === 4) {
         this.explanationError = false
+      } else if (this.currentPage === 1) {
+        this.checkExpressionErrorAndCompletedStep2()
       }
-      if (!this.explanationError) {
+      if (!this.explanationError && !this.expressionsError) {
         this.comparedExpressions = ''
         this.getComparedExpressions([
           this.firstExpression,
@@ -835,12 +846,15 @@ export default {
     },
     getFourthPage() {
       this.previousPage = this.currentPage
+      this.expressionsError = false
       if (this.currentPage === 3) {
         this.isExplanationError(this.secondExpressionDetails.explanation)
       } else if (this.currentPage === 5) {
         this.explanationError = false
+      } else if (this.currentPage === 1) {
+        this.checkExpressionErrorAndCompletedStep2()
       }
-      if (!this.explanationError) {
+      if (!this.explanationError && !this.expressionsError) {
         this.comparedExpressions = ''
         this.getComparedExpressions([
           this.firstExpression,
@@ -853,12 +867,15 @@ export default {
     },
     getFifthPage() {
       this.previousPage = this.currentPage
+      this.expressionsError = false
       if (this.currentPage === 4) {
         this.isExplanationError(this.thirdExpressionDetails.explanation)
       } else if (this.currentPage === 6) {
         this.explanationError = false
+      } else if (this.currentPage === 1) {
+        this.checkExpressionErrorAndCompletedStep2()
       }
-      if (!this.explanationError) {
+      if (!this.explanationError && !this.expressionsError) {
         this.comparedExpressions = ''
         this.getComparedExpressions([
           this.firstExpression,
@@ -871,8 +888,9 @@ export default {
     },
     getSixPage() {
       this.previousPage = this.currentPage
-      if (this.currentPage === 5)
+      if (this.currentPage === 5) {
         this.isExplanationError(this.fourthExpressionDetails.explanation)
+      }
       if (!this.explanationError) {
         this.comparedExpressions = ''
         this.getComparedExpressions([
@@ -954,5 +972,3 @@ export default {
   }
 }
 </script>
-
-<style scoped></style>
