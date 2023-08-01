@@ -270,12 +270,60 @@ RSpec.describe 'Expressions' do
     end
 
     describe 'words and phrases' do
-      it 'show validation error if only one word is given' do
+      it 'show validation error if only one word is given on 英単語 / フレーズ１' do
         fill_in('英単語 / フレーズ１', with: 'word')
         click_button '次へ'
         expect(page).to have_css '.text-red-600'
         expect(page).to have_content '英単語又はフレーズを２つ以上入力してください'
-        expect(page).not_to have_content '{word}の意味や前ページで登録した他の英単語 / フレーズ（{comparison}）との違いを入力してください'
+        expect(page).not_to have_content 'wordについて'
+      end
+
+      it 'show validation error if only one word is given on 英単語 / フレーズ２' do
+        fill_in('英単語 / フレーズ２', with: 'word')
+        click_button '次へ'
+        expect(page).to have_css '.text-red-600'
+        expect(page).to have_content '英単語又はフレーズを２つ以上入力してください'
+        expect(page).not_to have_content 'wordについて'
+        fill_in('英単語 / フレーズ３(任意)', with: 'word2')
+        click_button '次へ'
+        expect(page).not_to have_content '英単語又はフレーズを２つ以上入力してください'
+        expect(page).to have_content 'wordについて'
+      end
+
+      it 'show validation error if only one word is given on 英単語 / フレーズ３' do
+        fill_in('英単語 / フレーズ３(任意)', with: 'word')
+        click_button '次へ'
+        expect(page).to have_css '.text-red-600'
+        expect(page).to have_content '英単語又はフレーズを２つ以上入力してください'
+        expect(page).not_to have_content 'wordについて'
+        fill_in('英単語 / フレーズ４(任意)', with: 'word2')
+        click_button '次へ'
+        expect(page).not_to have_content '英単語又はフレーズを２つ以上入力してください'
+        expect(page).to have_content 'wordについて'
+      end
+
+      it 'show validation error if only one word is given on 英単語 / フレーズ４' do
+        fill_in('英単語 / フレーズ４(任意)', with: 'word')
+        click_button '次へ'
+        expect(page).to have_css '.text-red-600'
+        expect(page).to have_content '英単語又はフレーズを２つ以上入力してください'
+        expect(page).not_to have_content 'wordについて'
+        fill_in('英単語 / フレーズ５(任意)', with: 'word2')
+        click_button '次へ'
+        expect(page).not_to have_content '英単語又はフレーズを２つ以上入力してください'
+        expect(page).to have_content 'wordについて'
+      end
+
+      it 'show validation error if only one word is given on 英単語 / フレーズ５' do
+        fill_in('英単語 / フレーズ５(任意)', with: 'word')
+        click_button '次へ'
+        expect(page).to have_css '.text-red-600'
+        expect(page).to have_content '英単語又はフレーズを２つ以上入力してください'
+        expect(page).not_to have_content 'wordについて'
+        fill_in('英単語 / フレーズ４(任意)', with: 'word2')
+        click_button '次へ'
+        expect(page).not_to have_content '英単語又はフレーズを２つ以上入力してください'
+        expect(page).to have_content 'word2について'
       end
 
       it 'show validation error if no words are given' do

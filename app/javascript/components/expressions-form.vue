@@ -128,9 +128,9 @@
               {{ $t('form.next') }}
             </button>
             <button
-              v-else-if="fifthExpression"
+              v-else
               type="button"
-              @click="getSixPage"
+              @click="expressionsError = true"
               class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50">
               {{ $t('form.next') }}
             </button>
@@ -796,6 +796,17 @@ export default {
       this.previousPage = this.currentPage
       this.currentPage = 1
     },
+    checkExpressionErrorAndCompletedStep2() {
+      const previousExpressionsAmount = this.expressionsAmount
+      this.calculateExpressionsAmount()
+      if (this.expressionsAmount < 2) this.expressionsError = true
+      if (
+        this.completedStep2 &&
+        this.expressionsAmount !== previousExpressionsAmount
+      ) {
+        this.completedStep2 = false
+      }
+    },
     getSecondPage() {
       this.previousPage = this.currentPage
       this.explanationError = false
@@ -808,26 +819,21 @@ export default {
         this.fifthExpression
       ])
       if (this.currentPage === 1) {
-        const previousExpressionsAmount = this.expressionsAmount
-        this.calculateExpressionsAmount()
-        if (this.expressionsAmount < 2) this.expressionsError = true
-        if (
-          this.completedStep2 &&
-          this.expressionsAmount !== previousExpressionsAmount
-        ) {
-          this.completedStep2 = false
-        }
+        this.checkExpressionErrorAndCompletedStep2()
       }
       if (!this.expressionsError) this.currentPage = 2
     },
     getThirdPage() {
       this.previousPage = this.currentPage
+      this.expressionsError = false
       if (this.currentPage === 2) {
         this.isExplanationError(this.firstExpressionDetails.explanation)
       } else if (this.currentPage === 4) {
         this.explanationError = false
+      } else if (this.currentPage === 1) {
+        this.checkExpressionErrorAndCompletedStep2()
       }
-      if (!this.explanationError) {
+      if (!this.explanationError && !this.expressionsError) {
         this.comparedExpressions = ''
         this.getComparedExpressions([
           this.firstExpression,
@@ -840,12 +846,15 @@ export default {
     },
     getFourthPage() {
       this.previousPage = this.currentPage
+      this.expressionsError = false
       if (this.currentPage === 3) {
         this.isExplanationError(this.secondExpressionDetails.explanation)
       } else if (this.currentPage === 5) {
         this.explanationError = false
+      } else if (this.currentPage === 1) {
+        this.checkExpressionErrorAndCompletedStep2()
       }
-      if (!this.explanationError) {
+      if (!this.explanationError && !this.expressionsError) {
         this.comparedExpressions = ''
         this.getComparedExpressions([
           this.firstExpression,
@@ -858,12 +867,15 @@ export default {
     },
     getFifthPage() {
       this.previousPage = this.currentPage
+      this.expressionsError = false
       if (this.currentPage === 4) {
         this.isExplanationError(this.thirdExpressionDetails.explanation)
       } else if (this.currentPage === 6) {
         this.explanationError = false
+      } else if (this.currentPage === 1) {
+        this.checkExpressionErrorAndCompletedStep2()
       }
-      if (!this.explanationError) {
+      if (!this.explanationError && !this.expressionsError) {
         this.comparedExpressions = ''
         this.getComparedExpressions([
           this.firstExpression,
@@ -876,8 +888,9 @@ export default {
     },
     getSixPage() {
       this.previousPage = this.currentPage
-      if (this.currentPage === 5)
+      if (this.currentPage === 5) {
         this.isExplanationError(this.fourthExpressionDetails.explanation)
+      }
       if (!this.explanationError) {
         this.comparedExpressions = ''
         this.getComparedExpressions([
