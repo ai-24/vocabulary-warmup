@@ -1,3 +1,5 @@
+- title '間違いやすい英単語やフレーズの学習をサポートするツール'
+
 .welcome.bg-white.py-16.mx-auto
   p.text-green-700.pl-8.pb-5.font-bold.text-lg.max-w-800.mx-auto
     = notice
@@ -12,10 +14,11 @@
 
   div class=error_or_not(alert)
     .max-w-800.mx-auto
-      h1.font-bold.px-5.pb-14.md:pl-10.max-w-lg.text-2xl.leading-9
-        = t('.target')
-        i class="fa-solid fa-earth-asia pr-0.5"
-        i class="fa-regular fa-comments"
+      .flex.justify-center
+        h1.font-bold.mx-5.text-2xl.leading-9
+          = t('.target')
+      .flex.justify-center.my-5
+        = image_tag('word-warmup.svg')
 
     .py-14.bg-lavender-50.flex.justify-center
       .max-w-800
