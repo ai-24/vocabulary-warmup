@@ -37,17 +37,29 @@ https://word-warmup.fly.dev/
 - Fly.io
 
 ## 環境構築
+### セットアップ
 ```
 $ git clone https://github.com/ai-24/word-warmup.git
 $ cd word-warmup
 $ bin/setup
 ```
 
+### Credentials
+- **Google**
+  - client_id・・・Google CloudのクライアントID
+  - client_secret・・・Google Cloudのクライアントシークレット
+
 ## 起動
-```$ bin/dev```
+```
+$ bin/dev
+```
 
 ## テスト
-```$ bundle exec rspec```
+```
+$ bundle exec rspec
+```
 
 ## Lint
-```$ bin/lint```
+```
+$ bin/lint
+```
