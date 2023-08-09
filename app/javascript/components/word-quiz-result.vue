@@ -23,11 +23,14 @@
         class="w-4 h-4"
         v-model="isCheckedAllToBookmark"
         @change="changeStatus('bookmark')" />
-      <label for="move-to-bookmark" class="font-semibold pl-2">{{
-        $t('quiz.result.bookmark')
-      }}</label>
+      <label
+        for="move-to-bookmark"
+        class="font-semibold pl-2 hover:cursor-pointer"
+        >{{ $t('quiz.result.bookmark') }}</label
+      >
       <details class="my-1 mx-auto sm:w-96 bg-white px-3 rounded-md py-0.5">
-        <summary class="hover:cursor-pointer text-sm text-center">
+        <summary
+          class="hover:cursor-pointer hover:opacity-70 text-sm text-center">
           {{ $t('quiz.result.bookmarkList') }}
         </summary>
         <ul class="list-of-wrong-answers border-t border-lavender-600">
@@ -60,11 +63,14 @@
         class="w-4 h-4"
         v-model="isCheckedAllToMemorisedList"
         @change="changeStatus('memorisedList')" />
-      <label for="move-to-memorised-list" class="font-semibold pl-2">{{
-        $t('quiz.result.moveToMemorisedWordsList')
-      }}</label>
+      <label
+        for="move-to-memorised-list"
+        class="font-semibold pl-2 hover:cursor-pointer"
+        >{{ $t('quiz.result.moveToMemorisedWordsList') }}</label
+      >
       <details class="mt-1 mx-auto sm:w-96 bg-white px-3 rounded-md py-0.5">
-        <summary class="hover:cursor-pointer text-sm text-center">
+        <summary
+          class="hover:cursor-pointer hover:opacity-70 text-sm text-center">
           {{ $t('quiz.result.memorisedWordsList') }}
         </summary>
         <ul class="list-of-correct-answers border-t border-lavender-600">
@@ -106,7 +112,7 @@
   <details
     :class="{ 'mt-5': !movableExpressionExists }"
     class="mb-12 py-1 px-4 border-2 border-lavender-800 rounded-md">
-    <summary class="hover:cursor-pointer">
+    <summary class="hover:cursor-pointer hover:opacity-70">
       {{ $t('quiz.result.showUserAnswers') }}
     </summary>
     <ul class="user-answer-list border-t border-lavender-600 py-2">
