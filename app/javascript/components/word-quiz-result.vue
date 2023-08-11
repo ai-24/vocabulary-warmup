@@ -270,6 +270,34 @@ export default {
         this.toast.error('覚えた語彙リストに保存できませんでした')
       }
     },
+    showToastOfBookmarkAndMemorisedList(warning) {
+      if (this.failure.length === 2) {
+        this.toast.error('ブックマーク・覚えた語彙リストに保存できませんでした')
+      } else if (this.success.length === 2) {
+        this.isSaved = true
+        this.toast.success(
+          `ブックマーク・覚えた語彙リストに保存しました！${warning}`
+        )
+      } else if (
+        this.failure[0] === 'bookmarked_expressions' &&
+        this.success[0] === 'memorised_expressions'
+      ) {
+        this.isSavedMemorisedList = true
+        this.checkedContentsToMemorisedList = []
+        this.toast.warning(
+          `覚えた語彙リストに保存しました${warning}がブックマークは出来ませんでした`
+        )
+      } else if (
+        this.failure[0] === 'memorised_expressions' &&
+        this.success[0] === 'bookmarked_expressions'
+      ) {
+        this.isSavedBookmark = true
+        this.checkedContentsToBookmark = []
+        this.toast.warning(
+          `英単語・フレーズをブックマークしました${warning}が覚えた語彙リストには保存できませんでした`
+        )
+      }
+    },
     checkResponse(response) {
       const bookmark = response.url.match(/bookmarked_expressions$/g)
       const memorisedList = response.url.match(/memorised_expressions$/g)
@@ -295,6 +323,12 @@ export default {
         ? '\n(存在が確認できなかった英単語・フレーズを除く)'
         : ''
     },
+    showResult(response) {
+      this.checkResponse(response)
+      if (this.success.length > 0) this.isSaved = true
+      this.showToast()
+      this.resetCheckResponse()
+    },
     save() {
       if (
         this.checkedContentsToBookmark.length > 0 &&
@@ -314,34 +348,7 @@ export default {
             this.checkResponse(response)
           })
           const warning = this.createWarning()
-          if (this.failure.length === 2) {
-            this.toast.error(
-              'ブックマーク・覚えた語彙リストに保存できませんでした'
-            )
-          } else if (this.success.length === 2) {
-            this.isSaved = true
-            this.toast.success(
-              `ブックマーク・覚えた語彙リストに保存しました！${warning}`
-            )
-          } else if (
-            this.failure[0] === 'bookmarked_expressions' &&
-            this.success[0] === 'memorised_expressions'
-          ) {
-            this.isSavedMemorisedList = true
-            this.checkedContentsToMemorisedList = []
-            this.toast.warning(
-              `覚えた語彙リストに保存しました${warning}がブックマークは出来ませんでした`
-            )
-          } else if (
-            this.failure[0] === 'memorised_expressions' &&
-            this.success[0] === 'bookmarked_expressions'
-          ) {
-            this.isSavedBookmark = true
-            this.checkedContentsToBookmark = []
-            this.toast.warning(
-              `英単語・フレーズをブックマークしました${warning}が覚えた語彙リストには保存できませんでした`
-            )
-          }
+          this.showToastOfBookmarkAndMemorisedList(warning)
           this.resetCheckResponse()
         })
       } else if (this.checkedContentsToBookmark.length > 0) {
@@ -349,20 +356,14 @@ export default {
           'bookmarked',
           this.checkedContentsToBookmark
         ).then((response) => {
-          this.checkResponse(response)
-          if (this.success.length > 0) this.isSaved = true
-          this.showToast()
-          this.resetCheckResponse()
+          this.showResult(response)
         })
       } else if (this.checkedContentsToMemorisedList.length > 0) {
         this.createBookmarksOrMemorisedList(
           'memorised',
           this.checkedContentsToMemorisedList
         ).then((response) => {
-          this.checkResponse(response)
-          if (this.success.length > 0) this.isSaved = true
-          this.showToast()
-          this.resetCheckResponse()
+          this.showResult(response)
         })
       }
     },
@@ -447,32 +448,36 @@ export default {
         }
       })
     },
+    createTitle(id) {
+      const contents = []
+      const expressionItems = this.rawQuizResources.filter(
+        (quizResource) => quizResource.expressionId === id
+      )
+      const lastIndex = expressionItems.length - 1
+      expressionItems.forEach((expressionItem, index) => {
+        if (index === lastIndex) {
+          contents.push(`and ${expressionItem.content}`)
+        } else if (expressionItems.length > 2 && index !== lastIndex - 1) {
+          contents.push(`${expressionItem.content},`)
+        } else {
+          contents.push(expressionItem.content)
+        }
+      })
+
+      return contents.join(' ')
+    },
     convertExpressionIds(listOfExpressionIds, type) {
       listOfExpressionIds.forEach((id) => {
-        const contents = []
-
-        const expressionItems = this.rawQuizResources.filter(
-          (quizResource) => quizResource.expressionId === id
-        )
-        const lastIndex = expressionItems.length - 1
-        expressionItems.forEach((expressionItem, index) => {
-          if (index === lastIndex) {
-            contents.push(`and ${expressionItem.content}`)
-          } else if (expressionItems.length > 2 && index !== lastIndex - 1) {
-            contents.push(`${expressionItem.content},`)
-          } else {
-            contents.push(expressionItem.content)
-          }
-        })
+        const contents = this.createTitle(id)
         if (type === 'correct') {
           this.listOfCorrectItems.push({
-            content: contents.join(' '),
-            expressionId: expressionItems[0].expressionId
+            content: contents,
+            expressionId: id
           })
         } else if (type === 'wrong') {
           this.listOfWrongItems.push({
-            content: contents.join(' '),
-            expressionId: expressionItems[0].expressionId
+            content: contents,
+            expressionId: id
           })
         }
       })
