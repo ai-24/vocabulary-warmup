@@ -8,13 +8,7 @@ RSpec.describe 'Expressions' do
     let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
 
     before do
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-      visit '/'
-      within '.button-on-header' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_header '/', user
       has_text? 'ログインしました'
 
       click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
@@ -44,26 +38,14 @@ RSpec.describe 'Expressions' do
     end
 
     it "check if edit button is not on the page that expression's user_id is nil when user logged in" do
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
-
-      visit '/'
-      within '.welcome' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_welcome_page new_user
       expect(page).to have_content 'ログインしました'
       visit '/expressions/1'
       expect(page).not_to have_link '編集'
     end
 
     it 'check if edit button is on the page that expression is owned by user who logged in' do
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-      visit '/'
-      within '.button-on-header' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_header '/', user
       expect(page).to have_content 'ログインしました'
 
       click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
@@ -86,13 +68,7 @@ RSpec.describe 'Expressions' do
     end
 
     it 'check if it is home_path when user access to edit url of expression that user_id is nil when the user logged in' do
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
-
-      visit '/'
-      within '.welcome' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_welcome_page new_user
       expect(page).to have_content 'ログインしました'
 
       visit '/expressions/1/edit'
@@ -104,13 +80,7 @@ RSpec.describe 'Expressions' do
     end
 
     it 'check if it is home_path when user access to edit url of expression that is owned by another user' do
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
-
-      visit '/'
-      within '.welcome' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_welcome_page new_user
       expect(page).to have_content 'ログインしました'
       visit edit_expression_path(first_expression_items[0].expression)
       expect(page).to have_current_path home_path
@@ -122,13 +92,7 @@ RSpec.describe 'Expressions' do
     let!(:user) { FactoryBot.create(:user) }
 
     before do
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-      visit '/'
-      within '.button-on-header' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_header '/', user
       has_text? 'ログインしました'
 
       visit '/expressions/new'
@@ -236,13 +200,7 @@ RSpec.describe 'Expressions' do
       let(:user) { FactoryBot.build(:user) }
 
       before do
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.welcome' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_welcome_page user
         has_text? 'ログインしました'
 
         click_link 'balcony and veranda'
@@ -283,13 +241,7 @@ RSpec.describe 'Expressions' do
       let!(:user) { FactoryBot.create(:user) }
 
       before do
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.button-on-header' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_header '/', user
         has_text? 'ログインしました'
 
         click_link '新規作成'
@@ -330,13 +282,7 @@ RSpec.describe 'Expressions' do
       let(:user) { FactoryBot.build(:user) }
 
       before do
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.welcome' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_welcome_page user
         has_text? 'ログインしました'
 
         click_link 'balcony and veranda'
@@ -393,13 +339,7 @@ RSpec.describe 'Expressions' do
       let(:user) { FactoryBot.build(:user) }
 
       before do
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.welcome' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_welcome_page user
         has_text? 'ログインしました'
 
         click_link 'balcony and veranda'
@@ -460,13 +400,7 @@ RSpec.describe 'Expressions' do
       let!(:user) { FactoryBot.create(:user) }
 
       before do
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.button-on-header' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_header '/', user
         has_text? 'ログインしました'
         click_link '新規作成'
 
@@ -561,13 +495,7 @@ RSpec.describe 'Expressions' do
       let(:user) { FactoryBot.build(:user) }
 
       before do
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.welcome' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_welcome_page user
         has_text? 'ログインしました'
 
         click_link 'balcony and veranda'
@@ -724,13 +652,7 @@ RSpec.describe 'Expressions' do
       end
 
       it 'check if a tag that does not exist in a database is added' do
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.button-on-header' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_header '/', user
         expect(page).to have_content 'ログインしました'
 
         click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
@@ -752,13 +674,7 @@ RSpec.describe 'Expressions' do
       end
 
       it 'check if a tag that exists in a database is added' do
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.button-on-header' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_header '/', user
         expect(page).to have_content 'ログインしました'
 
         click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
@@ -780,13 +696,7 @@ RSpec.describe 'Expressions' do
       end
 
       it 'check if a tag is changed to a new tag that does not exist in a database' do
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.button-on-header' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_header '/', user
         expect(page).to have_content 'ログインしました'
 
         click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
@@ -810,13 +720,7 @@ RSpec.describe 'Expressions' do
       end
 
       it 'check if a tag is changed to a new tag that exists in a database' do
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.button-on-header' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_header '/', user
         expect(page).to have_content 'ログインしました'
 
         click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
@@ -840,13 +744,7 @@ RSpec.describe 'Expressions' do
       end
 
       it 'check if a tag is deleted' do
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.button-on-header' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_header '/', user
         expect(page).to have_content 'ログインしました'
 
         click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
@@ -866,13 +764,7 @@ RSpec.describe 'Expressions' do
       end
 
       it 'check tags order' do
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user2.uid, info: { name: user2.name } })
-
-        visit '/'
-        within '.button-on-header' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_header '/', user2
         expect(page).to have_content 'ログインしました'
 
         click_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}"
@@ -902,13 +794,7 @@ RSpec.describe 'Expressions' do
       FactoryBot.create(:example, expression_item: second_expression_item)
       FactoryBot.create(:example, expression_item: third_expression_item)
 
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-      visit '/'
-      within '.button-on-header' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_header '/', user
     end
 
     it 'check if the third word is deleted' do
@@ -957,13 +843,7 @@ RSpec.describe 'Expressions' do
     before do
       FactoryBot.create(:example, expression_item: first_expression_item)
 
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-      visit '/'
-      within '.button-on-header' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_header '/', user
     end
 
     it 'check if the example is deleted' do
@@ -993,13 +873,7 @@ RSpec.describe 'Expressions' do
     before do
       FactoryBot.create(:example, expression_item: expression_item1)
 
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-      visit '/'
-      within '.button-on-header' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_header '/', user
       has_text? 'ログインしました'
       click_link(
         "#{expression_item1.content}, #{expression_item2.content}, #{expression_item3.content}, #{expression_item4.content} and #{expression_item5.content}"

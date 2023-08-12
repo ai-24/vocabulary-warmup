@@ -25,13 +25,7 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
       FactoryBot.create(:bookmarking, user: user2, expression: fifth_expression_items[0].expression)
       FactoryBot.create(:memorising, user: user1, expression: third_expression_items[0].expression)
 
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user1.uid, info: { name: user1.name } })
-
-      visit '/'
-      within '.button-on-header' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_header '/', user1
     end
 
     it 'check the questions are from bookmarks' do
@@ -219,11 +213,7 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
     before do
       FactoryBot.create_list(:expression_item4, 2, expression: FactoryBot.create(:empty_note, user_id: user.id))
 
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
-
-      visit '/home'
-      click_button 'Sign up/Log in with Google'
+      sign_in_with_header '/home', new_user
       has_text? 'ログインしました'
     end
 
@@ -266,13 +256,7 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
       FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note))
       FactoryBot.create_list(:expression_item2, 3, expression: FactoryBot.create(:empty_note))
 
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
-
-      visit '/'
-      within '.button-on-header' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_header '/', new_user
     end
 
     it 'check if the page is bookmarks list' do

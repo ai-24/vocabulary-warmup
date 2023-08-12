@@ -9,13 +9,8 @@ RSpec.describe 'Bookmarked expressions' do
 
     before do
       FactoryBot.create(:bookmarking, user:, expression: first_expression_items[0].expression)
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
-      visit '/'
-      within '.button-on-header' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_header '/', user
     end
 
     it 'check the link that goes to bookmark list on expression detail page' do
@@ -45,13 +40,7 @@ RSpec.describe 'Bookmarked expressions' do
     let!(:seventh_expression_item) { FactoryBot.create(:expression_item, content: Faker::Job.field, explanation: Faker::Quote.yoda, expression: expression3) }
 
     before do
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-      visit '/'
-      within '.button-on-header' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_header '/', user
     end
 
     context 'when there are no bookmarks' do
@@ -199,14 +188,7 @@ RSpec.describe 'Bookmarked expressions' do
     let(:user) { FactoryBot.build(:user) }
 
     before do
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-      visit '/'
-      within '.button-on-header' do
-        click_button 'Sign up/Log in with Google'
-      end
-
+      sign_in_with_header '/', user
       has_text? 'ログインしました'
 
       visit '/quiz'

@@ -98,13 +98,7 @@ RSpec.describe 'Expressions' do
         FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:empty_note))
       end
 
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
-
-      visit '/'
-      within '.welcome' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_welcome_page new_user
     end
 
     it 'check the header link' do
@@ -184,13 +178,7 @@ RSpec.describe 'Expressions' do
     let!(:five_expression_items) { FactoryBot.create_list(:expression_item4, 5, expression: FactoryBot.create(:empty_note)) }
 
     before do
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
-
-      visit '/'
-      within '.welcome' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_welcome_page new_user
       has_text? 'ログインしました'
       click_link 'クイズに挑戦'
     end
@@ -271,13 +259,7 @@ RSpec.describe 'Expressions' do
       FactoryBot.create(:memorising, user:, expression: first_expression_items[0].expression)
       FactoryBot.create(:memorising, user:, expression: second_expression_items[0].expression)
 
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-      visit '/'
-      within '.welcome' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_welcome_page user
     end
 
     it 'check list of expressions' do
@@ -328,13 +310,7 @@ RSpec.describe 'Expressions' do
       FactoryBot.create(:tagging, expression: expression2)
       FactoryBot.create(:tagging2, expression: expression2)
 
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-      visit '/'
-      within '.welcome' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_welcome_page user
     end
 
     it 'check reset button' do

@@ -12,14 +12,13 @@ RSpec.describe 'Users' do
           FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note))
         end
         FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note))
+      end
 
+      it 'check the アカウント削除 button' do
         OmniAuth.config.test_mode = true
         OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
         visit '/'
-      end
-
-      it 'check the アカウント削除 button' do
         expect(page).not_to have_button 'アカウント削除'
         within '.welcome' do
           click_button 'Sign up/Log in with Google'
@@ -29,9 +28,7 @@ RSpec.describe 'Users' do
       end
 
       it 'check the function of deleting user account' do
-        within '.welcome' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_welcome_page user
         expect(page).to have_content 'ログインしました'
         click_button 'アカウント削除'
         expect do
@@ -61,13 +58,7 @@ RSpec.describe 'Users' do
           FactoryBot.create(:bookmarking, user:, expression: expressions[n + 8][0].expression)
         end
 
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.button-on-header' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_header '/', user
       end
 
       it 'check if user is deleted' do
@@ -106,13 +97,7 @@ RSpec.describe 'Users' do
           FactoryBot.create(:tagging, tag: tag2, expression: expressions[n][0].expression)
         end
 
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.button-on-header' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_header '/', user
       end
 
       it 'check if user is deleted' do
@@ -161,13 +146,7 @@ RSpec.describe 'Users' do
           FactoryBot.create(:bookmarking, user:, expression: expressions[n + 20][0].expression)
         end
 
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.button-on-header' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_header '/', user
       end
 
       it 'check if user is deleted' do

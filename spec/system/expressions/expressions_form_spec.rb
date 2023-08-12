@@ -83,14 +83,7 @@ RSpec.describe 'Expressions' do
       let!(:user) { FactoryBot.create(:user) }
 
       before do
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.button-on-header' do
-          click_button 'Sign up/Log in with Google'
-        end
-
+        sign_in_with_header '/', user
         click_link '新規作成'
 
         fill_in('英単語 / フレーズ１', with: 'on the beach')
@@ -122,13 +115,7 @@ RSpec.describe 'Expressions' do
       let!(:user) { FactoryBot.create(:user) }
 
       before do
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.button-on-header' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_header '/', user
         has_text? 'ログインしました'
         visit '/expressions/new'
 
@@ -161,13 +148,7 @@ RSpec.describe 'Expressions' do
       let!(:user) { FactoryBot.create(:user) }
 
       before do
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.button-on-header' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_header '/', user
         click_link '新規作成'
 
         fill_in('英単語 / フレーズ１', with: 'word1')
@@ -211,13 +192,7 @@ RSpec.describe 'Expressions' do
       let!(:user) { FactoryBot.create(:user) }
 
       before do
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.button-on-header' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_header '/', user
         click_link '新規作成'
 
         fill_in('英単語 / フレーズ１', with: 'word1')
@@ -259,13 +234,7 @@ RSpec.describe 'Expressions' do
     let!(:user) { FactoryBot.create(:user) }
 
     before do
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-      visit '/'
-      within '.button-on-header' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_header '/', user
       click_link '新規作成'
     end
 
@@ -485,13 +454,7 @@ RSpec.describe 'Expressions' do
     let!(:user) { FactoryBot.create(:user) }
 
     before do
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-      visit '/'
-      within '.button-on-header' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_header '/', user
       click_link '新規作成'
     end
 
@@ -590,13 +553,7 @@ RSpec.describe 'Expressions' do
     let(:user) { FactoryBot.build(:user) }
 
     before do
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-      visit '/'
-      within '.welcome' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_welcome_page user
       click_link '新規作成'
     end
 
