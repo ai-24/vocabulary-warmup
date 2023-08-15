@@ -257,4 +257,40 @@ RSpec.describe Expression, type: :model do
       expect(described_class.find_expressions_of_users_default_list(user.id)).to eq []
     end
   end
+
+  describe '#bookmarking?' do
+    let!(:user) { FactoryBot.create(:user) }
+    let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+    let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+
+    before do
+      FactoryBot.create(:bookmarking, user:, expression: first_expression_items[0].expression)
+    end
+
+    it 'return true' do
+      expect(first_expression_items[0].expression).to be_bookmarking
+    end
+
+    it 'return false' do
+      expect(second_expression_items[0].expression).not_to be_bookmarking
+    end
+  end
+
+  describe '#memorising?' do
+    let!(:user) { FactoryBot.create(:user) }
+    let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+    let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+
+    before do
+      FactoryBot.create(:memorising, user:, expression: first_expression_items[0].expression)
+    end
+
+    it 'return ture' do
+      expect(first_expression_items[0].expression).to be_memorising
+    end
+
+    it 'return false' do
+      expect(second_expression_items[0].expression).not_to be_memorising
+    end
+  end
 end
