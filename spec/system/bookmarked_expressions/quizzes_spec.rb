@@ -28,7 +28,7 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
       sign_in_with_header '/', user1
     end
 
-    it 'check the questions are from bookmarks' do
+    it 'check if the questions are from bookmarks' do
       expect(page).to have_content 'ログインしました'
       click_link 'ブックマーク'
       expect(page).to have_current_path bookmarked_expressions_path
@@ -49,7 +49,7 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
       expect(page).to have_content "Answer: #{fifth_expression_item.content}"
     end
 
-    it 'check the questions and answers are set correctly' do
+    it 'check if the questions and answers are set correctly' do
       expect(page).to have_content 'ログインしました'
       click_link 'ブックマーク'
       expect(page).to have_current_path bookmarked_expressions_path
@@ -217,7 +217,7 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
       has_text? 'ログインしました'
     end
 
-    it 'check the questions are from bookmarks' do
+    it 'check if the questions are from bookmarks' do
       click_link 'クイズに挑戦'
       9.times do |n|
         expect(page).to have_selector 'p.content-of-question'

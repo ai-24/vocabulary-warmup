@@ -57,7 +57,7 @@ RSpec.describe 'Expressions' do
       expect(page).not_to have_content 'タグ'
     end
 
-    it 'check the expression list after clicking the back button that goes to root path' do
+    it 'check the expression list after clicking the back button that goes to home path' do
       10.times do
         FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
         FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note))
@@ -114,14 +114,14 @@ RSpec.describe 'Expressions' do
       end
     end
 
-    it 'check if examples of first expression are on the page' do
+    it 'check if an example of first expression item is on the page' do
       within '.expression0' do
         expect(page).to have_content '例文'
         expect(page).to have_content 'example of on the beach'
       end
     end
 
-    it 'check if examples of second expression are on the page' do
+    it 'check if an example of second expression item is on the page' do
       within '.expression1' do
         expect(page).to have_content '例文'
         expect(page).to have_content 'example of at the beach'

@@ -28,7 +28,7 @@ RSpec.describe 'MemorisedExpressions Quiz' do
       sign_in_with_header '/', user1
     end
 
-    it 'check the questions are from memorised list' do
+    it 'check if the questions are from memorised list' do
       expect(page).to have_content 'ログインしました'
       click_link '覚えた語彙'
       expect(page).to have_current_path memorised_expressions_path
@@ -48,7 +48,7 @@ RSpec.describe 'MemorisedExpressions Quiz' do
       expect(page).to have_content "Answer: #{fifth_expression_item.content}"
     end
 
-    it 'check the questions and answers are set correctly' do
+    it 'check if the questions and answers are set correctly' do
       expect(page).to have_content 'ログインしました'
       click_link '覚えた語彙'
       expect(page).to have_current_path memorised_expressions_path
@@ -236,7 +236,7 @@ RSpec.describe 'MemorisedExpressions Quiz' do
       visit memorised_expressions_path
     end
 
-    it 'check the questions are from memorisied list' do
+    it 'check if the questions are from memorisied list' do
       expect(page).to have_link 'クイズに挑戦'
       click_link 'クイズに挑戦'
       expect(page).to have_css 'p.content-of-question'

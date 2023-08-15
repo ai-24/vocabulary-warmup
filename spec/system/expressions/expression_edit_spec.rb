@@ -88,7 +88,7 @@ RSpec.describe 'Expressions' do
     end
   end
 
-  describe 'get the right data that has not been edited yet to edit' do
+  describe 'get the right data that has not been edited yet' do
     let!(:user) { FactoryBot.create(:user) }
 
     before do
@@ -195,7 +195,7 @@ RSpec.describe 'Expressions' do
     end
   end
 
-  describe 'get the right data which are already edited with right order to edit' do
+  describe 'get the right data which are already edited with right order' do
     describe 'content and explanation of expression_items' do
       let(:user) { FactoryBot.build(:user) }
 
