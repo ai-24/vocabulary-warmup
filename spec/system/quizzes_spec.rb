@@ -26,13 +26,7 @@ RSpec.describe 'Quiz' do
     end
 
     it 'check questions when user has logged in' do
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-      visit '/'
-      within '.button-on-header' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_header '/', user
       has_text? 'ログインしました'
 
       click_link 'クイズに挑戦'
@@ -133,13 +127,8 @@ RSpec.describe 'Quiz' do
 
     before do
       FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note))
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
 
-      visit '/'
-      within '.button-on-header' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_header '/', user
     end
 
     it 'check the function of counting questions' do
@@ -660,13 +649,7 @@ RSpec.describe 'Quiz' do
       let(:user) { FactoryBot.build(:user) }
 
       before do
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.welcome' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_welcome_page user
         has_text? 'ログインしました'
 
         click_link 'クイズに挑戦'
@@ -766,13 +749,7 @@ RSpec.describe 'Quiz' do
       let(:user) { FactoryBot.build(:user) }
 
       before do
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.welcome' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_welcome_page user
         has_text? 'ログインしました'
 
         click_link 'クイズに挑戦'
@@ -878,13 +855,7 @@ RSpec.describe 'Quiz' do
       let(:user) { FactoryBot.build(:user) }
 
       before do
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.welcome' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_welcome_page user
         has_text? 'ログインしました'
 
         click_link 'クイズに挑戦'
@@ -960,13 +931,7 @@ RSpec.describe 'Quiz' do
       let(:user) { FactoryBot.build(:user) }
 
       before do
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.welcome' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_welcome_page user
         has_text? 'ログインしました'
 
         click_link 'クイズに挑戦'
@@ -1028,13 +993,7 @@ RSpec.describe 'Quiz' do
       before do
         FactoryBot.create_list(:expression_item4, 2, expression: FactoryBot.create(:empty_note))
 
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.welcome' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_welcome_page user
         has_text? 'ログインしました'
 
         click_link 'クイズに挑戦'
@@ -1176,13 +1135,7 @@ RSpec.describe 'Quiz' do
       let(:user) { FactoryBot.build(:user) }
 
       before do
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.welcome' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_welcome_page user
         has_text? 'ログインしました'
 
         click_link 'クイズに挑戦'
@@ -1195,7 +1148,7 @@ RSpec.describe 'Quiz' do
       it 'check if the quiz does not start when question is none' do
         click_button '保存する'
         expect(page).to have_content 'ブックマークしました！'
-        expect(Expression.find_expressions_of_users_main_list(user.id).count).to eq 0
+        expect(Expression.find_expressions_of_users_default_list(user.id).count).to eq 0
 
         click_button 'クイズに再挑戦'
         expect(page).to have_current_path '/home'

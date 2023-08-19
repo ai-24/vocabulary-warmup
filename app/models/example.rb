@@ -25,10 +25,10 @@ class Example < ApplicationRecord
   def self.destroy_examples(params, expression)
     current_examples = extract_current_examples(expression)
     new_examples = extract_new_examples(params)
-    current_examples.zip(new_examples) do |current_example, new_example|
-      next unless current_example.count > new_example.count
+    current_examples.zip(new_examples) do |current_examples_of_expression_item, new_examples_of_expression_item|
+      next unless current_examples_of_expression_item.count > new_examples_of_expression_item.count
 
-      delete_examples = current_example.difference(new_example)
+      delete_examples = current_examples_of_expression_item.difference(new_examples_of_expression_item)
       delete_examples.each do |example|
         expression.expression_items.each { |expression_item| Example.find_by(content: example, expression_item_id: expression_item.id)&.destroy }
       end

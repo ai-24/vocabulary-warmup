@@ -11,13 +11,7 @@ RSpec.describe 'Memorised expressions' do
         FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note))
         FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:empty_note))
 
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.welcome' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_welcome_page user
       end
 
       it 'show a message that there are no data' do
@@ -69,13 +63,7 @@ RSpec.describe 'Memorised expressions' do
           FactoryBot.create(:memorising, user:, expression: expressions[n][0].expression)
         end
 
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.button-on-header' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_header '/', user
       end
 
       it 'show a list of memorised expressions' do
@@ -151,13 +139,7 @@ RSpec.describe 'Memorised expressions' do
         FactoryBot.create(:memorising, user:, expression: second_expression_items[0].expression)
         FactoryBot.create(:memorising, user:, expression: third_expression_items[0].expression)
 
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.button-on-header' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_header '/', user
         has_text? 'ログインしました'
 
         click_link 'クイズに挑戦'
@@ -194,13 +176,7 @@ RSpec.describe 'Memorised expressions' do
     let(:user) { FactoryBot.build(:user) }
 
     before do
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-      visit '/'
-      within '.button-on-header' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_header '/', user
       has_text? 'ログインしました'
 
       click_link 'クイズに挑戦'

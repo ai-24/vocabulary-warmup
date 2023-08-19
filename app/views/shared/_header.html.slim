@@ -3,10 +3,10 @@ header class="sticky top-0 bg-white border-b border-lavender-600 relative h-[70p
     .basis-1/2.flex.items-center
       .pl-1.5
         - if logged_in?
-          = link_to home_path, class: 'logo' do
+          = link_to home_path, class: 'logo hover:opacity-60' do
             = image_tag 'logo.svg', alt: 'Word Warmupのロゴ'
         - else
-          = link_to root_path, class: 'logo' do
+          = link_to root_path, class: 'logo hover:opacity-60' do
             = image_tag 'logo.svg', alt: 'Word Warmupのロゴ'
     .basis-1/2
       .flex.justify-end.h-full

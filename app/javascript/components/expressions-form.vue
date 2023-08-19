@@ -211,7 +211,7 @@
             <button
               v-else-if="fifthExpression"
               type="button"
-              @click="getSixPage"
+              @click="getSixthPage"
               class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50">
               {{ $t('form.next') }}
             </button>
@@ -294,14 +294,14 @@
               v-else-if="fifthExpression"
               type="button"
               class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
-              @click="getSixPage">
+              @click="getSixthPage">
               {{ $t('form.next') }}
             </button>
             <button
               v-else
               type="button"
               class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
-              @click="getSevenPage(secondExpressionDetails.explanation)">
+              @click="getSeventhPage(secondExpressionDetails.explanation)">
               {{ $t('form.next') }}
             </button>
           </div>
@@ -383,14 +383,14 @@
               v-else-if="fifthExpression"
               type="button"
               class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
-              @click="getSixPage">
+              @click="getSixthPage">
               {{ $t('form.next') }}
             </button>
             <button
               v-else
               type="button"
               class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
-              @click="getSevenPage(thirdExpressionDetails.explanation)">
+              @click="getSeventhPage(thirdExpressionDetails.explanation)">
               {{ $t('form.next') }}
             </button>
           </div>
@@ -472,14 +472,14 @@
               v-if="fifthExpression"
               type="button"
               class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
-              @click="getSixPage">
+              @click="getSixthPage">
               {{ $t('form.next') }}
             </button>
             <button
               v-else
               type="button"
               class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
-              @click="getSevenPage(fourthExpressionDetails.explanation)">
+              @click="getSeventhPage(fourthExpressionDetails.explanation)">
               {{ $t('form.next') }}
             </button>
           </div>
@@ -560,7 +560,7 @@
             <button
               type="button"
               class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
-              @click="getSevenPage(fifthExpressionDetails.explanation)">
+              @click="getSeventhPage(fifthExpressionDetails.explanation)">
               {{ $t('form.next') }}
             </button>
           </div>
@@ -624,7 +624,7 @@
               v-else-if="previousPage === 6"
               type="button"
               class="border-2 border-lavender-800 rounded-md px-4 hover:bg-lavender-50"
-              @click="getSixPage">
+              @click="getSixthPage">
               {{ $t('back') }}
             </button>
           </div>
@@ -886,7 +886,7 @@ export default {
         this.currentPage = 5
       }
     },
-    getSixPage() {
+    getSixthPage() {
       this.previousPage = this.currentPage
       if (this.currentPage === 5) {
         this.isExplanationError(this.fourthExpressionDetails.explanation)
@@ -902,7 +902,7 @@ export default {
         this.currentPage = 6
       }
     },
-    getSevenPage(explanation) {
+    getSeventhPage(explanation) {
       this.isExplanationError(explanation)
       this.previousPage = this.currentPage
       if (!this.explanationError) {

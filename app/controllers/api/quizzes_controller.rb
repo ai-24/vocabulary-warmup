@@ -5,7 +5,7 @@ class API::QuizzesController < ApplicationController
     @quiz = []
 
     if logged_in?
-      Expression.find_expressions_of_users_main_list(current_user.id).each do |expression|
+      Expression.find_expressions_of_users_default_list(current_user.id).each do |expression|
         expression.expression_items.order(:created_at, :id).each { |expression_item| @quiz.push expression_item }
       end
     else

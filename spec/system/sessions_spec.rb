@@ -5,36 +5,22 @@ require 'rails_helper'
 RSpec.describe 'Sessions' do
   let(:user) { FactoryBot.create(:user) }
 
-  before do
-    OmniAuth.config.test_mode = true
-    OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-  end
-
   describe 'log in' do
     it 'check the function of login' do
-      visit '/'
-      within '.welcome' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_welcome_page user
       expect(page).to have_content 'ログインしました'
       expect(page).to have_content user.name
       expect(page).not_to have_button 'Sign up/Log in with Google'
     end
 
     it 'check if current path is bookmarked_expressions after login' do
-      visit '/bookmarked_expressions'
-      within '.button-on-header' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_header '/bookmarked_expressions', user
       expect(page).to have_content 'ログインしました'
       expect(page).to have_current_path '/bookmarked_expressions'
     end
 
     it 'check if current path is memorised_expressions after login' do
-      visit '/memorised_expressions'
-      within '.button-on-header' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_header '/memorised_expressions', user
       expect(page).to have_content 'ログインしました'
       expect(page).to have_current_path '/memorised_expressions'
     end
@@ -42,10 +28,7 @@ RSpec.describe 'Sessions' do
 
   describe 'log out' do
     before do
-      visit '/'
-      within '.welcome' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_welcome_page user
     end
 
     it 'the logout button is invisible before click user name' do

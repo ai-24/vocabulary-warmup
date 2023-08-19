@@ -57,7 +57,7 @@ RSpec.describe 'Expressions' do
       expect(page).not_to have_content 'タグ'
     end
 
-    it 'check the expression list after clicking the back button that goes to root path' do
+    it 'check the expression list after clicking the back button that goes to home path' do
       10.times do
         FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
         FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note))
@@ -79,14 +79,7 @@ RSpec.describe 'Expressions' do
     let!(:user) { FactoryBot.create(:user) }
 
     before do
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-      visit '/'
-      within '.welcome' do
-        click_button 'Sign up/Log in with Google'
-      end
-
+      sign_in_with_welcome_page user
       click_link '新規作成'
       fill_in('英単語 / フレーズ１', with: 'on the beach')
       fill_in('英単語 / フレーズ２', with: 'at the beach')
@@ -121,14 +114,14 @@ RSpec.describe 'Expressions' do
       end
     end
 
-    it 'check if examples of first expression are on the page' do
+    it 'check if an example of first expression item is on the page' do
       within '.expression0' do
         expect(page).to have_content '例文'
         expect(page).to have_content 'example of on the beach'
       end
     end
 
-    it 'check if examples of second expression are on the page' do
+    it 'check if an example of second expression item is on the page' do
       within '.expression1' do
         expect(page).to have_content '例文'
         expect(page).to have_content 'example of at the beach'
@@ -237,13 +230,7 @@ RSpec.describe 'Expressions' do
         FactoryBot.create(:bookmarking, user:, expression: second_expression_items[0].expression)
         FactoryBot.create(:bookmarking, user:, expression: third_expression_items[0].expression)
 
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.button-on-header' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_header '/', user
       end
 
       it 'check next button' do
@@ -322,13 +309,7 @@ RSpec.describe 'Expressions' do
         FactoryBot.create(:memorising, user:, expression: second_expression_items[0].expression)
         FactoryBot.create(:memorising, user:, expression: third_expression_items[0].expression)
 
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        visit '/'
-        within '.button-on-header' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_header '/', user
       end
 
       it 'check next button' do
@@ -400,14 +381,8 @@ RSpec.describe 'Expressions' do
   describe 'a link that goes to index' do
     let(:user) { FactoryBot.build(:user) }
 
-    before do
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-      visit '/'
-    end
-
     it 'check the link that goes to home page when user has not logged in' do
+      visit '/'
       click_link '試してみる(機能に制限あり)'
       click_link 'balcony and veranda'
       expect(page).to have_content '下記の英単語・フレーズの違いについて'
@@ -417,9 +392,7 @@ RSpec.describe 'Expressions' do
     end
 
     it 'check the link that goes to home page when user has logged in' do
-      within '.button-on-header' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_header '/', user
       expect(page).to have_content 'ログインしました'
       click_link 'balcony and veranda'
       expect(page).to have_content '下記の英単語・フレーズの違いについて'
@@ -436,13 +409,7 @@ RSpec.describe 'Expressions' do
     let!(:second_expression_items) { FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
 
     it 'check if user who does not own the expressions can not see it' do
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: new_user.uid, info: { name: new_user.name } })
-
-      visit '/'
-      within '.welcome' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_welcome_page new_user
       expect(page).to have_content 'ログインしました'
 
       visit "/expressions/#{first_expression_items[0].expression.id}"
@@ -458,13 +425,7 @@ RSpec.describe 'Expressions' do
     end
 
     it 'check if the user who owns the expressions can see it' do
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-      visit '/'
-      within '.button-on-header' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_header '/', user
       expect(page).to have_content 'ログインしました'
       visit "/expressions/#{first_expression_items[0].expression.id}"
 

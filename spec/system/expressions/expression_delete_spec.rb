@@ -19,14 +19,7 @@ RSpec.describe 'Expressions' do
       user2 = FactoryBot.create(:user)
       first_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note, user_id: user1.id))
 
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user2.uid, info: { name: user2.name } })
-
-      visit '/'
-      within '.welcome' do
-        click_button 'Sign up/Log in with Google'
-      end
-
+      sign_in_with_welcome_page user2
       expect(page).to have_content 'ログインしました'
       visit "/expressions/#{first_expression_items[0].expression.id}"
       expect(page).to have_current_path home_path
@@ -35,13 +28,8 @@ RSpec.describe 'Expressions' do
 
     it 'check if expression which user_id is nil is not deleted' do
       user1 = FactoryBot.create(:user)
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user1.uid, info: { name: user1.name } })
 
-      visit '/'
-      within '.welcome' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_welcome_page user1
       expect(page).to have_content 'ログインしました'
       expect(Expression.where('user_id = ?', user1.id).count).to eq 0
       visit '/expressions/1'
@@ -57,13 +45,7 @@ RSpec.describe 'Expressions' do
     let!(:second_expression_items) { FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:note, user_id: user.id)) }
 
     before do
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-      visit '/'
-      within '.welcome' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_welcome_page user
       has_text? 'ログインしました'
 
       click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
@@ -118,13 +100,7 @@ RSpec.describe 'Expressions' do
     let!(:second_expression_items) { FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:note, user_id: user.id)) }
 
     before do
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-      visit '/'
-      within '.welcome' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_welcome_page user
       has_text? 'ログインしました'
 
       visit "/expressions/#{second_expression_items[0].expression.id}"
@@ -149,13 +125,7 @@ RSpec.describe 'Expressions' do
     let(:user) { FactoryBot.build(:user) }
 
     it 'check if home page is on the screen when the last expression is deleted' do
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-      visit '/'
-      within '.welcome' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_welcome_page user
       expect(page).to have_content 'ログインしました'
       click_link 'balcony and veranda'
       accept_confirm do
@@ -177,13 +147,7 @@ RSpec.describe 'Expressions' do
 
     it 'check if the bookmark list is on the screen when the last expression is deleted' do
       FactoryBot.create(:bookmarking, user:, expression: first_expression_items[0].expression)
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-      visit '/'
-      within '.welcome' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_welcome_page user
       expect(page).to have_content 'ログインしました'
       click_link 'ブックマーク'
       click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
@@ -203,13 +167,7 @@ RSpec.describe 'Expressions' do
 
     it 'check if the memorised words list is on the screen when the last expression is deleted' do
       FactoryBot.create(:memorising, user:, expression: first_expression_items[0].expression)
-      OmniAuth.config.test_mode = true
-      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-      visit '/'
-      within '.welcome' do
-        click_button 'Sign up/Log in with Google'
-      end
+      sign_in_with_welcome_page user
       expect(page).to have_content 'ログインしました'
       click_link '覚えた語彙'
       click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
