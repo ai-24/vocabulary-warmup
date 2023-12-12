@@ -7,7 +7,7 @@ RSpec.describe 'Sessions' do
 
   describe 'log in' do
     it 'check the function of login' do
-      sign_in_with_welcome_page user
+      sign_in_with_welcome_page '.last-login-button', user
       expect(page).to have_content 'ログインしました'
       expect(page).to have_content user.name
       expect(page).not_to have_button 'Sign up/Log in with Google'
@@ -28,7 +28,7 @@ RSpec.describe 'Sessions' do
 
   describe 'log out' do
     before do
-      sign_in_with_welcome_page user
+      sign_in_with_welcome_page '.last-login-button', user
     end
 
     it 'the logout button is invisible before click user name' do
@@ -47,7 +47,7 @@ RSpec.describe 'Sessions' do
       expect(page).to have_content 'ログインしました'
       find('label', text: user.name).click
       click_button 'Log out'
-      expect(page).to have_button 'Sign up/Log in with Google'
+      expect(page).to have_button 'Sign up / Log in with Google'
       expect(page).not_to have_content user.name
     end
 

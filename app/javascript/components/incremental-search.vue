@@ -1,9 +1,12 @@
 <template>
   <div class="relative">
+    <label for="search-box" class="text-xs">{{
+      $t('incrementalSearch.explanation')
+    }}</label>
     <input
       v-model.trim="searchWord"
       id="search-box"
-      class="w-full h-8 rounded outline outline-offset-0 outline-1 p-2"
+      class="w-full h-8 rounded outline outline-offset-0 outline-1 outline-neutral-300 p-2"
       :placeholder="$t('incrementalSearch.placeholder')" />
     <div v-if="searchWord" class="absolute right-10 bottom-1.5">
       <button
@@ -22,12 +25,12 @@
   <div v-if="showSearchedExpressions && loaded">
     <div
       v-if="searchedExpressions.length === 0"
-      class="border-solid bg-golden-yellow-50 border-2 border-neutral-400 border-t-white px-2 py-1 rounded-b-lg">
+      class="border-solid bg-white border border-neutral-400 border-t-white px-2 py-1 rounded-b-lg">
       <p class="bg-white">{{ $t('incrementalSearch.noData') }}</p>
     </div>
     <div
       v-else
-      class="border-solid bg-golden-yellow-50 border-2 border-neutral-400 border-t-white px-2 rounded-b-lg">
+      class="border-solid bg-white border border-neutral-400 border-t-white px-1 pb-px rounded-b-lg">
       <ExpressionsList
         class="searched-expressions"
         :searchedExpressionsResources="searchedExpressions"></ExpressionsList>

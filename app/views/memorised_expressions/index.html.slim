@@ -1,24 +1,22 @@
 - title '覚えた語彙一覧'
 - description '間違いやすい英単語やフレーズの学習をサポートするツールWord Warmupの覚えた語彙の一覧ページ'
 
-.bg-white.pt-10.pb-24.max-w-800.w-full.mx-auto
-  p.text-green-700.pl-5.pb-6.font-bold
+.bg-white.pt-16.lg:pt-10.pb-24.max-w-800.w-full.mx-auto.px-2
+  p.text-green-700.pl-5.pb-10.font-bold.pt-1
     = notice
-  h1.text-2xl.font-bold.mb-10.border-b.border-neutral-400.pl-2.mt-4
-    = t('.title')
+  = render 'shared/expressions_list_page_header'
   .mt-4
     = render 'shared/page_tabs'
-  .sm:px-7.py-6.bg-lavender-600
+  .pb-6
     - if @memorisings.blank?
       - if logged_in?
         .h-80.px-3.sm:px-0
           .flex.justify-center
             p.font-bold.text-center.py-10.px-3.sm:w-full.w-72
-              = t('.no_data')
-        .flex.justify-end.mt-6
-          .text-center.w-1/2.sm:pr-10.sm:pl-3
-            p.opacity-70.inline-block.w-11/12.font-semibold.text-lg.py-1.rounded-full.bg-golden-yellow-400.text-black.hover:cursor-not-allowed
-              = t('.start_quiz')
+              = t('no_data')
+        .flex.justify-center.mt-6.text-center
+          p.opacity-70.inline-block.w-1/2.font-semibold.text-lg.py-1.rounded.bg-lavender-600.text-black.hover:cursor-not-allowed
+            = t('.start_quiz')
       - else
         .h-80.px-3.sm:px-0
           .flex.justify-center
@@ -27,6 +25,5 @@
     - else
       .h-80.px-3.sm:px-0
         div(data-vue='ExpressionsList' data-vue-path='/api/memorised_expressions')
-      .flex.justify-end.mt-6.pl-5.pr-2.sm:pl-2.5
-        .text-center.w-1/2.sm:pr-10.sm:pl-3
-          = link_to t('.start_quiz'), memorised_expressions_quiz_path, class: 'inline-block w-11/12 font-semibold text-lg py-1 rounded-full bg-golden-yellow-400 hover:bg-golden-yellow-200 text-black'
+      .flex.justify-center.mt-6.text-center
+        = link_to t('.start_quiz'), memorised_expressions_quiz_path, class: 'inline-block w-1/2 font-semibold text-lg py-1 rounded bg-lavender-600 hover:bg-lavender-400 text-black'

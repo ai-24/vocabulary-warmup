@@ -4,7 +4,7 @@
   </h2>
   <div :class="{ 'text-red-600': explanationError }" class="mt-8 font-semibold">
     <label for="explanation-of-expression">
-      {{ expression }}の意味や前ページで登録した他の英単語 / フレーズ（{{
+      {{ expression }}の意味や前ページで登録した他の英単語・フレーズ（{{
         comparedExpressions
       }}）との違いを入力してください
     </label>

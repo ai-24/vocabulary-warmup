@@ -4,30 +4,27 @@ require 'rails_helper'
 
 RSpec.describe 'Expressions' do
   describe 'expressions/1' do
-    it 'check url' do
+    it 'check url and title' do
       visit '/'
-      click_link '試してみる(機能に制限あり)'
-      expect(page).to have_current_path home_path
-      click_link 'balcony and veranda'
-      expect(page).to have_content '下記の英単語・フレーズの違いについて'
-      expect(page).to have_current_path expression_path(1), ignore_query: true
-    end
-
-    it 'show a title section' do
-      visit '/'
-      click_link '試してみる(機能に制限あり)'
-      expect(page).to have_current_path home_path
-      click_link 'balcony and veranda'
-      within '.title' do
-        expect(page).to have_content '1. balcony'
-        expect(page).to have_content '2. veranda'
-        expect(page).not_to have_content '4.'
+      within '.recommended-users' do
+        click_link '試してみる'
       end
+      expect(page).to have_current_path home_path
+      click_link 'balcony and veranda'
+      within 'h1' do
+        expect(page).to have_content 'balcony'
+        expect(page).to have_content 'と'
+        expect(page).to have_content 'veranda'
+        expect(page).to have_content 'の違いについて'
+      end
+      expect(page).to have_current_path expression_path(1), ignore_query: true
     end
 
     it 'show details of the first expression' do
       visit '/'
-      click_link '試してみる(機能に制限あり)'
+      within '.recommended-users' do
+        click_link '試してみる'
+      end
       expect(page).to have_current_path home_path
       click_link 'balcony and veranda'
       within '.expression0' do
@@ -40,7 +37,9 @@ RSpec.describe 'Expressions' do
 
     it 'show details of the second expression' do
       visit '/'
-      click_link '試してみる(機能に制限あり)'
+      within '.without-login' do
+        click_link '試してみる'
+      end
       expect(page).to have_current_path home_path
       click_link 'balcony and veranda'
       within '.expression1' do
@@ -79,19 +78,19 @@ RSpec.describe 'Expressions' do
     let!(:user) { FactoryBot.create(:user) }
 
     before do
-      sign_in_with_welcome_page user
-      click_link '新規作成'
-      fill_in('英単語 / フレーズ１', with: 'on the beach')
-      fill_in('英単語 / フレーズ２', with: 'at the beach')
-      fill_in('英単語 / フレーズ３(任意)', with: 'around the beach')
+      sign_in_with_welcome_page '.last-login-button', user
+      click_link '単語・フレーズを追加'
+      fill_in('英単語・フレーズ１', with: 'on the beach')
+      fill_in('英単語・フレーズ２', with: 'at the beach')
+      fill_in('英単語・フレーズ３(任意)', with: 'around the beach')
       click_button '次へ'
-      fill_in('on the beachの意味や前ページで登録した他の英単語 / フレーズ（at the beach, around the beach）との違いを入力してください', with: 'explanation of on the beach')
+      fill_in('on the beachの意味や前ページで登録した他の英単語・フレーズ（at the beach, around the beach）との違いを入力してください', with: 'explanation of on the beach')
       fill_in('例文１', with: 'example of on the beach')
       click_button '次へ'
-      fill_in('at the beachの意味や前ページで登録した他の英単語 / フレーズ（on the beach, around the beach）との違いを入力してください', with: 'explanation of at the beach')
+      fill_in('at the beachの意味や前ページで登録した他の英単語・フレーズ（on the beach, around the beach）との違いを入力してください', with: 'explanation of at the beach')
       fill_in('例文２', with: 'example of at the beach')
       click_button '次へ'
-      fill_in('around the beachの意味や前ページで登録した他の英単語 / フレーズ（on the beach, at the beach）との違いを入力してください', with: 'explanation of around the beach')
+      fill_in('around the beachの意味や前ページで登録した他の英単語・フレーズ（on the beach, at the beach）との違いを入力してください', with: 'explanation of around the beach')
       click_button '次へ'
       fill_in('メモ（任意）', with: 'note')
       fill_in('タグ（任意）', with: 'preposition')
@@ -101,9 +100,10 @@ RSpec.describe 'Expressions' do
 
     it 'show a title section' do
       within '.title' do
-        expect(page).to have_content '1. on the beach'
-        expect(page).to have_content '2. at the beach'
-        expect(page).to have_content '3. around the beach'
+        expect(page).to have_content 'on the beach'
+        expect(page).to have_content 'at the beach'
+        expect(page).to have_content 'around the beach'
+        expect(page).to have_content 'の違いについて'
       end
     end
 
@@ -148,16 +148,23 @@ RSpec.describe 'Expressions' do
   end
 
   describe 'next and back button' do
-    context 'when the expressions is in words and phrases list' do
+    context 'when the expressions is in 未分類 list' do
       it 'check if there is no next button when the expression is the last one' do
         first_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
 
         visit '/'
-        click_link '試してみる(機能に制限あり)'
+        within '.without-login' do
+          click_link '試してみる'
+        end
         expect(page).to have_current_path home_path
         click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
 
-        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        within 'h1' do
+          expect(page).to have_content first_expression_items[0].content
+          expect(page).to have_content 'と'
+          expect(page).to have_content first_expression_items[1].content
+          expect(page).to have_content 'の違いについて'
+        end
         expect(page).to have_current_path "/expressions/#{first_expression_items[0].expression.id}", ignore_query: true
         expect(page).to have_link 'previous', href: '/expressions/1'
         expect(page).not_to have_link 'next'
@@ -167,10 +174,17 @@ RSpec.describe 'Expressions' do
         expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note))
 
         visit '/'
-        click_link '試してみる(機能に制限あり)'
+        within '.without-login' do
+          click_link '試してみる'
+        end
         expect(page).to have_current_path home_path
         click_link 'balcony and veranda'
-        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        within 'h1' do
+          expect(page).to have_content 'balcony'
+          expect(page).to have_content 'と'
+          expect(page).to have_content 'veranda'
+          expect(page).to have_content 'の違いについて'
+        end
         expect(page).to have_current_path '/expressions/1'
         expect(page).to have_link 'next', href: "/expressions/#{expression_items[0].expression.id}"
         expect(page).not_to have_link 'previous'
@@ -178,10 +192,17 @@ RSpec.describe 'Expressions' do
 
       it 'check if there is no back and next button when expression is one in a list' do
         visit '/'
-        click_link '試してみる(機能に制限あり)'
+        within '.recommended-users' do
+          click_link '試してみる'
+        end
         expect(page).to have_current_path home_path
         click_link 'balcony and veranda'
-        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        within 'h1' do
+          expect(page).to have_content 'balcony'
+          expect(page).to have_content 'と'
+          expect(page).to have_content 'veranda'
+          expect(page).to have_content 'の違いについて'
+        end
         expect(page).to have_current_path '/expressions/1'
         expect(page).not_to have_link 'previous'
         expect(page).not_to have_link 'next'
@@ -192,14 +213,26 @@ RSpec.describe 'Expressions' do
         second_expression_items = FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:note))
 
         visit '/'
-        click_link '試してみる(機能に制限あり)'
+        within '.without-login' do
+          click_link '試してみる'
+        end
         expect(page).to have_current_path home_path
         click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
-        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        within 'h1' do
+          expect(page).to have_content first_expression_items[0].content
+          expect(page).to have_content 'と'
+          expect(page).to have_content first_expression_items[1].content
+          expect(page).to have_content 'の違いについて'
+        end
         expect(page).to have_current_path "/expressions/#{first_expression_items[0].expression.id}", ignore_query: true
 
         click_link 'next'
-        expect(page).to have_content "1. #{second_expression_items[0].content}"
+        within 'h1' do
+          expect(page).to have_content second_expression_items[0].content
+          expect(page).to have_content 'と'
+          expect(page).to have_content second_expression_items[1].content
+          expect(page).to have_content 'の違いについて'
+        end
         expect(page).to have_current_path expression_path(second_expression_items[0].expression), ignore_query: true
       end
 
@@ -208,18 +241,30 @@ RSpec.describe 'Expressions' do
         second_expression_items = FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:note))
 
         visit '/'
-        click_link '試してみる(機能に制限あり)'
+        within '.without-login' do
+          click_link '試してみる'
+        end
         expect(page).to have_current_path home_path
         click_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}"
-        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        within 'h1' do
+          expect(page).to have_content second_expression_items[0].content
+          expect(page).to have_content 'と'
+          expect(page).to have_content second_expression_items[1].content
+          expect(page).to have_content 'の違いについて'
+        end
         expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true
         click_link 'previous'
-        expect(page).to have_content "1. #{first_expression_items[0].content}"
+        within 'h1' do
+          expect(page).to have_content first_expression_items[0].content
+          expect(page).to have_content 'と'
+          expect(page).to have_content first_expression_items[1].content
+          expect(page).to have_content 'の違いについて'
+        end
         expect(page).to have_current_path expression_path(first_expression_items[0].expression), ignore_query: true
       end
     end
 
-    context 'when the expressions is in bookmarked expressions list' do
+    context 'when the expressions is in 要復習 list' do
       let!(:user) { FactoryBot.create(:user) }
       let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
       let!(:second_expression_items) { FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
@@ -230,7 +275,7 @@ RSpec.describe 'Expressions' do
         FactoryBot.create(:bookmarking, user:, expression: second_expression_items[0].expression)
         FactoryBot.create(:bookmarking, user:, expression: third_expression_items[0].expression)
 
-        sign_in_with_header '/', user
+        sign_in_with_welcome_page '.first-login-button', user
       end
 
       it 'check next button' do
@@ -238,13 +283,17 @@ RSpec.describe 'Expressions' do
         visit '/bookmarked_expressions'
         click_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}"
 
-        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        expect(page).to have_content second_expression_items[0].content
+        expect(page).to have_content 'と'
+        expect(page).to have_content second_expression_items[1].content
+        expect(page).to have_content 'の違いについて'
         expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true
         expect(page).to have_link 'previous'
         expect(page).to have_link 'next'
         click_link 'next'
 
-        expect(page).to have_content "1. #{third_expression_items[0].content}"
+        expect(page).to have_content third_expression_items[0].content
+        expect(page).not_to have_content second_expression_items[0].content
         expect(page).to have_current_path "/expressions/#{third_expression_items[0].expression.id}", ignore_query: true
       end
 
@@ -253,12 +302,16 @@ RSpec.describe 'Expressions' do
         visit '/bookmarked_expressions'
         click_link "#{third_expression_items[0].content} and #{third_expression_items[1].content}"
 
-        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        expect(page).to have_content third_expression_items[0].content
+        expect(page).to have_content 'と'
+        expect(page).to have_content third_expression_items[1].content
+        expect(page).to have_content 'の違いについて'
         expect(page).to have_current_path "/expressions/#{third_expression_items[0].expression.id}", ignore_query: true
         expect(page).to have_link 'previous'
         click_link 'previous'
 
-        expect(page).to have_content "1. #{second_expression_items[0].content}"
+        expect(page).to have_content second_expression_items[0].content
+        expect(page).not_to have_content third_expression_items[0].content
         expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true
       end
 
@@ -267,7 +320,6 @@ RSpec.describe 'Expressions' do
         visit '/bookmarked_expressions'
         click_link "#{third_expression_items[0].content} and #{third_expression_items[1].content}"
 
-        expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path "/expressions/#{third_expression_items[0].expression.id}", ignore_query: true
         expect(page).not_to have_link 'next'
       end
@@ -277,7 +329,6 @@ RSpec.describe 'Expressions' do
         visit '/bookmarked_expressions'
         click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
 
-        expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path "/expressions/#{first_expression_items[0].expression.id}", ignore_query: true
         expect(page).not_to have_link 'previous'
       end
@@ -291,14 +342,13 @@ RSpec.describe 'Expressions' do
         visit '/bookmarked_expressions'
         click_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}"
 
-        expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true
         expect(page).not_to have_link 'previous'
         expect(page).not_to have_link 'next'
       end
     end
 
-    context 'when the expression is in memorised expression list' do
+    context 'when the expression is in 覚えた list' do
       let!(:user) { FactoryBot.create(:user) }
       let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
       let!(:second_expression_items) { FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
@@ -309,21 +359,24 @@ RSpec.describe 'Expressions' do
         FactoryBot.create(:memorising, user:, expression: second_expression_items[0].expression)
         FactoryBot.create(:memorising, user:, expression: third_expression_items[0].expression)
 
-        sign_in_with_header '/', user
+        sign_in_with_welcome_page '.first-login-button', user
       end
 
       it 'check next button' do
         expect(page).to have_content 'ログインしました'
         visit '/memorised_expressions'
         click_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}"
-
-        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        expect(page).to have_content second_expression_items[0].content
+        expect(page).to have_content 'と'
+        expect(page).to have_content second_expression_items[1].content
+        expect(page).to have_content 'の違いについて'
         expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true
         expect(page).to have_link 'previous'
         expect(page).to have_link 'next'
         click_link 'next'
 
-        expect(page).to have_content "1. #{third_expression_items[0].content}"
+        expect(page).to have_content third_expression_items[0].content
+        expect(page).not_to have_content second_expression_items[0].content
         expect(page).to have_current_path "/expressions/#{third_expression_items[0].expression.id}", ignore_query: true
       end
 
@@ -332,12 +385,16 @@ RSpec.describe 'Expressions' do
         visit '/memorised_expressions'
         click_link "#{third_expression_items[0].content} and #{third_expression_items[1].content}"
 
-        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        expect(page).to have_content third_expression_items[0].content
+        expect(page).to have_content 'と'
+        expect(page).to have_content third_expression_items[1].content
+        expect(page).to have_content 'の違いについて'
         expect(page).to have_current_path "/expressions/#{third_expression_items[0].expression.id}", ignore_query: true
         expect(page).to have_link 'previous'
         click_link 'previous'
 
-        expect(page).to have_content "1. #{second_expression_items[0].content}"
+        expect(page).to have_content second_expression_items[0].content
+        expect(page).not_to have_content third_expression_items[0].content
         expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true
       end
 
@@ -346,7 +403,6 @@ RSpec.describe 'Expressions' do
         visit '/memorised_expressions'
         click_link "#{third_expression_items[0].content} and #{third_expression_items[1].content}"
 
-        expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path "/expressions/#{third_expression_items[0].expression.id}", ignore_query: true
         expect(page).not_to have_link 'next'
       end
@@ -356,7 +412,6 @@ RSpec.describe 'Expressions' do
         visit '/memorised_expressions'
         click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
 
-        expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path "/expressions/#{first_expression_items[0].expression.id}", ignore_query: true
         expect(page).not_to have_link 'previous'
       end
@@ -370,7 +425,6 @@ RSpec.describe 'Expressions' do
         visit '/memorised_expressions'
         click_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}"
 
-        expect(page).to have_content '下記の英単語・フレーズの違いについて'
         expect(page).to have_current_path "/expressions/#{second_expression_items[0].expression.id}", ignore_query: true
         expect(page).not_to have_link 'previous'
         expect(page).not_to have_link 'next'
@@ -383,19 +437,27 @@ RSpec.describe 'Expressions' do
 
     it 'check the link that goes to home page when user has not logged in' do
       visit '/'
-      click_link '試してみる(機能に制限あり)'
+      within '.recommended-users' do
+        click_link '試してみる'
+      end
       click_link 'balcony and veranda'
-      expect(page).to have_content '下記の英単語・フレーズの違いについて'
+      expect(page).to have_content 'balcony'
+      expect(page).to have_content 'と'
+      expect(page).to have_content 'veranda'
+      expect(page).to have_content 'の違いについて'
       expect(page).to have_link '一覧に戻る'
       click_link '一覧に戻る'
       expect(page).to have_current_path home_path
     end
 
     it 'check the link that goes to home page when user has logged in' do
-      sign_in_with_header '/', user
+      sign_in_with_welcome_page '.first-login-button', user
       expect(page).to have_content 'ログインしました'
       click_link 'balcony and veranda'
-      expect(page).to have_content '下記の英単語・フレーズの違いについて'
+      expect(page).to have_content 'balcony'
+      expect(page).to have_content 'と'
+      expect(page).to have_content 'veranda'
+      expect(page).to have_content 'の違いについて'
       expect(page).to have_link '一覧に戻る'
       click_link '一覧に戻る'
       expect(page).to have_current_path home_path
@@ -409,14 +471,14 @@ RSpec.describe 'Expressions' do
     let!(:second_expression_items) { FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
 
     it 'check if user who does not own the expressions can not see it' do
-      sign_in_with_welcome_page new_user
+      sign_in_with_welcome_page '.first-login-button', new_user
       expect(page).to have_content 'ログインしました'
 
       visit "/expressions/#{first_expression_items[0].expression.id}"
       expect(page).to have_current_path home_path
       expect(page).to have_content '権限がないため閲覧できません'
       within '.error' do
-        expect(page).not_to have_button 'Sign up/Log in with Google'
+        expect(page).not_to have_button 'Sign up / Log in with Google'
       end
 
       visit "/expressions/#{second_expression_items[0].expression.id}"
@@ -425,13 +487,15 @@ RSpec.describe 'Expressions' do
     end
 
     it 'check if the user who owns the expressions can see it' do
-      sign_in_with_header '/', user
+      sign_in_with_welcome_page '.first-login-button', user
       expect(page).to have_content 'ログインしました'
       visit "/expressions/#{first_expression_items[0].expression.id}"
 
       within '.title' do
-        expect(page).to have_content "1. #{first_expression_items[0].content}"
-        expect(page).to have_content "2. #{first_expression_items[1].content}"
+        expect(page).to have_content first_expression_items[0].content
+        expect(page).to have_content 'と'
+        expect(page).to have_content first_expression_items[1].content
+        expect(page).to have_content 'の違いについて'
       end
     end
 
@@ -440,7 +504,7 @@ RSpec.describe 'Expressions' do
       expect(page).to have_content 'ログインが必要です'
       expect(page).to have_current_path root_path
       within '.error' do
-        expect(page).to have_button 'Sign up/Log in with Google'
+        expect(page).to have_button 'Sign up / Log in with Google'
       end
     end
   end

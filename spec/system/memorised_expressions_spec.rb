@@ -11,32 +11,32 @@ RSpec.describe 'Memorised expressions' do
         FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note))
         FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:empty_note))
 
-        sign_in_with_welcome_page user
+        sign_in_with_welcome_page '.last-login-button', user
       end
 
       it 'show a message that there are no data' do
         expect(page).to have_content 'ログインしました'
-        click_link '覚えた語彙'
+        click_link '覚えた'
         expect(page).to have_current_path memorised_expressions_path
         expect(page).to have_content user.name
         expect(all('li.expression').count).to eq 0
-        expect(page).to have_content 'このリストに登録している英単語またはフレーズはありません'
+        expect(page).to have_content 'このリストに登録している英単語・フレーズはありません'
       end
 
       it 'check tabs' do
         expect(page).to have_content 'ログインしました'
         visit '/memorised_expressions'
         within '.page_tabs' do
-          expect(page).to have_link '英単語・フレーズ', href: home_path
-          expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
-          expect(page).to have_link '覚えた語彙', href: memorised_expressions_path
-          click_link 'ブックマーク'
+          expect(page).to have_link '未分類', href: home_path
+          expect(page).to have_link '要復習', href: bookmarked_expressions_path
+          expect(page).to have_link '覚えた', href: memorised_expressions_path
+          click_link '要復習'
         end
         expect(page).to have_current_path bookmarked_expressions_path
-        expect(page).to have_content 'ブックマークしている英単語またはフレーズはありません'
+        expect(page).to have_content 'このリストに登録している英単語・フレーズはありません'
         within '.page_tabs' do
-          click_link '覚えた語彙'
-          find('a.words-and-phrases-link', text: '英単語・フレーズ').click
+          click_link '覚えた'
+          find('a.words-and-phrases-link', text: '未分類').click
         end
         expect(all('li.expression').count).to eq 3
       end
@@ -63,16 +63,16 @@ RSpec.describe 'Memorised expressions' do
           FactoryBot.create(:memorising, user:, expression: expressions[n][0].expression)
         end
 
-        sign_in_with_header '/', user
+        sign_in_with_welcome_page '.first-login-button', user
       end
 
-      it 'show a list of memorised expressions' do
+      it 'show a list of memorisings' do
         expect(page).to have_content 'ログインしました'
-        click_link '覚えた語彙'
+        click_link '覚えた'
         expect(page).to have_current_path memorised_expressions_path
 
         expect(all('li.expression').count).to eq 12
-        expect(page).not_to have_content 'このリストに登録している英単語またはフレーズはありません'
+        expect(page).not_to have_content 'このリストに登録している英単語・フレーズはありません'
         expect(page).not_to have_content 'ログインしていないため閲覧できません'
       end
 
@@ -90,36 +90,39 @@ RSpec.describe 'Memorised expressions' do
 
       it 'check tabs' do
         expect(page).to have_content 'ログインしました'
-        click_link '覚えた語彙'
+        click_link '覚えた'
         expect(page).to have_current_path memorised_expressions_path
         within '.page_tabs' do
-          expect(page).to have_link '英単語・フレーズ', href: home_path
-          expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
-          expect(page).to have_link '覚えた語彙', href: memorised_expressions_path
-          click_link 'ブックマーク'
+          expect(page).to have_link '未分類', href: home_path
+          expect(page).to have_link '要復習', href: bookmarked_expressions_path
+          expect(page).to have_link '覚えた', href: memorised_expressions_path
+          click_link '要復習'
         end
         expect(page).to have_current_path bookmarked_expressions_path
-        expect(page).to have_content 'ブックマークしている英単語またはフレーズはありません'
+        expect(page).to have_content 'このリストに登録している英単語・フレーズはありません'
         within '.page_tabs' do
-          click_link '覚えた語彙'
-          find('a.words-and-phrases-link', text: '英単語・フレーズ').click
+          click_link '覚えた'
+          find('a.words-and-phrases-link', text: '未分類').click
         end
         expect(page).to have_current_path home_path
-        expect(page).to have_content 'このリストに登録されている英単語またはフレーズはありません'
+        expect(page).to have_content 'このリストに登録している英単語・フレーズはありません'
       end
 
       it 'check if there is incremental search' do
         expect(page).to have_content 'ログインしました'
-        click_link '覚えた語彙'
+        click_link '覚えた'
         expect(page).to have_current_path memorised_expressions_path
         expect(page).to have_selector '.incremental-search'
       end
 
-      it 'check the link that goes to memorised words list' do
+      it 'check the link that goes to 覚えた list' do
         expect(page).to have_content 'ログインしました'
-        click_link '覚えた語彙'
+        click_link '覚えた'
         click_link "#{first_expression_items[0].content}, #{first_expression_items[1].content} and #{first_expression_items[2].content}"
-        expect(page).to have_content '下記の英単語・フレーズの違いについて'
+        expect(page).to have_content first_expression_items[0].content
+        expect(page).to have_content first_expression_items[1].content
+        expect(page).to have_content first_expression_items[2].content
+        expect(page).to have_content 'の違いについて'
         expect(page).to have_link '一覧に戻る'
         click_link '一覧に戻る'
         expect(page).to have_current_path memorised_expressions_path
@@ -139,7 +142,7 @@ RSpec.describe 'Memorised expressions' do
         FactoryBot.create(:memorising, user:, expression: second_expression_items[0].expression)
         FactoryBot.create(:memorising, user:, expression: third_expression_items[0].expression)
 
-        sign_in_with_header '/', user
+        sign_in_with_welcome_page '.first-login-button', user
         has_text? 'ログインしました'
 
         click_link 'クイズに挑戦'
@@ -176,7 +179,7 @@ RSpec.describe 'Memorised expressions' do
     let(:user) { FactoryBot.build(:user) }
 
     before do
-      sign_in_with_header '/', user
+      sign_in_with_welcome_page '.first-login-button', user
       has_text? 'ログインしました'
 
       click_link 'クイズに挑戦'
@@ -202,7 +205,7 @@ RSpec.describe 'Memorised expressions' do
       expect(page).to have_content 'ログアウトしました'
 
       visit '/memorised_expressions'
-      expect(page).to have_button 'Sign up/Log in with Google'
+      expect(page).to have_button 'Sign up / Log in with Google'
       expect(all('li.expression').count).to eq 0
       expect(page).to have_content 'ログインしていないため閲覧できません'
     end
@@ -211,16 +214,16 @@ RSpec.describe 'Memorised expressions' do
       expect(page).to have_content 'ログアウトしました'
       visit '/memorised_expressions'
       within '.page_tabs' do
-        expect(page).to have_link '英単語・フレーズ', href: home_path
-        expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
-        expect(page).to have_link '覚えた語彙', href: memorised_expressions_path
-        click_link 'ブックマーク'
+        expect(page).to have_link '未分類', href: home_path
+        expect(page).to have_link '要復習', href: bookmarked_expressions_path
+        expect(page).to have_link '覚えた', href: memorised_expressions_path
+        click_link '要復習'
       end
       expect(page).to have_current_path bookmarked_expressions_path
       expect(page).to have_content 'ログインしていないため閲覧できません'
       within '.page_tabs' do
-        click_link '覚えた語彙'
-        find('a.words-and-phrases-link', text: '英単語・フレーズ').click
+        click_link '覚えた'
+        find('a.words-and-phrases-link', text: '未分類').click
       end
       expect(page).to have_current_path home_path
       expect(all('li.expression').count).to eq 1

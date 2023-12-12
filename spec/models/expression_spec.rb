@@ -24,7 +24,7 @@ RSpec.describe Expression, type: :model do
       end
     end
 
-    context 'when user has logged in and url is root' do
+    context 'when user has logged in and url is home' do
       let!(:user) { FactoryBot.create(:user) }
       let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
       let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
@@ -59,7 +59,7 @@ RSpec.describe Expression, type: :model do
         expect(third_expression_items[0].expression.next(user)).to eq fourth_expression_items[0].expression
       end
 
-      it 'get next expression when the bookmark is created different order to expression' do
+      it 'get next expression when the bookmarking is created different order to expression' do
         FactoryBot.create(:bookmarking, user:, expression: second_expression_items[0].expression)
         FactoryBot.create(:bookmarking, user:, expression: fourth_expression_items[0].expression)
         FactoryBot.create(:bookmarking, user:, expression: third_expression_items[0].expression)
@@ -92,7 +92,7 @@ RSpec.describe Expression, type: :model do
         expect(third_expression_items[0].expression.next(user)).to eq fourth_expression_items[0].expression
       end
 
-      it 'get next expression when the memorised expression is created different order to expression' do
+      it 'get next expression when the memorising is created different order to expression' do
         FactoryBot.create(:memorising, user:, expression: second_expression_items[0].expression)
         FactoryBot.create(:memorising, user:, expression: fourth_expression_items[0].expression)
         FactoryBot.create(:memorising, user:, expression: third_expression_items[0].expression)
@@ -127,7 +127,7 @@ RSpec.describe Expression, type: :model do
       end
     end
 
-    context 'when user has logged in and url is root' do
+    context 'when user has logged in and url is home' do
       let!(:user) { FactoryBot.create(:user) }
       let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
       let!(:second_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
@@ -162,7 +162,7 @@ RSpec.describe Expression, type: :model do
         expect(third_expression_items[0].expression.previous(user)).to eq first_expression_items[0].expression
       end
 
-      it 'get previous expression when the bookmark is created different order to expression' do
+      it 'get previous expression when the bookmarking is created different order to expression' do
         FactoryBot.create(:bookmarking, user:, expression: second_expression_items[0].expression)
         FactoryBot.create(:bookmarking, user:, expression: fourth_expression_items[0].expression)
         FactoryBot.create(:bookmarking, user:, expression: third_expression_items[0].expression)
@@ -195,7 +195,7 @@ RSpec.describe Expression, type: :model do
         expect(third_expression_items[0].expression.previous(user)).to eq first_expression_items[0].expression
       end
 
-      it 'get previous expression when the bookmark is created different order to expression' do
+      it 'get previous expression when the memorising is created different order to expression' do
         FactoryBot.create(:memorising, user:, expression: second_expression_items[0].expression)
         FactoryBot.create(:memorising, user:, expression: fourth_expression_items[0].expression)
         FactoryBot.create(:memorising, user:, expression: third_expression_items[0].expression)

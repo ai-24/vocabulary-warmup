@@ -83,7 +83,6 @@ end
 group :test do
   gem 'capybara'
   gem 'selenium-webdriver'
-  gem 'webdrivers', '~> 5.0', require: false
 end
 
 gem 'dockerfile-rails', '>= 1.5', group: :development

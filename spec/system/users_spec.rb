@@ -15,20 +15,15 @@ RSpec.describe 'Users' do
       end
 
       it 'check the アカウント削除 button' do
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
         visit '/'
         expect(page).not_to have_button 'アカウント削除'
-        within '.welcome' do
-          click_button 'Sign up/Log in with Google'
-        end
+        sign_in_with_welcome_page '.last-login-button', user
         expect(page).to have_content 'ログインしました'
         expect(page).to have_button 'アカウント削除'
       end
 
       it 'check the function of deleting user account' do
-        sign_in_with_welcome_page user
+        sign_in_with_welcome_page '.last-login-button', user
         expect(page).to have_content 'ログインしました'
         click_button 'アカウント削除'
         expect do
@@ -36,11 +31,11 @@ RSpec.describe 'Users' do
           expect(page).to have_content 'アカウントを削除しました'
         end.to change(User, :count).by(-1).and change(Expression, :count).by(-17).and change(ExpressionItem, :count).by(-35).and change(Example, :count).by(-2)
         expect(page).to have_current_path root_path
-        expect(page).to have_content '間違いやすい英単語やフレーズの学習をサポートするツール'
+        expect(page).to have_content '間違いやすい英単語・フレーズの学習をサポート'
       end
     end
 
-    context 'when user has bookmarks and memorised words list' do
+    context 'when user has bookmarkings and memorisings' do
       let!(:user) { FactoryBot.create(:user) }
 
       before do
@@ -58,7 +53,7 @@ RSpec.describe 'Users' do
           FactoryBot.create(:bookmarking, user:, expression: expressions[n + 8][0].expression)
         end
 
-        sign_in_with_header '/', user
+        sign_in_with_welcome_page '.first-login-button', user
       end
 
       it 'check if user is deleted' do
@@ -97,7 +92,7 @@ RSpec.describe 'Users' do
           FactoryBot.create(:tagging, tag: tag2, expression: expressions[n][0].expression)
         end
 
-        sign_in_with_header '/', user
+        sign_in_with_welcome_page '.first-login-button', user
       end
 
       it 'check if user is deleted' do
@@ -112,7 +107,7 @@ RSpec.describe 'Users' do
       end
     end
 
-    context 'when user has tags, bookmarks and memorised words list' do
+    context 'when user has tags, bookmarkings and memorisings' do
       let!(:user) { FactoryBot.create(:user) }
 
       before do
@@ -146,7 +141,7 @@ RSpec.describe 'Users' do
           FactoryBot.create(:bookmarking, user:, expression: expressions[n + 20][0].expression)
         end
 
-        sign_in_with_header '/', user
+        sign_in_with_welcome_page '.first-login-button', user
       end
 
       it 'check if user is deleted' do

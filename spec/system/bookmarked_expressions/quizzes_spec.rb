@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'BookmarkedExpressions Quiz' do
-  context 'when user starts quiz from bookmark list' do
+  context 'when user starts quiz from 要復習 list' do
     let!(:user1) { FactoryBot.create(:user) }
     let!(:expression1) { FactoryBot.create(:empty_note, user_id: user1.id) }
     let!(:first_expression_item) { FactoryBot.create(:expression_item, expression: expression1) }
@@ -25,12 +25,12 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
       FactoryBot.create(:bookmarking, user: user2, expression: fifth_expression_items[0].expression)
       FactoryBot.create(:memorising, user: user1, expression: third_expression_items[0].expression)
 
-      sign_in_with_header '/', user1
+      sign_in_with_welcome_page '.first-login-button', user1
     end
 
-    it 'check if the questions are from bookmarks' do
+    it 'check if the questions are from 要復習' do
       expect(page).to have_content 'ログインしました'
-      click_link 'ブックマーク'
+      click_link '要復習'
       expect(page).to have_current_path bookmarked_expressions_path
       click_link 'クイズに挑戦'
       expect(page).to have_current_path bookmarked_expressions_quiz_path
@@ -51,7 +51,7 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
 
     it 'check if the questions and answers are set correctly' do
       expect(page).to have_content 'ログインしました'
-      click_link 'ブックマーク'
+      click_link '要復習'
       expect(page).to have_current_path bookmarked_expressions_path
       click_link 'クイズに挑戦'
       expect(page).to have_current_path bookmarked_expressions_quiz_path
@@ -76,9 +76,9 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
       end
     end
 
-    it 'check if a section of moving expressions to bookmark or memorised list is not on the result page when all answers were wrong' do
+    it 'check if a section of moving expressions to 要復習 or 覚えた list is not on the result page when all answers were wrong' do
       expect(page).to have_content 'ログインしました'
-      click_link 'ブックマーク'
+      click_link '要復習'
       expect(page).to have_current_path bookmarked_expressions_path
       click_link 'クイズに挑戦'
       expect(page).to have_current_path bookmarked_expressions_quiz_path
@@ -94,7 +94,7 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
 
     it 'check if a message that recommends next action is not on the result page when a section of moving expressions is not there' do
       expect(page).to have_content 'ログインしました'
-      click_link 'ブックマーク'
+      click_link '要復習'
       expect(page).to have_current_path bookmarked_expressions_path
       click_link 'クイズに挑戦'
       expect(page).to have_current_path bookmarked_expressions_quiz_path
@@ -103,13 +103,13 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
         click_button 'クイズに解答する'
         n < 4 ? click_button('次へ') : click_button('クイズの結果を確認する')
       end
-      expect(page).not_to have_content 'ブックマークや覚えた語彙リストに英単語・フレーズを保存した後は復習しましょう！'
-      expect(page).not_to have_content '重要: 一度この画面を離れると戻れません。今回の結果をブックマークや覚えた語彙リストに保存する場合は、下記ボタンをクリックする前に必ず行なってください。'
+      expect(page).not_to have_content '要復習や覚えたリストに英単語・フレーズを保存した後は復習しましょう！'
+      expect(page).not_to have_content '重要: 一度この画面を離れると戻れません。今回の結果を要復習や覚えたリストに保存する場合は、下記ボタンをクリックする前に必ず行なってください。'
     end
 
-    it 'check if a section of moving expressions to memorised list is on the result page when some answers are correct' do
+    it 'check if a section of moving expressions to 覚えた list is on the result page when some answers are correct' do
       expect(page).to have_content 'ログインしました'
-      click_link 'ブックマーク'
+      click_link '要復習'
       expect(page).to have_current_path bookmarked_expressions_path
       click_link 'クイズに挑戦'
       expect(page).to have_current_path bookmarked_expressions_quiz_path
@@ -130,7 +130,7 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
 
     it 'check if request for saving bookmarkings is not sent when memorising is saved' do
       expect(page).to have_content 'ログインしました'
-      click_link 'ブックマーク'
+      click_link '要復習'
       expect(page).to have_current_path bookmarked_expressions_path
       click_link 'クイズに挑戦'
       expect(page).to have_current_path bookmarked_expressions_quiz_path
@@ -146,13 +146,13 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
       end
       expect(page).to have_selector('.section-of-correct-answers')
       click_button '保存する'
-      expect(page).to have_content '覚えた語彙リストに保存しました！'
-      expect(page).not_to have_content '覚えた語彙リストに保存しましたがブックマークは出来ませんでした'
+      expect(page).to have_content '覚えたリストに英単語・フレーズを保存しました！'
+      expect(page).not_to have_content '覚えたリストに保存しましたが要復習リストには保存出来ませんでした'
     end
 
     it 'check if bookmarking is destroyed when memorising is created' do
       expect(page).to have_content 'ログインしました'
-      click_link 'ブックマーク'
+      click_link '要復習'
       expect(page).to have_current_path bookmarked_expressions_path
       click_link 'クイズに挑戦'
       expect(page).to have_current_path bookmarked_expressions_quiz_path
@@ -169,13 +169,13 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
       expect(page).to have_selector('.section-of-correct-answers')
       expect do
         click_button '保存する'
-        expect(page).to have_content '覚えた語彙リストに保存しました！'
+        expect(page).to have_content '覚えたリストに英単語・フレーズを保存しました！'
       end.to change(Bookmarking, :count).by(-1).and change(Memorising, :count).by(1)
     end
 
     it 'check if bookmarkings are destroyed when memorisings are created' do
       expect(page).to have_content 'ログインしました'
-      click_link 'ブックマーク'
+      click_link '要復習'
       expect(page).to have_current_path bookmarked_expressions_path
       click_link 'クイズに挑戦'
       expect(page).to have_current_path bookmarked_expressions_quiz_path
@@ -198,12 +198,12 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
       expect(page).to have_selector('.section-of-correct-answers')
       expect do
         click_button '保存する'
-        expect(page).to have_content '覚えた語彙リストに保存しました！'
+        expect(page).to have_content '覚えたリストに英単語・フレーズを保存しました！'
       end.to change(Bookmarking, :count).by(-2).and change(Memorising, :count).by(2)
     end
   end
 
-  context 'when new user starts quiz from bookmarks' do
+  context 'when new user starts quiz from 要復習' do
     let(:new_user) { FactoryBot.build(:user) }
     let!(:user) { FactoryBot.create(:user) }
     let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note)) }
@@ -217,7 +217,7 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
       has_text? 'ログインしました'
     end
 
-    it 'check if the questions are from bookmarks' do
+    it 'check if the questions are from 要復習' do
       click_link 'クイズに挑戦'
       9.times do |n|
         expect(page).to have_selector 'p.content-of-question'
@@ -225,11 +225,11 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
         expect(page).to have_content '×'
         n < 8 ? click_button('次へ') : click_button('クイズの結果を確認する')
       end
-      find('summary', text: 'ブックマークする英単語・フレーズ').click
+      find('summary', text: '要復習リストに保存する英単語・フレーズ').click
       find('label', text: 'balcony and veranda').click
       find('label', text: "#{second_expression_items[0].content}, #{second_expression_items[1].content} and #{second_expression_items[2].content}").click
       click_button '保存する'
-      expect(page).to have_content 'ブックマークしました！'
+      expect(page).to have_content '要復習リストに英単語・フレーズを保存しました！'
 
       visit bookmarked_expressions_path
 
@@ -249,17 +249,17 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
     end
   end
 
-  context 'when user does not have bookmarks' do
+  context 'when user does not have bookmarkings' do
     let(:new_user) { FactoryBot.build(:user) }
 
     before do
       FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note))
       FactoryBot.create_list(:expression_item2, 3, expression: FactoryBot.create(:empty_note))
 
-      sign_in_with_header '/', new_user
+      sign_in_with_welcome_page '.first-login-button', new_user
     end
 
-    it 'check if the page is bookmarks list' do
+    it 'check if the page is 要復習 list' do
       expect(page).to have_content 'ログインしました'
       expect(new_user.bookmarkings.count).to eq 0
       visit bookmarked_expressions_path
@@ -271,7 +271,7 @@ RSpec.describe 'BookmarkedExpressions Quiz' do
   end
 
   context 'when user has not logged in' do
-    it 'check if the page is bookmarks list' do
+    it 'check if the page is 要復習 list' do
       visit bookmarked_expressions_path
       expect(page).not_to have_link 'クイズに挑戦'
 

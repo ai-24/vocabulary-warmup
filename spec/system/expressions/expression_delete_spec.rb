@@ -6,7 +6,9 @@ RSpec.describe 'Expressions' do
   describe 'authority' do
     it 'check if expression is not deleted without login' do
       visit '/'
-      click_link '試してみる(機能に制限あり)'
+      within '.without-login' do
+        click_link '試してみる'
+      end
       expect(page).to have_current_path home_path
       click_link 'balcony and veranda'
       within '.specific-expression' do
@@ -19,7 +21,7 @@ RSpec.describe 'Expressions' do
       user2 = FactoryBot.create(:user)
       first_expression_items = FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:note, user_id: user1.id))
 
-      sign_in_with_welcome_page user2
+      sign_in_with_welcome_page '.last-login-button', user2
       expect(page).to have_content 'ログインしました'
       visit "/expressions/#{first_expression_items[0].expression.id}"
       expect(page).to have_current_path home_path
@@ -29,7 +31,7 @@ RSpec.describe 'Expressions' do
     it 'check if expression which user_id is nil is not deleted' do
       user1 = FactoryBot.create(:user)
 
-      sign_in_with_welcome_page user1
+      sign_in_with_welcome_page '.last-login-button', user1
       expect(page).to have_content 'ログインしました'
       expect(Expression.where('user_id = ?', user1.id).count).to eq 0
       visit '/expressions/1'
@@ -45,7 +47,7 @@ RSpec.describe 'Expressions' do
     let!(:second_expression_items) { FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:note, user_id: user.id)) }
 
     before do
-      sign_in_with_welcome_page user
+      sign_in_with_welcome_page '.last-login-button', user
       has_text? 'ログインしました'
 
       click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
@@ -56,8 +58,8 @@ RSpec.describe 'Expressions' do
         within '.specific-expression' do
           click_button '削除'
         end
-        expect(page.accept_confirm).to eq 'この英単語又はフレーズを本当に削除しますか？'
-        expect(page).to have_content '英単語又はフレーズを削除しました'
+        expect(page.accept_confirm).to eq 'この英単語・フレーズを本当に削除しますか？'
+        expect(page).to have_content '英単語・フレーズを削除しました'
       end.to change(Expression, :count).by(-1).and change(ExpressionItem, :count).by(-2)
 
       visit '/'
@@ -69,7 +71,7 @@ RSpec.describe 'Expressions' do
         within '.specific-expression' do
           click_button '削除'
         end
-        expect(page.dismiss_confirm).to eq 'この英単語又はフレーズを本当に削除しますか？'
+        expect(page.dismiss_confirm).to eq 'この英単語・フレーズを本当に削除しますか？'
         within '.title' do
           expect(page).to have_content first_expression_items[0].content
         end
@@ -85,11 +87,13 @@ RSpec.describe 'Expressions' do
           click_button '削除'
         end
       end
-      expect(page).to have_content '英単語又はフレーズを削除しました'
+      expect(page).to have_content '英単語・フレーズを削除しました'
 
-      within '.title' do
-        expect(page).to have_content "1. #{second_expression_items[0].content}"
-        expect(page).to have_content "2. #{second_expression_items[1].content}"
+      within 'h1' do
+        expect(page).to have_content second_expression_items[0].content
+        expect(page).to have_content 'と'
+        expect(page).to have_content second_expression_items[1].content
+        expect(page).to have_content 'の違いについて'
       end
     end
   end
@@ -100,7 +104,7 @@ RSpec.describe 'Expressions' do
     let!(:second_expression_items) { FactoryBot.create_list(:expression_item2, 2, expression: FactoryBot.create(:note, user_id: user.id)) }
 
     before do
-      sign_in_with_welcome_page user
+      sign_in_with_welcome_page '.last-login-button', user
       has_text? 'ログインしました'
 
       visit "/expressions/#{second_expression_items[0].expression.id}"
@@ -112,20 +116,22 @@ RSpec.describe 'Expressions' do
           click_button '削除'
         end
       end
-      expect(page).to have_content '英単語又はフレーズを削除しました'
+      expect(page).to have_content '英単語・フレーズを削除しました'
 
-      within '.title' do
-        expect(page).to have_content "1. #{first_expression_items[0].content}"
-        expect(page).to have_content "2. #{first_expression_items[1].content}"
+      within 'h1' do
+        expect(page).to have_content first_expression_items[0].content
+        expect(page).to have_content 'と'
+        expect(page).to have_content first_expression_items[1].content
+        expect(page).to have_content 'の違いについて'
       end
     end
   end
 
-  describe 'delete last expression in a default list' do
+  describe 'delete last expression in 未分類 list' do
     let(:user) { FactoryBot.build(:user) }
 
     it 'check if home page is on the screen when the last expression is deleted' do
-      sign_in_with_welcome_page user
+      sign_in_with_welcome_page '.last-login-button', user
       expect(page).to have_content 'ログインしました'
       click_link 'balcony and veranda'
       accept_confirm do
@@ -133,50 +139,50 @@ RSpec.describe 'Expressions' do
           click_button '削除'
         end
       end
-      expect(page).to have_content '英単語又はフレーズを削除しました'
+      expect(page).to have_content '英単語・フレーズを削除しました'
 
       expect(Expression.where('user_id = ?', user.id).count).to eq 0
       expect(page).to have_current_path home_path, ignore_query: true
-      expect(page).to have_content 'このリストに登録されている英単語またはフレーズはありません'
+      expect(page).to have_content 'このリストに登録している英単語・フレーズはありません'
     end
   end
 
-  describe 'delete last expression in a bookmark list' do
+  describe 'delete last expression in a 要復習 list' do
     let!(:user) { FactoryBot.create(:user) }
     let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
 
-    it 'check if the bookmark list is on the screen when the last expression is deleted' do
+    it 'check if the 要復習 list is on the screen when the last expression is deleted' do
       FactoryBot.create(:bookmarking, user:, expression: first_expression_items[0].expression)
-      sign_in_with_welcome_page user
+      sign_in_with_welcome_page '.last-login-button', user
       expect(page).to have_content 'ログインしました'
-      click_link 'ブックマーク'
+      click_link '要復習'
       click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
       accept_confirm do
         within '.specific-expression' do
           click_button '削除'
         end
       end
-      expect(page).to have_content '英単語又はフレーズを削除しました'
+      expect(page).to have_content '英単語・フレーズを削除しました'
       expect(page).to have_current_path bookmarked_expressions_path
     end
   end
 
-  describe 'delete last expression in a memorised words list' do
+  describe 'delete last expression in 覚えた list' do
     let!(:user) { FactoryBot.create(:user) }
     let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
 
-    it 'check if the memorised words list is on the screen when the last expression is deleted' do
+    it 'check if the 覚えた list is on the screen when the last expression is deleted' do
       FactoryBot.create(:memorising, user:, expression: first_expression_items[0].expression)
-      sign_in_with_welcome_page user
+      sign_in_with_welcome_page '.last-login-button', user
       expect(page).to have_content 'ログインしました'
-      click_link '覚えた語彙'
+      click_link '覚えた'
       click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
       accept_confirm do
         within '.specific-expression' do
           click_button '削除'
         end
       end
-      expect(page).to have_content '英単語又はフレーズを削除しました'
+      expect(page).to have_content '英単語・フレーズを削除しました'
       expect(page).to have_current_path memorised_expressions_path
     end
   end

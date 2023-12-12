@@ -3,21 +3,21 @@
 require 'rails_helper'
 
 RSpec.describe 'Bookmarked expressions' do
-  context 'when user who already has a bookmark logged in' do
+  context 'when user who already has a bookmarking logged in' do
     let!(:user) { FactoryBot.create(:user) }
     let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
 
     before do
       FactoryBot.create(:bookmarking, user:, expression: first_expression_items[0].expression)
 
-      sign_in_with_header '/', user
+      sign_in_with_welcome_page '.first-login-button', user
     end
 
-    it 'check the link that goes to bookmark list on expression detail page' do
+    it 'check the link that goes to 要復習 list on expression detail page' do
       expect(page).to have_content 'ログインしました'
-      click_link 'ブックマーク'
+      click_link '要復習'
       click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
-      expect(page).to have_content '下記の英単語・フレーズの違いについて'
+      expect(page).to have_current_path expression_path(first_expression_items[0].expression)
       expect(page).to have_link '一覧に戻る'
       click_link '一覧に戻る'
       expect(page).to have_current_path bookmarked_expressions_path
@@ -40,42 +40,42 @@ RSpec.describe 'Bookmarked expressions' do
     let!(:seventh_expression_item) { FactoryBot.create(:expression_item, content: Faker::Job.field, explanation: Faker::Quote.yoda, expression: expression3) }
 
     before do
-      sign_in_with_header '/', user
+      sign_in_with_welcome_page '.first-login-button', user
     end
 
-    context 'when there are no bookmarks' do
-      it 'show a message that there are no bookmarks' do
+    context 'when there are no bookmarkings' do
+      it 'show a message that there are no bookmarkings' do
         expect(page).to have_content 'ログインしました'
-        click_link 'ブックマーク'
+        click_link '要復習'
         expect(page).to have_current_path bookmarked_expressions_path
         expect(page).to have_content user.name
         expect(all('li.expression').count).to eq 0
-        expect(page).to have_content 'ブックマークしている英単語またはフレーズはありません'
+        expect(page).to have_content 'このリストに登録している英単語・フレーズはありません'
       end
 
       it 'check tabs' do
         expect(page).to have_content 'ログインしました'
-        click_link 'ブックマーク'
+        click_link '要復習'
 
         within '.page_tabs' do
-          expect(page).to have_link '英単語・フレーズ', href: home_path
-          expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
-          expect(page).to have_link '覚えた語彙', href: memorised_expressions_path
-          find('a.words-and-phrases-link', text: '英単語・フレーズ').click
+          expect(page).to have_link '未分類', href: home_path
+          expect(page).to have_link '要復習', href: bookmarked_expressions_path
+          expect(page).to have_link '覚えた', href: memorised_expressions_path
+          find('a.words-and-phrases-link', text: '未分類').click
         end
         expect(page).to have_current_path home_path
         expect(all('li.expression').count).to eq 3
         within '.page_tabs' do
-          click_link 'ブックマーク'
-          click_link '覚えた語彙'
+          click_link '要復習'
+          click_link '覚えた'
         end
         expect(page).to have_current_path memorised_expressions_path
-        expect(page).to have_content 'このリストに登録している英単語またはフレーズはありません'
+        expect(page).to have_content 'このリストに登録している英単語・フレーズはありません'
       end
     end
 
-    context 'when there are bookmarks' do
-      it 'show a list of bookmarked expressions' do
+    context 'when there are bookmarkings' do
+      it 'show a list of 要復習' do
         expect(page).to have_content 'ログインしました'
         click_link 'クイズに挑戦'
 
@@ -86,13 +86,13 @@ RSpec.describe 'Bookmarked expressions' do
           n < 6 ? click_button('次へ') : click_button('クイズの結果を確認する')
         end
         click_button '保存する'
-        expect(page).to have_content 'ブックマークしました！'
+        expect(page).to have_content '要復習リストに英単語・フレーズを保存しました！'
 
         visit '/bookmarked_expressions'
 
         expect(page).to have_selector '.incremental-search'
         expect(all('li.expression').count).to eq 3
-        expect(page).not_to have_content 'ブックマークしている英単語またはフレーズはありません'
+        expect(page).not_to have_content 'このリストに登録している英単語・フレーズはありません'
         expect(page).not_to have_content 'ログインしていないため閲覧できません'
       end
 
@@ -107,7 +107,7 @@ RSpec.describe 'Bookmarked expressions' do
           n < 6 ? click_button('次へ') : click_button('クイズの結果を確認する')
         end
         click_button '保存する'
-        expect(page).to have_content 'ブックマークしました！'
+        expect(page).to have_content '要復習リストに英単語・フレーズを保存しました！'
 
         visit '/bookmarked_expressions'
 
@@ -132,14 +132,14 @@ RSpec.describe 'Bookmarked expressions' do
           n < 6 ? click_button('次へ') : click_button('クイズの結果を確認する')
         end
         click_button '保存する'
-        expect(page).to have_content 'ブックマークしました！'
+        expect(page).to have_content '要復習リストに英単語・フレーズを保存しました！'
 
         visit '/bookmarked_expressions'
 
         within '.page_tabs' do
-          expect(page).to have_link '英単語・フレーズ', href: home_path
-          expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
-          expect(page).to have_link '覚えた語彙', href: memorised_expressions_path
+          expect(page).to have_link '未分類', href: home_path
+          expect(page).to have_link '要復習', href: bookmarked_expressions_path
+          expect(page).to have_link '覚えた', href: memorised_expressions_path
         end
       end
     end
@@ -155,10 +155,10 @@ RSpec.describe 'Bookmarked expressions' do
           expect(page).to have_content '×'
           n < 6 ? click_button('次へ') : click_button('クイズの結果を確認する')
         end
-        find('summary', text: 'ブックマークする英単語・フレーズ').click
+        find('summary', text: '要復習リストに保存する英単語・フレーズ').click
         find('label', text: "#{first_expression_item.content} and #{second_expression_item.content}").click
         click_button '保存する'
-        expect(page).to have_content 'ブックマークしました！'
+        expect(page).to have_content '要復習リストに英単語・フレーズを保存しました！'
 
         click_button 'クイズに再挑戦'
         2.times do |n|
@@ -168,7 +168,7 @@ RSpec.describe 'Bookmarked expressions' do
           n < 1 ? click_button('次へ') : click_button('クイズの結果を確認する')
         end
         click_button '保存する'
-        expect(page).to have_content 'ブックマークしました！'
+        expect(page).to have_content '要復習リストに英単語・フレーズを保存しました！'
 
         visit '/bookmarked_expressions'
 
@@ -188,7 +188,7 @@ RSpec.describe 'Bookmarked expressions' do
     let(:user) { FactoryBot.build(:user) }
 
     before do
-      sign_in_with_header '/', user
+      sign_in_with_welcome_page '.first-login-button', user
       has_text? 'ログインしました'
 
       visit '/quiz'
@@ -199,7 +199,7 @@ RSpec.describe 'Bookmarked expressions' do
         n < 1 ? click_button('次へ') : click_button('クイズの結果を確認する')
       end
       click_button '保存する'
-      has_text? 'ブックマークしました！'
+      has_text? '要復習リストに保存しました！'
 
       visit '/home'
       find('label', text: user.name).click
@@ -208,32 +208,36 @@ RSpec.describe 'Bookmarked expressions' do
 
     it 'show message that is not logged in' do
       expect(page).to have_content 'ログアウトしました'
-      click_link '試してみる(機能に制限あり)'
+      within '.recommended-users' do
+        click_link '試してみる'
+      end
       expect(page).to have_current_path home_path
-      click_link 'ブックマーク'
+      click_link '要復習'
       expect(page).to have_current_path bookmarked_expressions_path
-      expect(page).to have_button 'Sign up/Log in with Google'
+      expect(page).to have_button 'Sign up / Log in with Google'
       expect(all('li.expression').count).to eq 0
       expect(page).to have_content 'ログインしていないため閲覧できません'
     end
 
     it 'check tabs' do
       expect(page).to have_content 'ログアウトしました'
-      click_link '試してみる(機能に制限あり)'
+      within '.without-login' do
+        click_link '試してみる'
+      end
       expect(page).to have_current_path home_path
-      click_link 'ブックマーク'
+      click_link '要復習'
 
       within '.page_tabs' do
-        expect(page).to have_link '英単語・フレーズ', href: home_path
-        expect(page).to have_link 'ブックマーク', href: bookmarked_expressions_path
-        expect(page).to have_link '覚えた語彙', href: memorised_expressions_path
-        find('a.words-and-phrases-link', text: '英単語・フレーズ').click
+        expect(page).to have_link '未分類', href: home_path
+        expect(page).to have_link '要復習', href: bookmarked_expressions_path
+        expect(page).to have_link '覚えた', href: memorised_expressions_path
+        find('a.words-and-phrases-link', text: '未分類').click
       end
       expect(page).to have_current_path home_path
       expect(all('li.expression').count).to eq 1
       within '.page_tabs' do
-        click_link 'ブックマーク'
-        click_link '覚えた語彙'
+        click_link '要復習'
+        click_link '覚えた'
       end
       expect(page).to have_current_path memorised_expressions_path
       expect(page).to have_content 'ログインしていないため閲覧できません'
@@ -241,9 +245,11 @@ RSpec.describe 'Bookmarked expressions' do
 
     it 'check if there is no incremental search' do
       expect(page).to have_content 'ログアウトしました'
-      click_link '試してみる(機能に制限あり)'
+      within '.without-login' do
+        click_link '試してみる'
+      end
       expect(page).to have_current_path home_path
-      click_link 'ブックマーク'
+      click_link '要復習'
       expect(page).not_to have_selector '.incremental-search'
     end
   end

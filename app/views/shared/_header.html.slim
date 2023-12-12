@@ -1,7 +1,7 @@
-header class="sticky top-0 bg-white border-b border-lavender-600 relative h-[70px] z-50"
+header class="sticky top-0 bg-lavender-600 relative h-[70px] z-50"
   .flex.flex-row.h-full
     .basis-1/2.flex.items-center
-      .pl-1.5
+      .sm:pl-6
         - if logged_in?
           = link_to home_path, class: 'logo hover:opacity-60' do
             = image_tag 'logo.svg', alt: 'Word Warmupのロゴ'
@@ -11,8 +11,8 @@ header class="sticky top-0 bg-white border-b border-lavender-600 relative h-[70p
     .basis-1/2
       .flex.justify-end.h-full
         - if logged_in?
-          div class="bg-white inline-block absolute lg:static top-[70px] left-0 w-full h-11 lg:h-full border-b lg:border-b-0 border-lavender-600 flex justify-center items-center"
-            div(data-vue='IncrementalSearch' class="incremental-search inline-block lg:pr-5 w-11/12 absolute top-[5.5px] bottom-[5.5px] lg:top-[15.5px]  lg:bottom-[15.5px] md:w-96")
+          div class="bg-white lg:bg-lavender-600 inline-block absolute lg:static top-[70px] left-0 w-full h-16 lg:h-full border-b lg:border-b-0 border-lavender-600 flex justify-center items-center"
+            div(data-vue='IncrementalSearch' class="incremental-search inline-block lg:pr-5 w-11/12 absolute md:w-96 inset-y-px lg:top-[5.5px] lg:bottom-[5.5px]")
           .account.relative
             label.inline-block.font-medium.h-full.w-36.px-2.flex.justify-center.hover:cursor-pointer.hover:bg-lavender-600.hover:text-white.border-l.flex.items-center.overflow-auto(for='header-menu')
               = current_user.name
@@ -22,5 +22,5 @@ header class="sticky top-0 bg-white border-b border-lavender-600 relative h-[70p
               .left-0.top-full.absolute.text-center.z-50
                 = button_to 'Log out', logout_path, method: :delete, class: 'w-36 bg-white border py-3 rounded hover:bg-lavender-600 hover:text-white'
         - else
-          .button-on-header.flex.items-center.mr-1.md:mr-9
-            = button_to 'Sign up/Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }, class: 'font-medium text-sm md:text-lg rounded-full bg-lavender-800 hover:bg-lavender-600 text-white px-0.5 md:px-5 py-px md:py-0.5'
+          .button-on-header.flex.items-center.mr-1.ml-10.sm:mr-9
+            = button_to 'Sign up / Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }, class: 'font-medium text-sm md:text-lg rounded bg-black-900 hover:bg-white hover:text-darklavender-600 text-white px-0.5 sm:px-5 py-px sm:py-0.5'
