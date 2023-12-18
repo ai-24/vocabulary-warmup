@@ -1,17 +1,17 @@
-div class="mb-10 border-b border-neutral-300 pb-2 flex flex-row"
-  h1 class="text-xl sm:text-2xl font-bold inline basis-1/2"
+.mb-10.border-b.border-neutral-300.pb-2.flex.flex-row
+  h1.text-xl.sm:text-2xl.font-bold.inline.basis-1/2
     = Expression.model_name.human
-  div class="basis-1/2 flex justify-end"
+  .basis-1/2.flex.justify-end
     - if logged_in?
       = link_to t('create'), new_expression_path, class: 'w-fit block font-semibold py-1 rounded hover:bg-lavender-50 border border-lavender-600 text-lavender-600 px-2 mr-1 text-sm sm:text-base'
     - else
-      div class="create-button-for-non-users relative group"
+      .create-button-for-non-users.relative.group
         div class="w-56 text-sm group-hover:opacity-100 group-hover:pointer-events-auto opacity-0 pointer-events-none border border-lavender-600 rounded absolute z-10 right-0 top-[-177%] px-1 py-1"
           p class="mb-0.5 text-center font-semibold"
             = t('how_to_create_data')
-          div class="flex justify-center"
+          .flex.justify-center
             = button_to 'Sign up / Log in with Google', '/auth/google_oauth2', method: :post, data: { turbo: false }, class: 'rounded bg-black-900 text-white hover:bg-white hover:text-darklavender-600 border border-black-900 hover:border-darklavender-600 px-1 sm:px-2'
-        div class="group-hover:opacity-100 group-hover:pointer-events-auto pointer-events-none opacity-0 h-4 -top-20% right-0 absolute z-10 w-56"
-        div class="group-hover:opacity-100 group-hover:pointer-events-auto pointer-events-none opacity-0 border-8 border-x-transparent border-b-transparent border-t-lavender-600 -top-20% left-1/2 absolute h-0 w-0 z-20"
+        .group-hover:opacity-100.group-hover:pointer-events-auto.pointer-events-none.opacity-0.h-4.-top-1/5.right-0.absolute.z-10.w-56
+        .group-hover:opacity-100.group-hover:pointer-events-auto.pointer-events-none.opacity-0.border-8.border-x-transparent.border-b-transparent.border-t-lavender-600.-top-1/5.left-1/2.absolute.h-0.w-0.z-20
         p class="opacity-70 inline-block font-semibold py-1 hover:cursor-not-allowed text-lavender-600 border-lavender-600 border rounded px-1.5 mr-1"
           = t('create')
