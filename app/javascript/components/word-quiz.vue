@@ -7,11 +7,12 @@
         :raw-quiz-resources="rawQuizResources"
         :userAnswers="userAnswersList"></WordQuizResult>
       <div v-else>
-        <p class="count-questions text-right mr-5 tracking-wide">
-          {{ currentQuestion }} / {{ numberOfResources }}
-        </p>
-        <p class="font-bold text-lg tracking-widest">
+        <p class="inline font-bold text-lg tracking-widest">
           {{ $t('quiz.question') }}
+        </p>
+        <p
+          class="inline float-right count-questions text-right mr-5 tracking-wide">
+          {{ currentQuestion }} / {{ numberOfResources }}
         </p>
         <div class="h-56">
           <template
@@ -19,17 +20,20 @@
             :key="quizResource">
             <p
               v-if="currentIndex === index"
-              class="content-of-question font-bold border-2 border-lavender-800 bg-lavender-50 rounded py-2 px-4 mt-2 h-44 overflow-y-auto">
+              class="content-of-question border border-darklavender-200 bg-darklavender-50 rounded py-2 px-4 mt-2 h-44 overflow-y-auto">
               {{ quizResource.explanation }}
             </p>
           </template>
         </div>
+        <label for="userAnswer" class="font-bold">{{
+          $t('quiz.inputTheAnswer')
+        }}</label>
         <input
           v-if="!answered"
           v-model="userAnswer"
           ref="input"
           class="border-2 border-gray-400 rounded w-full h-9 pl-4 mb-3"
-          :placeholder="$t('quiz.placeholder')" />
+          id="userAnswer" />
         <p
           v-else
           class="border-2 border-gray-400 rounded w-full h-9 flex items-center pl-4 mb-3">
@@ -56,21 +60,21 @@
             <p class="font-semibold text-sm pb-1">{{ $t('quiz.completed') }}</p>
             <button
               @click="getResult"
-              class="rounded-full font-bold py-1 px-3 sm:px-5 bg-golden-yellow-400 hover:bg-golden-yellow-800">
+              class="rounded font-bold py-2 px-3.5 sm:px-10 bg-darklavender-200 hover:bg-darklavender-600 hover:text-white">
               {{ $t('quiz.resultButton') }}
             </button>
           </div>
           <div v-else-if="answered" class="mt-3">
             <button
               @click="getNextQuestion"
-              class="rounded-full bg-golden-yellow-400 font-bold py-0.5 px-10 hover:bg-golden-yellow-800">
+              class="rounded bg-darklavender-200 font-bold py-2 px-10 hover:bg-darklavender-600 hover:text-white">
               {{ $t('quiz.next') }}
             </button>
           </div>
           <div v-else class="mt-3">
             <button
               @click="onSubmit"
-              class="rounded-full bg-golden-yellow-400 font-bold py-1 px-5 hover:bg-golden-yellow-800">
+              class="rounded bg-darklavender-200 font-bold py-2 px-10 hover:bg-darklavender-600 hover:text-white">
               {{ $t('quiz.submit') }}
             </button>
           </div>

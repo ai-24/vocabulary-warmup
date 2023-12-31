@@ -1,11 +1,11 @@
 - title '英単語・フレーズの編集'
 - description '間違いやすい英単語やフレーズの学習をサポートするツールWord Warmupの英単語・フレーズの編集ページ'
 
-.pt-20.pb-12.lg:pt-14.max-w-800.w-full.mx-auto
-  h1.text-xl.font-bold.mb-10.border-b.border-neutral-400.pl-2
+.pt-24.lg:pt-20.pb-12.lg:pt-14.max-w-800.w-full.mx-auto
+  h1.text-xl.font-bold.mb-10.border-b.border-lavender-600.pb-2.mx-2.sm:mx-0
     = t('.title')
   div(data-vue='ExpressionsForm' data-vue-expression-id:number="#{params[:id]}")
 
 .mb-12
-  = link_to t('.go_to_show'), @expression, class: 'block mb-3 w-fit mx-auto hover:text-neutral-400'
-  = link_to t('.go_to_index'), home_path, class: 'block w-fit mx-auto hover:text-neutral-400'
+  = link_to t('.cancel'), @expression, class: 'block mb-3 w-fit mx-auto text-darklavender-800 hover:opacity-50'
+  = link_to t('.go_to_index'), home_path, class: 'block w-fit mx-auto text-darklavender-800 hover:opacity-50'

@@ -8,11 +8,11 @@ RSpec.describe 'Expressions' do
     let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
 
     before do
-      sign_in_with_header '/', user
+      sign_in_with_welcome_page '.first-login-button', user
       has_text? 'ログインしました'
 
       click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
-      click_link '編集'
+      click_link '内容変更'
     end
 
     it 'check links' do
@@ -31,25 +31,27 @@ RSpec.describe 'Expressions' do
 
     it 'check if edit button is not on the page when user has not logged in' do
       visit '/'
-      click_link '試してみる(機能に制限あり)'
+      within '.without-login' do
+        click_link '試してみる'
+      end
       expect(page).to have_current_path home_path
       click_link 'balcony and veranda'
-      expect(page).not_to have_link '編集'
+      expect(page).not_to have_link '内容変更'
     end
 
     it "check if edit button is not on the page that expression's user_id is nil when user logged in" do
-      sign_in_with_welcome_page new_user
+      sign_in_with_welcome_page '.first-login-button', new_user
       expect(page).to have_content 'ログインしました'
       visit '/expressions/1'
-      expect(page).not_to have_link '編集'
+      expect(page).not_to have_link '内容変更'
     end
 
     it 'check if edit button is on the page that expression is owned by user who logged in' do
-      sign_in_with_header '/', user
+      sign_in_with_welcome_page '.first-login-button', user
       expect(page).to have_content 'ログインしました'
 
       click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
-      expect(page).to have_link '編集'
+      expect(page).to have_link '内容変更'
     end
   end
 
@@ -63,24 +65,24 @@ RSpec.describe 'Expressions' do
       expect(page).to have_current_path root_path
       expect(page).to have_content 'ログインが必要です'
       within '.error' do
-        expect(page).to have_button 'Sign up/Log in with Google'
+        expect(page).to have_button 'Sign up / Log in with Google'
       end
     end
 
     it 'check if it is home_path when user access to edit url of expression that user_id is nil when the user logged in' do
-      sign_in_with_welcome_page new_user
+      sign_in_with_welcome_page '.last-login-button', new_user
       expect(page).to have_content 'ログインしました'
 
       visit '/expressions/1/edit'
       expect(page).to have_current_path home_path
       expect(page).to have_content '権限がありません'
       within '.error' do
-        expect(page).not_to have_button 'Sign up/Log in with Google'
+        expect(page).not_to have_button 'Sign up / Log in with Google'
       end
     end
 
     it 'check if it is home_path when user access to edit url of expression that is owned by another user' do
-      sign_in_with_welcome_page new_user
+      sign_in_with_welcome_page '.last-login-button', new_user
       expect(page).to have_content 'ログインしました'
       visit edit_expression_path(first_expression_items[0].expression)
       expect(page).to have_current_path home_path
@@ -92,38 +94,38 @@ RSpec.describe 'Expressions' do
     let!(:user) { FactoryBot.create(:user) }
 
     before do
-      sign_in_with_header '/', user
+      sign_in_with_welcome_page '.first-login-button', user
       has_text? 'ログインしました'
 
       visit '/expressions/new'
-      fill_in('英単語 / フレーズ１', with: 'on the beach')
-      fill_in('英単語 / フレーズ２', with: 'at the beach')
-      fill_in('英単語 / フレーズ３(任意)', with: 'around the beach')
-      fill_in('英単語 / フレーズ４(任意)', with: 'of the beach')
-      fill_in('英単語 / フレーズ５(任意)', with: 'in the beach')
+      fill_in('英単語・フレーズ１', with: 'on the beach')
+      fill_in('英単語・フレーズ２', with: 'at the beach')
+      fill_in('英単語・フレーズ３(任意)', with: 'around the beach')
+      fill_in('英単語・フレーズ４(任意)', with: 'of the beach')
+      fill_in('英単語・フレーズ５(任意)', with: 'in the beach')
       click_button '次へ'
-      fill_in('on the beachの意味や前ページで登録した他の英単語 / フレーズ（at the beach, around the beach, of the beach, in the beach）との違いを入力してください',
+      fill_in('on the beachの意味や前ページで登録した他の英単語・フレーズ（at the beach, around the beach, of the beach, in the beach）との違いを入力してください',
               with: 'explanation of on the beach')
       fill_in('例文１', with: 'example1 of on the beach')
       fill_in('例文２', with: 'example2 of on the beach')
       fill_in('例文３', with: 'example3 of on the beach')
       click_button '次へ'
-      fill_in('at the beachの意味や前ページで登録した他の英単語 / フレーズ（on the beach, around the beach, of the beach, in the beach）との違いを入力してください',
+      fill_in('at the beachの意味や前ページで登録した他の英単語・フレーズ（on the beach, around the beach, of the beach, in the beach）との違いを入力してください',
               with: 'explanation of at the beach')
       fill_in('例文１', with: 'example1 of at the beach')
       fill_in('例文２', with: 'example2 of at the beach')
       fill_in('例文３', with: 'example3 of at the beach')
       click_button '次へ'
-      fill_in('around the beachの意味や前ページで登録した他の英単語 / フレーズ（on the beach, at the beach, of the beach, in the beach）との違いを入力してください',
+      fill_in('around the beachの意味や前ページで登録した他の英単語・フレーズ（on the beach, at the beach, of the beach, in the beach）との違いを入力してください',
               with: 'explanation of around the beach')
       fill_in('例文１', with: 'example1 of around the beach')
       fill_in('例文２', with: 'example2 of around the beach')
       fill_in('例文３', with: 'example3 of around the beach')
       click_button '次へ'
-      fill_in('of the beachの意味や前ページで登録した他の英単語 / フレーズ（on the beach, at the beach, around the beach, in the beach）との違いを入力してください',
+      fill_in('of the beachの意味や前ページで登録した他の英単語・フレーズ（on the beach, at the beach, around the beach, in the beach）との違いを入力してください',
               with: 'explanation of of the beach')
       click_button '次へ'
-      fill_in('in the beachの意味や前ページで登録した他の英単語 / フレーズ（on the beach, at the beach, around the beach, of the beach）との違いを入力してください',
+      fill_in('in the beachの意味や前ページで登録した他の英単語・フレーズ（on the beach, at the beach, around the beach, of the beach）との違いを入力してください',
               with: 'explanation of in the beach')
       click_button '次へ'
       fill_in('メモ（任意）', with: 'note')
@@ -131,20 +133,20 @@ RSpec.describe 'Expressions' do
       find('input#tags').send_keys :return
       click_button '登録'
 
-      click_link '編集'
+      click_link '内容変更'
     end
 
     it 'check if data of expression_items content is on the first page' do
-      expect(page).to have_field('英単語 / フレーズ１', with: 'on the beach')
-      expect(page).to have_field('英単語 / フレーズ２', with: 'at the beach')
-      expect(page).to have_field('英単語 / フレーズ３(任意)', with: 'around the beach')
-      expect(page).to have_field('英単語 / フレーズ４(任意)', with: 'of the beach')
-      expect(page).to have_field('英単語 / フレーズ５(任意)', with: 'in the beach')
+      expect(page).to have_field('英単語・フレーズ１', with: 'on the beach')
+      expect(page).to have_field('英単語・フレーズ２', with: 'at the beach')
+      expect(page).to have_field('英単語・フレーズ３(任意)', with: 'around the beach')
+      expect(page).to have_field('英単語・フレーズ４(任意)', with: 'of the beach')
+      expect(page).to have_field('英単語・フレーズ５(任意)', with: 'in the beach')
     end
 
     it 'check if explanation and examples are on the second page' do
       click_button '次へ'
-      expect(page).to have_field('on the beachの意味や前ページで登録した他の英単語 / フレーズ（at the beach, around the beach, of the beach, in the beach）との違いを入力してください',
+      expect(page).to have_field('on the beachの意味や前ページで登録した他の英単語・フレーズ（at the beach, around the beach, of the beach, in the beach）との違いを入力してください',
                                  with: 'explanation of on the beach')
       expect(page).to have_field('例文１', with: 'example1 of on the beach')
       expect(page).to have_field('例文２', with: 'example2 of on the beach')
@@ -154,7 +156,7 @@ RSpec.describe 'Expressions' do
     it 'check if explanation and examples are on the third page' do
       2.times { click_button '次へ' }
 
-      expect(page).to have_field('at the beachの意味や前ページで登録した他の英単語 / フレーズ（on the beach, around the beach, of the beach, in the beach）との違いを入力してください',
+      expect(page).to have_field('at the beachの意味や前ページで登録した他の英単語・フレーズ（on the beach, around the beach, of the beach, in the beach）との違いを入力してください',
                                  with: 'explanation of at the beach')
       expect(page).to have_field('例文１', with: 'example1 of at the beach')
       expect(page).to have_field('例文２', with: 'example2 of at the beach')
@@ -164,7 +166,7 @@ RSpec.describe 'Expressions' do
     it 'check if explanation and examples are on the fourth page' do
       3.times { click_button '次へ' }
 
-      expect(page).to have_field('around the beachの意味や前ページで登録した他の英単語 / フレーズ（on the beach, at the beach, of the beach, in the beach）との違いを入力してください',
+      expect(page).to have_field('around the beachの意味や前ページで登録した他の英単語・フレーズ（on the beach, at the beach, of the beach, in the beach）との違いを入力してください',
                                  with: 'explanation of around the beach')
       expect(page).to have_field('例文１', with: 'example1 of around the beach')
       expect(page).to have_field('例文２', with: 'example2 of around the beach')
@@ -174,14 +176,14 @@ RSpec.describe 'Expressions' do
     it 'check if data of explanation is on the fifth page' do
       4.times { click_button '次へ' }
 
-      expect(page).to have_field('of the beachの意味や前ページで登録した他の英単語 / フレーズ（on the beach, at the beach, around the beach, in the beach）との違いを入力してください',
+      expect(page).to have_field('of the beachの意味や前ページで登録した他の英単語・フレーズ（on the beach, at the beach, around the beach, in the beach）との違いを入力してください',
                                  with: 'explanation of of the beach')
     end
 
     it 'check if data of explanation is on the sixth page' do
       5.times { click_button '次へ' }
 
-      expect(page).to have_field('in the beachの意味や前ページで登録した他の英単語 / フレーズ（on the beach, at the beach, around the beach, of the beach）との違いを入力してください',
+      expect(page).to have_field('in the beachの意味や前ページで登録した他の英単語・フレーズ（on the beach, at the beach, around the beach, of the beach）との違いを入力してください',
                                  with: 'explanation of in the beach')
     end
 
@@ -200,38 +202,38 @@ RSpec.describe 'Expressions' do
       let(:user) { FactoryBot.build(:user) }
 
       before do
-        sign_in_with_welcome_page user
+        sign_in_with_welcome_page '.last-login-button', user
         has_text? 'ログインしました'
 
         click_link 'balcony and veranda'
-        click_link '編集'
-        fill_in('英単語 / フレーズ１', with: 'journey')
+        click_link '内容変更'
+        fill_in('英単語・フレーズ１', with: 'journey')
         click_button '次へ'
-        fill_in('journeyの意味や前ページで登録した他の英単語 / フレーズ（veranda）との違いを入力してください', with: 'Travelling but this word means more broad.')
+        fill_in('journeyの意味や前ページで登録した他の英単語・フレーズ（veranda）との違いを入力してください', with: 'Travelling but this word means more broad.')
         fill_in('例文１', with: 'The journey was tiring.')
         2.times { click_button '次へ' }
         click_button '編集する'
-        has_text? '英単語またはフレーズを編集しました'
+        has_text? '英単語・フレーズを編集しました'
       end
 
       it 'check if content of expression_items are correct order on editing page after it is edited' do
-        click_link '編集'
+        click_link '内容変更'
 
-        expect(page).to have_field('英単語 / フレーズ１', with: 'journey')
-        expect(page).to have_field('英単語 / フレーズ２', with: 'veranda')
+        expect(page).to have_field('英単語・フレーズ１', with: 'journey')
+        expect(page).to have_field('英単語・フレーズ２', with: 'veranda')
       end
 
       it 'check if explanations are correct order on editing page after it is edited' do
-        click_link '編集'
+        click_link '内容変更'
         click_button '次へ'
 
-        expect(page).to have_field('journeyの意味や前ページで登録した他の英単語 / フレーズ（veranda）との違いを入力してください',
+        expect(page).to have_field('journeyの意味や前ページで登録した他の英単語・フレーズ（veranda）との違いを入力してください',
                                    with: 'Travelling but this word means more broad.')
         expect(page).to have_field('例文１', with: 'The journey was tiring.')
         click_button '次へ'
 
         expect(page).to have_field(
-          'verandaの意味や前ページで登録した他の英単語 / フレーズ（journey）との違いを入力してください',
+          'verandaの意味や前ページで登録した他の英単語・フレーズ（journey）との違いを入力してください',
           with: '(noun) A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.'
         )
       end
@@ -241,33 +243,33 @@ RSpec.describe 'Expressions' do
       let!(:user) { FactoryBot.create(:user) }
 
       before do
-        sign_in_with_header '/', user
+        sign_in_with_welcome_page '.first-login-button', user
         has_text? 'ログインしました'
 
-        click_link '新規作成'
-        fill_in('英単語 / フレーズ１', with: 'on the beach')
-        fill_in('英単語 / フレーズ２', with: 'at the beach')
+        click_link '単語・フレーズを追加'
+        fill_in('英単語・フレーズ１', with: 'on the beach')
+        fill_in('英単語・フレーズ２', with: 'at the beach')
         click_button '次へ'
-        fill_in('on the beachの意味や前ページで登録した他の英単語 / フレーズ（at the beach）との違いを入力してください', with: 'explanation of on the beach')
+        fill_in('on the beachの意味や前ページで登録した他の英単語・フレーズ（at the beach）との違いを入力してください', with: 'explanation of on the beach')
         fill_in('例文１', with: 'example1 of on the beach')
         fill_in('例文２', with: 'example2 of on the beach')
         fill_in('例文３', with: 'example3 of on the beach')
         click_button '次へ'
-        fill_in('at the beachの意味や前ページで登録した他の英単語 / フレーズ（on the beach）との違いを入力してください', with: 'explanation of at the beach')
+        fill_in('at the beachの意味や前ページで登録した他の英単語・フレーズ（on the beach）との違いを入力してください', with: 'explanation of at the beach')
         click_button '次へ'
         click_button '登録'
 
-        click_link '編集'
+        click_link '内容変更'
         click_button '次へ'
         fill_in('例文１', with: 'test1')
         fill_in('例文２', with: 'test2')
         2.times { click_button '次へ' }
         click_button '編集する'
-        has_text? '英単語またはフレーズを編集しました'
+        has_text? '英単語・フレーズを編集しました'
       end
 
       it 'check if examples are correct order on edit page after it is edited' do
-        click_link '編集'
+        click_link '内容変更'
         click_button '次へ'
 
         expect(page).to have_field('例文１', with: 'test1')
@@ -282,14 +284,14 @@ RSpec.describe 'Expressions' do
       let(:user) { FactoryBot.build(:user) }
 
       before do
-        sign_in_with_welcome_page user
+        sign_in_with_welcome_page '.last-login-button', user
         has_text? 'ログインしました'
 
         click_link 'balcony and veranda'
-        click_link '編集'
-        fill_in('英単語 / フレーズ１', with: 'journey')
+        click_link '内容変更'
+        fill_in('英単語・フレーズ１', with: 'journey')
         click_button '次へ'
-        fill_in('journeyの意味や前ページで登録した他の英単語 / フレーズ（veranda）との違いを入力してください', with: 'Travelling but this word means more broad.')
+        fill_in('journeyの意味や前ページで登録した他の英単語・フレーズ（veranda）との違いを入力してください', with: 'Travelling but this word means more broad.')
         fill_in('例文１', with: 'The journey was tiring.')
         2.times { click_button '次へ' }
       end
@@ -297,29 +299,29 @@ RSpec.describe 'Expressions' do
       it 'check if database does not create data when editing' do
         expect do
           click_button '編集する'
-          expect(page).to have_content '英単語またはフレーズを編集しました'
+          expect(page).to have_content '英単語・フレーズを編集しました'
         end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(0).and change(Example, :count).by(0)
       end
 
       it 'check if the word which already saved change to another one' do
         click_button '編集する'
-        has_text? '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
 
-        within '.title div' do
-          expect(page).to have_content '1. journey'
+        within '.title' do
+          expect(page).to have_content 'journey'
           expect(page).not_to have_content 'balcony'
         end
 
-        within '.details div.expression0' do
+        within '.details article.expression0' do
           expect(page).to have_content(/^journey$/)
         end
       end
 
       it 'check if the explanation which already saved change to another one' do
         click_button '編集する'
-        has_text? '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
 
-        within '.details div.expression0' do
+        within '.details article.expression0' do
           expect(page).to have_content 'Travelling but this word means more broad.'
           expect(page).not_to have_content 'A platform on the side of a building, accessible from inside the building.'
         end
@@ -327,9 +329,9 @@ RSpec.describe 'Expressions' do
 
       it 'check if the example is on the details page' do
         click_button '編集する'
-        has_text? '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
 
-        within '.details div.expression0' do
+        within '.details article.expression0' do
           expect(page).to have_content 'The journey was tiring.'
         end
       end
@@ -339,14 +341,14 @@ RSpec.describe 'Expressions' do
       let(:user) { FactoryBot.build(:user) }
 
       before do
-        sign_in_with_welcome_page user
+        sign_in_with_welcome_page '.last-login-button', user
         has_text? 'ログインしました'
 
         click_link 'balcony and veranda'
-        click_link '編集'
-        fill_in('英単語 / フレーズ２', with: 'Veranda')
+        click_link '内容変更'
+        fill_in('英単語・フレーズ２', with: 'Veranda')
         2.times { click_button '次へ' }
-        fill_in('Verandaの意味や前ページで登録した他の英単語 / フレーズ（balcony）との違いを入力してください',
+        fill_in('Verandaの意味や前ページで登録した他の英単語・フレーズ（balcony）との違いを入力してください',
                 with: 'normally on the ground floor and generally quite ornate or fancy, with room to sit. This sentence is added.')
         fill_in('例文１', with: 'test1')
         fill_in('例文２', with: 'test2')
@@ -357,38 +359,38 @@ RSpec.describe 'Expressions' do
       it 'check if database does not create data when editing' do
         expect do
           click_button '編集する'
-          expect(page).to have_content '英単語またはフレーズを編集しました'
+          expect(page).to have_content '英単語・フレーズを編集しました'
         end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(0).and change(Example, :count).by(2)
       end
 
       it 'check if the word which already saved change to another one' do
         click_button '編集する'
-        has_text? '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
 
-        within '.title div' do
-          expect(page).to have_content '2. Veranda'
+        within '.title' do
+          expect(page).to have_content 'Veranda'
           expect(page).not_to have_content 'veranda'
         end
 
-        within '.details div.expression1' do
+        within '.details article.expression1' do
           expect(page).to have_content 'Veranda'
         end
       end
 
       it 'check if the explanation which already saved change to another one' do
         click_button '編集する'
-        has_text? '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
 
-        within '.details div.expression1' do
+        within '.details article.expression1' do
           expect(page).to have_content 'normally on the ground floor and generally quite ornate or fancy, with room to sit. This sentence is added.'
         end
       end
 
       it 'check if the example is on the details page' do
         click_button '編集する'
-        has_text? '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
 
-        within '.details div.expression1' do
+        within '.details article.expression1' do
           expect(page).to have_content 'test1'
           expect(page).to have_content 'test2'
           expect(page).to have_content 'test3'
@@ -400,19 +402,19 @@ RSpec.describe 'Expressions' do
       let!(:user) { FactoryBot.create(:user) }
 
       before do
-        sign_in_with_header '/', user
+        sign_in_with_welcome_page '.first-login-button', user
         has_text? 'ログインしました'
-        click_link '新規作成'
+        click_link '単語・フレーズを追加'
 
-        fill_in('英単語 / フレーズ１', with: 'on the beach')
-        fill_in('英単語 / フレーズ２', with: 'at the beach')
-        fill_in('英単語 / フレーズ３(任意)', with: 'around the beach')
+        fill_in('英単語・フレーズ１', with: 'on the beach')
+        fill_in('英単語・フレーズ２', with: 'at the beach')
+        fill_in('英単語・フレーズ３(任意)', with: 'around the beach')
         click_button '次へ'
-        fill_in('on the beachの意味や前ページで登録した他の英単語 / フレーズ（at the beach, around the beach）との違いを入力してください', with: 'explanation of on the beach')
+        fill_in('on the beachの意味や前ページで登録した他の英単語・フレーズ（at the beach, around the beach）との違いを入力してください', with: 'explanation of on the beach')
         click_button '次へ'
-        fill_in('at the beachの意味や前ページで登録した他の英単語 / フレーズ（on the beach, around the beach）との違いを入力してください', with: 'explanation of at the beach')
+        fill_in('at the beachの意味や前ページで登録した他の英単語・フレーズ（on the beach, around the beach）との違いを入力してください', with: 'explanation of at the beach')
         click_button '次へ'
-        fill_in('around the beachの意味や前ページで登録した他の英単語 / フレーズ（on the beach, at the beach）との違いを入力してください', with: 'explanation of around the beach')
+        fill_in('around the beachの意味や前ページで登録した他の英単語・フレーズ（on the beach, at the beach）との違いを入力してください', with: 'explanation of around the beach')
         fill_in('例文１', with: 'example1 of around the beach')
         fill_in('例文２', with: 'example2 of around the beach')
         fill_in('例文３', with: 'example3 of around the beach')
@@ -421,10 +423,10 @@ RSpec.describe 'Expressions' do
         fill_in('タグ（任意）', with: 'test')
         click_button '登録'
 
-        click_link '編集'
-        fill_in('英単語 / フレーズ３(任意)', with: 'test3')
+        click_link '内容変更'
+        fill_in('英単語・フレーズ３(任意)', with: 'test3')
         3.times { click_button '次へ' }
-        fill_in('test3の意味や前ページで登録した他の英単語 / フレーズ（on the beach, at the beach）との違いを入力してください', with: 'explanation of test3')
+        fill_in('test3の意味や前ページで登録した他の英単語・フレーズ（on the beach, at the beach）との違いを入力してください', with: 'explanation of test3')
         fill_in('例文１', with: 'test1')
         fill_in('例文２', with: 'test2')
         click_button '次へ'
@@ -434,7 +436,7 @@ RSpec.describe 'Expressions' do
       it 'check if database does not create data when editing' do
         expect do
           click_button '編集する'
-          expect(page).to have_content '英単語またはフレーズを編集しました'
+          expect(page).to have_content '英単語・フレーズを編集しました'
         end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(0).and change(Example, :count).by(0).and change(
           Tag, :count
         ).by(0).and change(Tagging, :count).by(0)
@@ -442,14 +444,14 @@ RSpec.describe 'Expressions' do
 
       it 'check if the word which already saved change to another one' do
         click_button '編集する'
-        has_text? '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
 
-        within '.title div' do
-          expect(page).to have_content '3. test3'
+        within '.title' do
+          expect(page).to have_content 'test3'
           expect(page).not_to have_content 'around the beach'
         end
 
-        within '.details div.expression2 p.content' do
+        within '.details article.expression2 h2' do
           expect(page).to have_content 'test3'
           expect(page).not_to have_content 'around the beach'
         end
@@ -457,33 +459,33 @@ RSpec.describe 'Expressions' do
 
       it 'check if the explanation which already saved change to another one' do
         click_button '編集する'
-        has_text? '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
 
-        within '.details div.expression2 p.explanation' do
+        within '.details article.expression2 dd.explanation' do
           expect(page).to have_content 'explanation of test3'
         end
       end
 
       it 'check if the example which already saved change to another one' do
         click_button '編集する'
-        has_text? '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
 
-        within first('.details div.expression2 p.example') do
+        within first('.details article.expression2 dd.example') do
           expect(page).to have_content 'test1'
         end
 
-        within all('.details div.expression2 p.example')[1] do
+        within all('.details article.expression2 dd.example')[1] do
           expect(page).to have_content 'test2'
         end
 
-        within all('.details div.expression2 p.example')[2] do
+        within all('.details article.expression2 dd.example')[2] do
           expect(page).to have_content 'example3 of around the beach'
         end
       end
 
       it 'check if note which is already saved change to another one' do
         click_button '編集する'
-        has_text? '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
 
         within first('.note') do
           expect(page).to have_content 'note. note is added.'
@@ -495,26 +497,26 @@ RSpec.describe 'Expressions' do
       let(:user) { FactoryBot.build(:user) }
 
       before do
-        sign_in_with_welcome_page user
+        sign_in_with_welcome_page '.last-login-button', user
         has_text? 'ログインしました'
 
         click_link 'balcony and veranda'
-        click_link '編集'
-        fill_in('英単語 / フレーズ３(任意)', with: 'test3')
-        fill_in('英単語 / フレーズ４(任意)', with: 'test4')
-        fill_in('英単語 / フレーズ５(任意)', with: 'test5')
+        click_link '内容変更'
+        fill_in('英単語・フレーズ３(任意)', with: 'test3')
+        fill_in('英単語・フレーズ４(任意)', with: 'test4')
+        fill_in('英単語・フレーズ５(任意)', with: 'test5')
         3.times { click_button '次へ' }
-        fill_in('test3の意味や前ページで登録した他の英単語 / フレーズ（balcony, veranda, test4, test5）との違いを入力してください', with: 'explanation of test3')
+        fill_in('test3の意味や前ページで登録した他の英単語・フレーズ（balcony, veranda, test4, test5）との違いを入力してください', with: 'explanation of test3')
         fill_in('例文１', with: 'test3 example1')
         fill_in('例文２', with: 'test3 example2')
         fill_in('例文３', with: 'test3 example3')
         click_button '次へ'
-        fill_in('test4の意味や前ページで登録した他の英単語 / フレーズ（balcony, veranda, test3, test5）との違いを入力してください', with: 'explanation of test4')
+        fill_in('test4の意味や前ページで登録した他の英単語・フレーズ（balcony, veranda, test3, test5）との違いを入力してください', with: 'explanation of test4')
         fill_in('例文１', with: 'test4 example1')
         fill_in('例文２', with: 'test4 example2')
         fill_in('例文３', with: 'test4 example3')
         click_button '次へ'
-        fill_in('test5の意味や前ページで登録した他の英単語 / フレーズ（balcony, veranda, test3, test4）との違いを入力してください', with: 'explanation of test5')
+        fill_in('test5の意味や前ページで登録した他の英単語・フレーズ（balcony, veranda, test3, test4）との違いを入力してください', with: 'explanation of test5')
         fill_in('例文１', with: 'test5 example1')
         fill_in('例文２', with: 'test5 example2')
         fill_in('例文３', with: 'test5 example3')
@@ -526,15 +528,15 @@ RSpec.describe 'Expressions' do
       it 'check if new data are created' do
         expect do
           click_button '編集する'
-          expect(page).to have_content '英単語またはフレーズを編集しました'
+          expect(page).to have_content '英単語・フレーズを編集しました'
         end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(3).and change(Example, :count).by(9).and change(Tag, :count).by(1)
       end
 
       it 'check if the new words are at title section on the details page' do
         click_button '編集する'
-        has_text? '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
 
-        within '.title div' do
+        within '.title' do
           expect(page).to have_content 'test3'
           expect(page).to have_content 'test4'
           expect(page).to have_content 'test5'
@@ -543,92 +545,92 @@ RSpec.describe 'Expressions' do
 
       it 'check if the new words are at detail section on the details page' do
         click_button '編集する'
-        has_text? '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
 
-        within '.details div.expression2' do
+        within '.details article.expression2' do
           expect(page).to have_content 'test3'
         end
 
-        within '.details div.expression3' do
+        within '.details article.expression3' do
           expect(page).to have_content 'test4'
         end
 
-        within '.details div.expression4' do
+        within '.details article.expression4' do
           expect(page).to have_content 'test5'
         end
       end
 
       it 'check if new explanations are on the details page' do
         click_button '編集する'
-        expect(page).to have_content '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
 
-        within '.details div.expression2 p.explanation' do
+        within '.details article.expression2 dd.explanation' do
           expect(page).to have_content 'explanation of test3'
         end
 
-        within '.details div.expression3 p.explanation' do
+        within '.details article.expression3 dd.explanation' do
           expect(page).to have_content 'explanation of test4'
         end
 
-        within '.details div.expression4 p.explanation' do
+        within '.details article.expression4 dd.explanation' do
           expect(page).to have_content 'explanation of test5'
         end
       end
 
       it 'check if new examples of third expression are on the details page' do
         click_button '編集する'
-        has_text? '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
 
-        within first('.details div.expression2 p.example') do
+        within first('.details article.expression2 dd.example') do
           expect(page).to have_content 'test3 example1'
         end
 
-        within all('.details div.expression2 p.example')[1] do
+        within all('.details article.expression2 dd.example')[1] do
           expect(page).to have_content 'test3 example2'
         end
 
-        within all('.details div.expression2 p.example')[2] do
+        within all('.details article.expression2 dd.example')[2] do
           expect(page).to have_content 'test3 example3'
         end
       end
 
       it 'check if new examples of fourth expression are on the details page' do
         click_button '編集する'
-        has_text? '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
 
-        within first('.details div.expression3 p.example') do
+        within first('.details article.expression3 dd.example') do
           expect(page).to have_content 'test4 example1'
         end
 
-        within all('.details div.expression3 p.example')[1] do
+        within all('.details article.expression3 dd.example')[1] do
           expect(page).to have_content 'test4 example2'
         end
 
-        within all('.details div.expression3 p.example')[2] do
+        within all('.details article.expression3 dd.example')[2] do
           expect(page).to have_content 'test4 example3'
         end
       end
 
       it 'check if new examples of fifth expression are on the details page' do
         click_button '編集する'
-        has_text? '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
 
-        within first('.details div.expression4 p.example') do
+        within first('.details article.expression4 dd.example') do
           expect(page).to have_content 'test5 example1'
         end
 
-        within all('.details div.expression4 p.example')[1] do
+        within all('.details article.expression4 dd.example')[1] do
           expect(page).to have_content 'test5 example2'
         end
 
-        within all('.details div.expression4 p.example')[2] do
+        within all('.details article.expression4 dd.example')[2] do
           expect(page).to have_content 'test5 example3'
         end
       end
 
       it 'check if note and new tag are on the details page' do
         click_button '編集する'
-        has_text? '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
 
         within first('.note') do
           expect(page).to have_content 'note'
@@ -652,56 +654,56 @@ RSpec.describe 'Expressions' do
       end
 
       it 'check if a tag that does not exist in a database is added' do
-        sign_in_with_header '/', user
+        sign_in_with_welcome_page '.first-login-button', user
         expect(page).to have_content 'ログインしました'
 
         click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
         expect(page).to have_current_path expression_path(first_expression_items[0].expression)
-        click_link '編集'
+        click_link '内容変更'
         3.times { click_button '次へ' }
         fill_in('タグ（任意）', with: 'tag')
         find('#tags').send_keys :return
         expect do
           click_button '編集する'
-          expect(page).to have_content '英単語またはフレーズを編集しました'
+          expect(page).to have_content '英単語・フレーズを編集しました'
         end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(0).and change(
           Example, :count
         ).by(0).and change(Tag, :count).by(1).and change(Tagging, :count).by(1)
         within '.tag' do
-          expect(all('p')[1]).to have_content 'test'
-          expect(all('p')[2]).to have_content 'tag'
+          expect(all('dd')[0]).to have_content 'test'
+          expect(all('dd')[1]).to have_content 'tag'
         end
       end
 
       it 'check if a tag that exists in a database is added' do
-        sign_in_with_header '/', user
+        sign_in_with_welcome_page '.first-login-button', user
         expect(page).to have_content 'ログインしました'
 
         click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
         expect(page).to have_current_path expression_path(first_expression_items[0].expression)
-        click_link '編集'
+        click_link '内容変更'
         3.times { click_button '次へ' }
         fill_in('タグ（任意）', with: '2023')
         find('#tags').send_keys :return
         expect do
           click_button '編集する'
-          expect(page).to have_content '英単語またはフレーズを編集しました'
+          expect(page).to have_content '英単語・フレーズを編集しました'
         end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(0).and change(
           Example, :count
         ).by(0).and change(Tag, :count).by(0).and change(Tagging, :count).by(1)
         within '.tag' do
-          expect(all('p')[1]).to have_content 'test'
-          expect(all('p')[2]).to have_content '2023'
+          expect(all('dd')[0]).to have_content 'test'
+          expect(all('dd')[1]).to have_content '2023'
         end
       end
 
       it 'check if a tag is changed to a new tag that does not exist in a database' do
-        sign_in_with_header '/', user
+        sign_in_with_welcome_page '.first-login-button', user
         expect(page).to have_content 'ログインしました'
 
         click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
         expect(page).to have_current_path expression_path(first_expression_items[0].expression)
-        click_link '編集'
+        click_link '内容変更'
         3.times { click_button '次へ' }
         within '.tags' do
           find('i.ti-icon-close').click
@@ -710,22 +712,22 @@ RSpec.describe 'Expressions' do
         find('#tags').send_keys :return
         expect do
           click_button '編集する'
-          expect(page).to have_content '英単語またはフレーズを編集しました'
+          expect(page).to have_content '英単語・フレーズを編集しました'
         end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(0).and change(
           Example, :count
         ).by(0).and change(Tag, :count).by(1).and change(Tagging, :count).by(0)
         within '.tag' do
-          expect(all('p')[1]).to have_content 'tag'
+          expect(all('dd')[0]).to have_content 'tag'
         end
       end
 
       it 'check if a tag is changed to a new tag that exists in a database' do
-        sign_in_with_header '/', user
+        sign_in_with_welcome_page '.first-login-button', user
         expect(page).to have_content 'ログインしました'
 
         click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
         expect(page).to have_current_path expression_path(first_expression_items[0].expression)
-        click_link '編集'
+        click_link '内容変更'
         3.times { click_button '次へ' }
         within '.tags' do
           find('i.ti-icon-close').click
@@ -734,29 +736,29 @@ RSpec.describe 'Expressions' do
         find('#tags').send_keys :return
         expect do
           click_button '編集する'
-          expect(page).to have_content '英単語またはフレーズを編集しました'
+          expect(page).to have_content '英単語・フレーズを編集しました'
         end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(0).and change(
           Example, :count
         ).by(0).and change(Tag, :count).by(0).and change(Tagging, :count).by(0)
         within '.tag' do
-          expect(all('p')[1]).to have_content '2023'
+          expect(all('dd')[0]).to have_content '2023'
         end
       end
 
       it 'check if a tag is deleted' do
-        sign_in_with_header '/', user
+        sign_in_with_welcome_page '.first-login-button', user
         expect(page).to have_content 'ログインしました'
 
         click_link "#{first_expression_items[0].content} and #{first_expression_items[1].content}"
         expect(page).to have_current_path expression_path(first_expression_items[0].expression)
-        click_link '編集'
+        click_link '内容変更'
         3.times { click_button '次へ' }
         within '.tags' do
           find('i.ti-icon-close').click
         end
         expect do
           click_button '編集する'
-          expect(page).to have_content '英単語またはフレーズを編集しました'
+          expect(page).to have_content '英単語・フレーズを編集しました'
         end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(0).and change(
           Example, :count
         ).by(0).and change(Tag, :count).by(0).and change(Tagging, :count).by(-1)
@@ -764,20 +766,20 @@ RSpec.describe 'Expressions' do
       end
 
       it 'check tags order' do
-        sign_in_with_header '/', user2
+        sign_in_with_welcome_page '.first-login-button', user2
         expect(page).to have_content 'ログインしました'
 
         click_link "#{second_expression_items[0].content} and #{second_expression_items[1].content}"
         expect(page).to have_current_path expression_path(second_expression_items[0].expression)
-        click_link '編集'
+        click_link '内容変更'
         3.times { click_button '次へ' }
         fill_in('タグ（任意）', with: 'test')
         find('#tags').send_keys :return
         click_button '編集する'
-        expect(page).to have_content '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
         within '.tag' do
-          expect(all('p')[1]).to have_content '2023'
-          expect(all('p')[2]).to have_content 'test'
+          expect(all('dd')[0]).to have_content '2023'
+          expect(all('dd')[1]).to have_content 'test'
         end
       end
     end
@@ -794,32 +796,32 @@ RSpec.describe 'Expressions' do
       FactoryBot.create(:example, expression_item: second_expression_item)
       FactoryBot.create(:example, expression_item: third_expression_item)
 
-      sign_in_with_header '/', user
+      sign_in_with_welcome_page '.first-login-button', user
     end
 
     it 'check if the third word is deleted' do
       expect(page).to have_content 'ログインしました'
       click_link "#{first_expression_item.content}, balcony and veranda"
-      click_link '編集'
-      fill_in('英単語 / フレーズ３(任意)', with: '')
+      click_link '内容変更'
+      fill_in('英単語・フレーズ３(任意)', with: '')
       3.times { click_button '次へ' }
       expect do
         click_button '編集する'
-        expect(page).to have_content '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
       end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(-1).and change(Example, :count).by(-1)
       expect(expression.expression_items.count).to eq 2
       within '.title' do
-        expect(page).to have_content "1. #{first_expression_item.content}"
-        expect(page).to have_content '2. balcony'
-        expect(page).not_to have_content '3. veranda'
+        expect(page).to have_content first_expression_item.content
+        expect(page).to have_content 'balcony'
+        expect(page).not_to have_content 'veranda'
       end
     end
 
     it 'check if the second word is deleted' do
       expect(page).to have_content 'ログインしました'
       click_link "#{first_expression_item.content}, balcony and veranda"
-      click_link '編集'
-      fill_in('英単語 / フレーズ２', with: '')
+      click_link '内容変更'
+      fill_in('英単語・フレーズ２', with: '')
       click_button '次へ'
       expect(page).to have_content "#{first_expression_item.content}について"
       click_button '次へ'
@@ -828,7 +830,7 @@ RSpec.describe 'Expressions' do
       click_button '次へ'
       expect do
         click_button '編集する'
-        expect(page).to have_content '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
       end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(-1).and change(Example, :count).by(-1)
       expect(expression.expression_items.count).to eq 2
     end
@@ -843,19 +845,19 @@ RSpec.describe 'Expressions' do
     before do
       FactoryBot.create(:example, expression_item: first_expression_item)
 
-      sign_in_with_header '/', user
+      sign_in_with_welcome_page '.first-login-button', user
     end
 
     it 'check if the example is deleted' do
       expect(page).to have_content 'ログインしました'
       click_link "#{first_expression_item.content} and #{second_expression_item.content}"
-      click_link '編集'
+      click_link '内容変更'
       click_button '次へ'
       fill_in('例文１', with: '')
       2.times { click_button '次へ' }
       expect do
         click_button '編集する'
-        expect(page).to have_content '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
       end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(0).and change(Example, :count).by(-1)
       expect(first_expression_item.examples.count).to eq 0
     end
@@ -873,19 +875,19 @@ RSpec.describe 'Expressions' do
     before do
       FactoryBot.create(:example, expression_item: expression_item1)
 
-      sign_in_with_header '/', user
+      sign_in_with_welcome_page '.first-login-button', user
       has_text? 'ログインしました'
       click_link(
         "#{expression_item1.content}, #{expression_item2.content}, #{expression_item3.content}, #{expression_item4.content} and #{expression_item5.content}"
       )
-      click_link '編集'
+      click_link '内容変更'
     end
 
     it 'check buttons' do
       click_button '次へ'
       expect(page).to have_content "#{expression_item1.content}について"
       click_button '戻る'
-      expect(page).to have_content '意味の違いや使い分けを学習したい英単語又はフレーズを入力してください'
+      expect(page).to have_content '意味の違いや使い分けを学習したい英単語・フレーズを入力してください'
       2.times { click_button '次へ' }
       expect(page).to have_content "#{expression_item2.content}について"
       click_button '戻る'
@@ -907,11 +909,11 @@ RSpec.describe 'Expressions' do
     end
 
     it 'check buttons when first word is deleted' do
-      fill_in('英単語 / フレーズ１', with: '')
+      fill_in('英単語・フレーズ１', with: '')
       click_button '次へ'
       expect(page).to have_content "#{expression_item2.content}について"
       click_button '戻る'
-      expect(page).to have_content '意味の違いや使い分けを学習したい英単語又はフレーズを入力してください'
+      expect(page).to have_content '意味の違いや使い分けを学習したい英単語・フレーズを入力してください'
       2.times { click_button '次へ' }
       expect(page).to have_content "#{expression_item3.content}について"
       click_button '戻る'
@@ -919,17 +921,17 @@ RSpec.describe 'Expressions' do
       4.times { click_button '次へ' }
       expect do
         click_button '編集する'
-        expect(page).to have_content '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
       end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(-1).and change(Example, :count).by(-1)
       expect(expression.expression_items.count).to eq 4
-      expect(page).to have_content "1. #{expression_item2.content}"
-      expect(page).to have_content "2. #{expression_item3.content}"
-      expect(page).to have_content "3. #{expression_item4.content}"
-      expect(page).to have_content "4. #{expression_item5.content}"
+      expect(page).to have_content expression_item2.content
+      expect(page).to have_content expression_item3.content
+      expect(page).to have_content expression_item4.content
+      expect(page).to have_content expression_item5.content
     end
 
     it 'check buttons when second word is deleted' do
-      fill_in('英単語 / フレーズ２', with: '')
+      fill_in('英単語・フレーズ２', with: '')
       click_button '次へ'
       expect(page).to have_content "#{expression_item1.content}について"
       click_button '次へ'
@@ -941,17 +943,17 @@ RSpec.describe 'Expressions' do
       2.times { click_button '次へ' }
       expect do
         click_button '編集する'
-        expect(page).to have_content '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
       end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(-1).and change(Example, :count).by(0)
       expect(expression.expression_items.count).to eq 4
-      expect(page).to have_content "1. #{expression_item1.content}"
-      expect(page).to have_content "2. #{expression_item3.content}"
-      expect(page).to have_content "3. #{expression_item4.content}"
-      expect(page).to have_content "4. #{expression_item5.content}"
+      expect(page).to have_content expression_item1.content
+      expect(page).to have_content expression_item3.content
+      expect(page).to have_content expression_item4.content
+      expect(page).to have_content expression_item5.content
     end
 
     it 'check buttons when third word is deleted' do
-      fill_in('英単語 / フレーズ３(任意)', with: '')
+      fill_in('英単語・フレーズ３(任意)', with: '')
       2.times { click_button '次へ' }
       expect(page).to have_content "#{expression_item2.content}について"
       click_button '次へ'
@@ -963,17 +965,17 @@ RSpec.describe 'Expressions' do
       click_button '次へ'
       expect do
         click_button '編集する'
-        expect(page).to have_content '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
       end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(-1).and change(Example, :count).by(0)
       expect(expression.expression_items.count).to eq 4
-      expect(page).to have_content "1. #{expression_item1.content}"
-      expect(page).to have_content "2. #{expression_item2.content}"
-      expect(page).to have_content "3. #{expression_item4.content}"
-      expect(page).to have_content "4. #{expression_item5.content}"
+      expect(page).to have_content expression_item1.content
+      expect(page).to have_content expression_item2.content
+      expect(page).to have_content expression_item4.content
+      expect(page).to have_content expression_item5.content
     end
 
     it 'check buttons when fourth word is deleted' do
-      fill_in('英単語 / フレーズ４(任意)', with: '')
+      fill_in('英単語・フレーズ４(任意)', with: '')
       3.times { click_button '次へ' }
       expect(page).to have_content "#{expression_item3.content}について"
       click_button '次へ'
@@ -983,17 +985,17 @@ RSpec.describe 'Expressions' do
       2.times { click_button '次へ' }
       expect do
         click_button '編集する'
-        expect(page).to have_content '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
       end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(-1).and change(Example, :count).by(0)
       expect(expression.expression_items.count).to eq 4
-      expect(page).to have_content "1. #{expression_item1.content}"
-      expect(page).to have_content "2. #{expression_item2.content}"
-      expect(page).to have_content "3. #{expression_item3.content}"
-      expect(page).to have_content "4. #{expression_item5.content}"
+      expect(page).to have_content expression_item1.content
+      expect(page).to have_content expression_item2.content
+      expect(page).to have_content expression_item3.content
+      expect(page).to have_content expression_item5.content
     end
 
     it 'check buttons when fifth word is deleted' do
-      fill_in('英単語 / フレーズ５(任意)', with: '')
+      fill_in('英単語・フレーズ５(任意)', with: '')
       4.times { click_button '次へ' }
       expect(page).to have_content "#{expression_item4.content}について"
       click_button '次へ'
@@ -1003,18 +1005,18 @@ RSpec.describe 'Expressions' do
       click_button '次へ'
       expect do
         click_button '編集する'
-        expect(page).to have_content '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
       end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(-1).and change(Example, :count).by(0)
       expect(expression.expression_items.count).to eq 4
-      expect(page).to have_content "1. #{expression_item1.content}"
-      expect(page).to have_content "2. #{expression_item2.content}"
-      expect(page).to have_content "3. #{expression_item3.content}"
-      expect(page).to have_content "4. #{expression_item4.content}"
+      expect(page).to have_content expression_item1.content
+      expect(page).to have_content expression_item2.content
+      expect(page).to have_content expression_item3.content
+      expect(page).to have_content expression_item4.content
     end
 
     it 'check buttons when second and third words are deleted' do
-      fill_in('英単語 / フレーズ２', with: '')
-      fill_in('英単語 / フレーズ３(任意)', with: '')
+      fill_in('英単語・フレーズ２', with: '')
+      fill_in('英単語・フレーズ３(任意)', with: '')
       click_button '次へ'
       expect(page).to have_content "#{expression_item1.content}について"
       click_button '次へ'
@@ -1026,12 +1028,12 @@ RSpec.describe 'Expressions' do
       click_button '次へ'
       expect do
         click_button '編集する'
-        expect(page).to have_content '英単語またはフレーズを編集しました'
+        expect(page).to have_content '英単語・フレーズを編集しました'
       end.to change(Expression, :count).by(0).and change(ExpressionItem, :count).by(-2).and change(Example, :count).by(0)
       expect(expression.expression_items.count).to eq 3
-      expect(page).to have_content "1. #{expression_item1.content}"
-      expect(page).to have_content "2. #{expression_item4.content}"
-      expect(page).to have_content "3. #{expression_item5.content}"
+      expect(page).to have_content expression_item1.content
+      expect(page).to have_content expression_item4.content
+      expect(page).to have_content expression_item5.content
     end
   end
 end

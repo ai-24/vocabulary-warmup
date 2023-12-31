@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'MemorisedExpressions Quiz' do
-  context 'when user starts quiz from memorised list' do
+  context 'when user starts quiz from 覚えた list' do
     let!(:user1) { FactoryBot.create(:user) }
     let!(:expression1) { FactoryBot.create(:empty_note, user_id: user1.id) }
     let!(:first_expression_item) { FactoryBot.create(:expression_item, expression: expression1) }
@@ -25,12 +25,12 @@ RSpec.describe 'MemorisedExpressions Quiz' do
       FactoryBot.create(:memorising, user: user2, expression: fifth_expression_items[0].expression)
       FactoryBot.create(:bookmarking, user: user1, expression: third_expression_items[0].expression)
 
-      sign_in_with_header '/', user1
+      sign_in_with_welcome_page '.first-login-button', user1
     end
 
-    it 'check if the questions are from memorised list' do
+    it 'check if the questions are from 覚えた list' do
       expect(page).to have_content 'ログインしました'
-      click_link '覚えた語彙'
+      click_link '覚えた'
       expect(page).to have_current_path memorised_expressions_path
       click_link 'クイズに挑戦'
 
@@ -50,7 +50,7 @@ RSpec.describe 'MemorisedExpressions Quiz' do
 
     it 'check if the questions and answers are set correctly' do
       expect(page).to have_content 'ログインしました'
-      click_link '覚えた語彙'
+      click_link '覚えた'
       expect(page).to have_current_path memorised_expressions_path
       click_link 'クイズに挑戦'
 
@@ -74,9 +74,9 @@ RSpec.describe 'MemorisedExpressions Quiz' do
       end
     end
 
-    it 'check if a section of moving expressions to bookmark or memorised list is not on the result page when all answers were correct' do
+    it 'check if a section of moving expressions to 要復習 or 覚えた list is not on the result page when all answers were correct' do
       expect(page).to have_content 'ログインしました'
-      click_link '覚えた語彙'
+      click_link '覚えた'
       expect(page).to have_current_path memorised_expressions_path
       click_link 'クイズに挑戦'
 
@@ -102,7 +102,7 @@ RSpec.describe 'MemorisedExpressions Quiz' do
 
     it 'check if a message that recommends next action is not on the result page when a section of moving expressions is not there' do
       expect(page).to have_content 'ログインしました'
-      click_link '覚えた語彙'
+      click_link '覚えた'
       expect(page).to have_current_path memorised_expressions_path
       click_link 'クイズに挑戦'
 
@@ -121,13 +121,13 @@ RSpec.describe 'MemorisedExpressions Quiz' do
         click_button 'クイズに解答する'
         n < 4 ? click_button('次へ') : click_button('クイズの結果を確認する')
       end
-      expect(page).not_to have_content 'ブックマークや覚えた語彙リストに英単語・フレーズを保存した後は復習しましょう！'
-      expect(page).not_to have_content '重要: 一度この画面を離れると戻れません。今回の結果をブックマークや覚えた語彙リストに保存する場合は、下記ボタンをクリックする前に必ず行なってください。'
+      expect(page).not_to have_content '要復習や覚えたリストに英単語・フレーズを保存した後は復習しましょう！'
+      expect(page).not_to have_content '重要: 一度この画面を離れると戻れません。今回の結果を要復習や覚えたリストに保存する場合は、下記ボタンをクリックする前に必ず行なってください。'
     end
 
-    it 'check if a section of moving expressions to bookmarks list is on the result page when answers are wrong' do
+    it 'check if a section of moving expressions to 要復習 list is on the result page when answers are wrong' do
       expect(page).to have_content 'ログインしました'
-      click_link '覚えた語彙'
+      click_link '覚えた'
       expect(page).to have_current_path memorised_expressions_path
       click_link 'クイズに挑戦'
 
@@ -142,7 +142,7 @@ RSpec.describe 'MemorisedExpressions Quiz' do
 
     it 'check if request for saving memorising is not sent when bookmarking is saved' do
       expect(page).to have_content 'ログインしました'
-      click_link '覚えた語彙'
+      click_link '覚えた'
       expect(page).to have_current_path memorised_expressions_path
       click_link 'クイズに挑戦'
 
@@ -157,13 +157,13 @@ RSpec.describe 'MemorisedExpressions Quiz' do
       end
       expect(page).to have_selector('.section-of-wrong-answers')
       click_button '保存する'
-      expect(page).to have_content 'ブックマークしました！'
-      expect(page).not_to have_content '英単語・フレーズをブックマークしましたが覚えた語彙リストには保存できませんでした'
+      expect(page).to have_content '要復習リストに英単語・フレーズを保存しました！'
+      expect(page).not_to have_content '英単語・フレーズを要復習リストに保存しましたが覚えたリストには保存できませんでした'
     end
 
     it 'check if memorising is destroyed when bookmarking is created' do
       expect(page).to have_content 'ログインしました'
-      click_link '覚えた語彙'
+      click_link '覚えた'
       expect(page).to have_current_path memorised_expressions_path
       click_link 'クイズに挑戦'
 
@@ -179,13 +179,13 @@ RSpec.describe 'MemorisedExpressions Quiz' do
       expect(page).to have_selector('.section-of-wrong-answers')
       expect do
         click_button '保存する'
-        expect(page).to have_content 'ブックマークしました！'
+        expect(page).to have_content '要復習リストに英単語・フレーズを保存しました！'
       end.to change(Bookmarking, :count).by(1).and change(Memorising, :count).by(-1)
     end
 
     it 'check if memorisings are destroyed when bookmarkings are created' do
       expect(page).to have_content 'ログインしました'
-      click_link '覚えた語彙'
+      click_link '覚えた'
       expect(page).to have_current_path memorised_expressions_path
       click_link 'クイズに挑戦'
 
@@ -196,12 +196,12 @@ RSpec.describe 'MemorisedExpressions Quiz' do
       expect(page).to have_selector('.section-of-wrong-answers')
       expect do
         click_button '保存する'
-        expect(page).to have_content 'ブックマークしました！'
+        expect(page).to have_content '要復習リストに英単語・フレーズを保存しました！'
       end.to change(Bookmarking, :count).by(2).and change(Memorising, :count).by(-2)
     end
   end
 
-  context 'when new user starts quiz from memorised list' do
+  context 'when new user starts quiz from 覚えた list' do
     let(:new_user) { FactoryBot.build(:user) }
     let!(:user) { FactoryBot.create(:user) }
     let!(:expression) { FactoryBot.create(:empty_note) }
@@ -213,7 +213,7 @@ RSpec.describe 'MemorisedExpressions Quiz' do
       FactoryBot.create_list(:expression_item4, 2, expression: FactoryBot.create(:empty_note))
       FactoryBot.create_list(:expression_item5, 2, expression: FactoryBot.create(:empty_note, user_id: user.id))
 
-      sign_in_with_header '/', new_user
+      sign_in_with_welcome_page '.first-login-button', new_user
       has_text? 'ログインしました'
 
       click_link 'クイズに挑戦'
@@ -231,12 +231,12 @@ RSpec.describe 'MemorisedExpressions Quiz' do
         n < 8 ? click_button('次へ') : click_button('クイズの結果を確認する')
       end
       click_button '保存する'
-      has_text? 'ブックマーク・覚えた語彙リストに保存しました！'
+      has_text? '要復習リストと覚えたリストに英単語・フレーズを保存しました！'
 
       visit memorised_expressions_path
     end
 
-    it 'check if the questions are from memorisied list' do
+    it 'check if the questions are from 覚えた list' do
       expect(page).to have_link 'クイズに挑戦'
       click_link 'クイズに挑戦'
       expect(page).to have_css 'p.content-of-question'
@@ -253,20 +253,20 @@ RSpec.describe 'MemorisedExpressions Quiz' do
     end
   end
 
-  context 'when user does not have memorised expressions' do
+  context 'when user does not have memorisings' do
     let(:new_user) { FactoryBot.build(:user) }
 
     before do
       FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note))
       FactoryBot.create_list(:expression_item2, 3, expression: FactoryBot.create(:empty_note))
 
-      sign_in_with_welcome_page new_user
+      sign_in_with_welcome_page '.last-login-button', new_user
       has_text? 'ログインしました'
     end
 
-    it 'check if the page is memorised list' do
+    it 'check if the page is 覚えた list' do
       expect(new_user.memorisings.count).to eq 0
-      click_link '覚えた語彙'
+      click_link '覚えた'
       expect(page).not_to have_link 'クイズに挑戦'
       visit memorised_expressions_quiz_path
       expect(page).to have_current_path memorised_expressions_path
@@ -275,10 +275,12 @@ RSpec.describe 'MemorisedExpressions Quiz' do
   end
 
   context 'when user has not logged in' do
-    it 'check if the page is memorised list' do
+    it 'check if the page is 覚えた list' do
       visit '/'
-      click_link '試してみる(機能に制限あり)'
-      click_link '覚えた語彙'
+      within '.without-login' do
+        click_link '試してみる'
+      end
+      click_link '覚えた'
       expect(page).not_to have_link 'クイズに挑戦'
 
       visit memorised_expressions_quiz_path

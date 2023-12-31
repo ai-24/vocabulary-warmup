@@ -11,8 +11,8 @@ html
     = favicon_link_tag
     = favicon_link_tag 'mb-icon.png', rel: 'apple-touch-icon', type: 'image/png'
     script src="https://kit.fontawesome.com/ce82121a9a.js" crossorigin="anonymous"
-  body class='text-[#444444]'
-    = render 'shared/header'
+  body.text-black-900
+    = render 'shared/header' unless request.fullpath == '/'
     main
       = yield
     = render 'shared/footer'

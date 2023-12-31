@@ -6,14 +6,22 @@ RSpec.describe 'Welcome' do
   let(:user) { FactoryBot.build(:user) }
 
   it 'check sign up button' do
-    sign_in_with_welcome_page user
+    sign_in_with_welcome_page '.last-login-button', user
     expect(page).to have_content 'ログインしました'
     expect(page).to have_current_path home_path
   end
 
-  it 'check 使ってみる link' do
+  it 'check 試してみる link' do
     visit '/'
-    click_link '試してみる(機能に制限あり)'
+    within '.without-login' do
+      click_link '試してみる'
+    end
+    expect(page).to have_current_path home_path
+
+    visit '/'
+    within '.recommended-users' do
+      click_link '試してみる'
+    end
     expect(page).to have_current_path home_path
   end
 

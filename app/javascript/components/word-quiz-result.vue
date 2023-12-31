@@ -11,7 +11,7 @@
   </div>
   <div
     v-if="!isSaved && movableExpressionExists"
-    class="move-to-bookmark-or-memorised-list mb-12 py-3 px-2 sm:px-4 border-lavender-800 border-2 bg-lavender-50 rounded-md">
+    class="move-to-bookmark-or-memorised-list mb-12 py-3 px-2 sm:px-4 border-darklavender-200 border-2 bg-darklavender-50 rounded">
     <div
       v-if="
         listOfWrongItems.length > 0 && !isSavedBookmark && !isBookmarkedList
@@ -28,12 +28,12 @@
         class="font-semibold pl-2 hover:cursor-pointer"
         >{{ $t('quiz.result.bookmark') }}</label
       >
-      <details class="my-1 mx-auto sm:w-96 bg-white px-3 rounded-md py-0.5">
+      <details class="my-1 mx-auto sm:w-96 bg-white px-3 rounded py-0.5">
         <summary
           class="hover:cursor-pointer hover:opacity-70 text-sm text-center">
           {{ $t('quiz.result.bookmarkList') }}
         </summary>
-        <ul class="list-of-wrong-answers border-t border-lavender-600">
+        <ul class="list-of-wrong-answers border-t border-darklavender-200">
           <li v-for="(item, index) in listOfWrongItems" :key="item">
             <input
               type="checkbox"
@@ -68,12 +68,12 @@
         class="font-semibold pl-2 hover:cursor-pointer"
         >{{ $t('quiz.result.moveToMemorisedWordsList') }}</label
       >
-      <details class="mt-1 mx-auto sm:w-96 bg-white px-3 rounded-md py-0.5">
+      <details class="mt-1 mx-auto sm:w-96 bg-white px-3 rounded py-0.5">
         <summary
           class="hover:cursor-pointer hover:opacity-70 text-sm text-center">
           {{ $t('quiz.result.memorisedWordsList') }}
         </summary>
-        <ul class="list-of-correct-answers border-t border-lavender-600">
+        <ul class="list-of-correct-answers border-t border-darklavender-200">
           <li v-for="(item, index) in listOfCorrectItems" :key="item">
             <input
               type="checkbox"
@@ -103,7 +103,7 @@
     </div>
     <div class="flex justify-center">
       <button
-        class="py-0.5 my-1 px-16 font-bold rounded-full bg-golden-yellow-400 hover:bg-golden-yellow-800"
+        class="py-0.5 my-1 px-16 font-bold rounded bg-darklavender-200 border border-darklavender-800 hover:bg-white hover:text-darklavender-800"
         @click="save">
         {{ $t('quiz.result.save') }}
       </button>
@@ -111,11 +111,11 @@
   </div>
   <details
     :class="{ 'mt-5': !movableExpressionExists }"
-    class="mb-12 py-1 px-4 border-2 border-lavender-800 rounded-md">
+    class="mb-12 py-1 px-4 border-2 border-darklavender-200 rounded">
     <summary class="hover:cursor-pointer hover:opacity-70">
       {{ $t('quiz.result.showUserAnswers') }}
     </summary>
-    <ul class="user-answer-list border-t border-lavender-600 py-2">
+    <ul class="user-answer-list border-t border-darklavender-200 py-2">
       <template v-for="userAnswer in userAnswers" :key="userAnswer">
         <li v-if="userAnswer.content[0] === '× '">
           × {{ $t('quiz.result.blank') }}
@@ -140,7 +140,7 @@
       :class="{
         'py-3': movableExpressionExists,
         'border-2': movableExpressionExists,
-        'border-lavender-800': movableExpressionExists,
+        'border-darklavender-200': movableExpressionExists,
         'px-2': movableExpressionExists,
         'sm:px-4': movableExpressionExists,
         'basis-1/2': !movableExpressionExists
@@ -148,7 +148,7 @@
       <div v-if="movableExpressionExists">
         <p class="text-sm mb-2">{{ $t('quiz.result.recommendNextAction') }}</p>
         <p
-          class="important-notice font-semibold text-sm p-1 rounded bg-lavender-50">
+          class="important-notice font-semibold text-sm p-1 rounded bg-darklavender-50">
           <span class="text-red-600">{{ $t('quiz.result.important') }}</span>
           {{ $t('quiz.result.importantContent') }}
         </p>
@@ -161,7 +161,7 @@
         }">
         <a
           href="/bookmarked_expressions"
-          class="inline-block hover:bg-golden-yellow-800 bg-golden-yellow-400 rounded-full font-bold text-sm py-1 mt-3"
+          class="inline-block hover:bg-darklavender-600 hover:text-white bg-darklavender-200 rounded font-bold text-sm py-1 mt-3"
           :class="{
             'py-2': !movableExpressionExists,
             'w-11/12': !movableExpressionExists,
@@ -181,7 +181,7 @@
       }">
       <button
         @click="getNewQuiz"
-        class="hover:bg-golden-yellow-800 bg-golden-yellow-400 rounded-full font-bold px-16 py-1"
+        class="hover:bg-darklavender-600 hover:text-white bg-darklavender-200 rounded font-bold px-16 py-1"
         :class="{
           'w-11/12': !movableExpressionExists,
           'py-2': !movableExpressionExists,
@@ -261,22 +261,28 @@ export default {
     showToast() {
       const warning = this.createWarning()
       if (this.success[0] === 'bookmarked_expressions') {
-        this.toast.success(`ブックマークしました！${warning}`)
+        this.toast.success(
+          `要復習リストに英単語・フレーズを保存しました！${warning}`
+        )
       } else if (this.success[0] === 'memorised_expressions') {
-        this.toast.success(`覚えた語彙リストに保存しました！${warning}`)
+        this.toast.success(
+          `覚えたリストに英単語・フレーズを保存しました！${warning}`
+        )
       } else if (this.failure[0] === 'bookmarked_expressions') {
-        this.toast.error('ブックマークできませんでした')
+        this.toast.error('要復習リストに英単語・フレーズを保存できませんでした')
       } else if (this.failure[0] === 'memorised_expressions') {
-        this.toast.error('覚えた語彙リストに保存できませんでした')
+        this.toast.error('覚えたリストに英単語・フレーズを保存できませんでした')
       }
     },
     showToastOfBookmarkAndMemorisedList(warning) {
       if (this.failure.length === 2) {
-        this.toast.error('ブックマーク・覚えた語彙リストに保存できませんでした')
+        this.toast.error(
+          '要復習リストと覚えたリストに英単語・フレーズを保存できませんでした'
+        )
       } else if (this.success.length === 2) {
         this.isSaved = true
         this.toast.success(
-          `ブックマーク・覚えた語彙リストに保存しました！${warning}`
+          `要復習リストと覚えたリストに英単語・フレーズを保存しました！${warning}`
         )
       } else if (
         this.failure[0] === 'bookmarked_expressions' &&
@@ -285,7 +291,7 @@ export default {
         this.isSavedMemorisedList = true
         this.checkedContentsToMemorisedList = []
         this.toast.warning(
-          `覚えた語彙リストに保存しました${warning}がブックマークは出来ませんでした`
+          `英単語・フレーズを覚えたリストに保存しました${warning}が要復習リストに保存は出来ませんでした`
         )
       } else if (
         this.failure[0] === 'memorised_expressions' &&
@@ -294,7 +300,7 @@ export default {
         this.isSavedBookmark = true
         this.checkedContentsToBookmark = []
         this.toast.warning(
-          `英単語・フレーズをブックマークしました${warning}が覚えた語彙リストには保存できませんでした`
+          `英単語・フレーズを要復習リストに保存しました${warning}が覚えたリストには保存できませんでした`
         )
       }
     },

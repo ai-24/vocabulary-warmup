@@ -1,37 +1,34 @@
 ja:
+  activerecord:
+    models:
+      expression: 英単語・フレーズ
   welcome:
     index:
-      target: 間違いやすい英単語やフレーズの学習をサポートするツール
+      target: 間違いやすい英単語・フレーズの学習をサポート
       about_word_warmup: このツールでできること
-      function1: 英単語・フレーズの登録
-      detail_of_function1: 意味が似ている、スペルが似ているなど様々な理由で間違いやすい英単語・フレーズを間違いやすいもの同士で登録できます。それぞれの意味や例文、使い分けの解説が入力可能です。
-      function2: クイズ
-      detail_of_function2: 自身で登録した英単語・フレーズを覚えたかのクイズが行えます。
-      function3: クイズの結果を元に覚えた語彙リストとブックマークに簡単保存
-      detail_of_function3:  覚えた、または覚えていなかった英単語・フレーズをクイズの結果から自動で抽出するため、英単語・フレーズの管理が簡単で効率よく復習が可能です。
-      function4: 英単語・フレーズ(イギリス英語)18語の閲覧とそのクイズのお試しはログイン不要
-      detail_of_function4: これら18語の英単語・フレーズはログインした後、修正・削除も可能です。
-      after_login: ※クイズの結果を元に覚えた語彙リストとブックマークに英単語・フレーズを保存するにはログインが必要となります。
+      function1: 間違いやすい英単語・フレーズの登録
+      detail_of_function1: 意味が似ている、スペルが似ているなど様々な理由で間違いやすい英単語・フレーズを間違いやすいもの同士で登録できます。同時に意味や例文、使い分けの解説も保存できます。
+      function2: 覚えた、覚えていないをクイズで確認
+      detail_of_function2: 自身で登録した英単語・フレーズでクイズができます。
+      function3: クイズの結果から自動で振り分け
+      detail_of_function3:  クイズの結果から覚えた、覚えていない英単語・フレーズを自動で振り分けするので、効率よく復習ができます。
+      function4: ログイン不要で試せます
+      detail_of_function4: ログインをしなくても、英単語・フレーズ(イギリス英語)18語の閲覧とクイズができます。
       target_user: こんな方におすすめ！
       user1: 英語の類義語を複数学んでもすぐに忘れてしまう
       user2: 英単語・フレーズを新しく覚えたけど、既によく使う単語との違いが分からずなかなか英会話で新しい単語を使えない
       user3: 自信を持って英語を使えるようになりたい
       user4: 場面に適した英語を使えるようになりたい
       cost: 無料でご利用いただけます
-      try_app: 試してみる(機能に制限あり)
+      try_app: 試してみる
+      limitation_of_functions: 機能に制限があります
   home:
     index:
-      title: 一覧
-      no_data: このリストに登録されている英単語またはフレーズはありません
-      create: 新規作成
       start_quiz: クイズに挑戦
       try_quiz: クイズを試す
-      warning: ログイン後に挑戦すると英単語・フレーズをブックマークや覚えた語彙リストに保存可能となります
-      how_to_create_data: ログインすると英単語やフレーズの登録が可能です
+      warning: ログイン後に挑戦すると英単語・フレーズを要復習や覚えたリストに保存可能となります
   bookmarked_expressions:
     index:
-      title: 一覧
-      no_data: ブックマークしている英単語またはフレーズはありません
       unauthorized: ログインしていないため閲覧できません
       start_quiz: クイズに挑戦
     quizzes:
@@ -40,8 +37,6 @@ ja:
         no_data: このリストのクイズに問題が存在しません
   memorised_expressions:
     index:
-      title: 一覧
-      no_data: このリストに登録している英単語またはフレーズはありません
       unauthorized: ログインしていないため閲覧できません
       start_quiz: クイズに挑戦
     quizzes:
@@ -59,37 +54,41 @@ ja:
       success: ログアウトしました
   expressions:
     create:
-      success: 英単語またはフレーズを新規作成しました
+      success: 英単語・フレーズを新規作成しました
     update:
-      success: 英単語またはフレーズを編集しました
+      success: 英単語・フレーズを編集しました
     destroy:
-      success: 英単語又はフレーズを削除しました
+      success: 英単語・フレーズを削除しました
     show:
       no_authority: 権限がないため閲覧できません
-      title: 下記の英単語・フレーズの違いについて
+      and: と
+      about_differences: の違いについて
       explanation: 意味
       example: 例文
       note: メモ
       tag: タグ
       go_to_index: 一覧に戻る
-      edit: 編集
+      edit: 内容変更
       delete: 削除
-      confirm_deletion_of_expression: この英単語又はフレーズを本当に削除しますか？
+      confirm_deletion_of_expression: この英単語・フレーズを本当に削除しますか？
     new:
       title: 英単語・フレーズの新規作成フォーム
     edit:
-      title: 英単語・フレーズの編集フォーム
-      go_to_show: 詳細画面に戻る
+      title: 英単語・フレーズの内容変更
+      cancel: キャンセル
       go_to_index: 英単語・フレーズ一覧に戻る
   quizzes:
     show:
       title: クイズ
       no_data: このリストのクイズに問題が存在しません
   no_authority: 権限がありません
+  no_data: このリストに登録している英単語・フレーズはありません
   not_logged_in: ログインが必要です
-  words_and_phrases: 英単語・フレーズ
-  bookmark: ブックマーク
-  memorised_list: 覚えた語彙
+  words_and_phrases: 未分類
+  bookmark: 要復習
+  memorised_list: 覚えた
+  create: 単語・フレーズを追加
+  how_to_create_data: ログインが必要です
   terms_of_service: 利用規約
   privacy_policy: プライバシーポリシー
   delete_account: アカウント削除
