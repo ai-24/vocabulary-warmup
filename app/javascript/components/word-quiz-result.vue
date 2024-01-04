@@ -131,66 +131,61 @@
     </ul>
   </details>
   <div
+    class="mb-4 rounded-md bg-white"
     :class="{
-      'md:flex': !movableExpressionExists,
-      'md:flex-row': !movableExpressionExists
+      'py-3': movableExpressionExists,
+      'border-2': movableExpressionExists,
+      'border-darklavender-200': movableExpressionExists,
+      'px-2': movableExpressionExists,
+      'sm:px-4': movableExpressionExists,
+      'basis-1/2': !movableExpressionExists
     }">
-    <div
-      class="mb-8 rounded-md bg-white"
-      :class="{
-        'py-3': movableExpressionExists,
-        'border-2': movableExpressionExists,
-        'border-darklavender-200': movableExpressionExists,
-        'px-2': movableExpressionExists,
-        'sm:px-4': movableExpressionExists,
-        'basis-1/2': !movableExpressionExists
-      }">
-      <div v-if="movableExpressionExists">
-        <p class="text-sm mb-2">{{ $t('quiz.result.recommendNextAction') }}</p>
-        <p
-          class="important-notice font-semibold text-sm p-1 rounded bg-darklavender-50">
-          <span class="text-red-600">{{ $t('quiz.result.important') }}</span>
-          {{ $t('quiz.result.importantContent') }}
-        </p>
-      </div>
-      <div
-        :class="{
-          flex: movableExpressionExists,
-          'justify-center': movableExpressionExists,
-          'text-center': !movableExpressionExists
-        }">
-        <a
-          href="/bookmarked_expressions"
-          class="inline-block hover:bg-darklavender-600 hover:text-white bg-darklavender-200 rounded font-bold text-sm py-1 mt-3"
-          :class="{
-            'py-2': !movableExpressionExists,
-            'w-11/12': !movableExpressionExists,
-            'px-7': movableExpressionExists
-          }"
-          >{{ $t('quiz.result.review') }}</a
-        >
-      </div>
+    <div v-if="movableExpressionExists">
+      <p class="text-sm mb-2">{{ $t('quiz.result.recommendNextAction') }}</p>
+      <p
+        class="important-notice font-semibold text-sm p-1 rounded bg-darklavender-50">
+        <span class="text-red-600">{{ $t('quiz.result.important') }}</span>
+        {{ $t('quiz.result.importantContent') }}
+      </p>
     </div>
     <div
       :class="{
-        'py-3': movableExpressionExists,
         flex: movableExpressionExists,
         'justify-center': movableExpressionExists,
-        'basis-1/2': !movableExpressionExists,
         'text-center': !movableExpressionExists
       }">
-      <button
-        @click="getNewQuiz"
-        class="hover:bg-darklavender-600 hover:text-white bg-darklavender-200 rounded font-bold px-16 py-1"
+      <a
+        href="/bookmarked_expressions"
+        class="inline-block hover:bg-darklavender-600 hover:text-white bg-darklavender-200 rounded font-bold text-sm py-1 mt-3"
         :class="{
-          'w-11/12': !movableExpressionExists,
           'py-2': !movableExpressionExists,
-          'text-sm': !movableExpressionExists,
-          'mt-3': !movableExpressionExists
-        }">
-        {{ $t('quiz.result.tryAgain') }}
-      </button>
+          'w-11/12': !movableExpressionExists,
+          'px-7': movableExpressionExists
+        }"
+        >{{ $t('quiz.result.review') }}</a
+      >
     </div>
+  </div>
+  <div
+    :class="{
+      'py-3': movableExpressionExists,
+      flex: movableExpressionExists,
+      'justify-center': movableExpressionExists,
+      'basis-1/2': !movableExpressionExists,
+      'text-center': !movableExpressionExists,
+      'mb-4': !movableExpressionExists
+    }">
+    <button
+      @click="getNewQuiz"
+      class="hover:bg-darklavender-600 hover:text-white bg-darklavender-200 rounded font-bold px-16 py-1"
+      :class="{
+        'w-11/12': !movableExpressionExists,
+        'py-2': !movableExpressionExists,
+        'text-sm': !movableExpressionExists,
+        'mt-3': !movableExpressionExists
+      }">
+      {{ $t('quiz.result.tryAgain') }}
+    </button>
   </div>
 </template>
 
