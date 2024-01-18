@@ -69,6 +69,15 @@ RSpec.describe 'Expressions' do
       end
     end
 
+    it 'check if the page is redirected to the expression edit page after login' do
+      visit "/expressions/#{first_expression_items[0].expression.id}/edit"
+      expect(page).to have_current_path root_path
+      expect(page).to have_content 'ログインが必要です'
+      sign_in_with_warning user
+      expect(page).to have_content 'ログインしました'
+      expect(page).to have_current_path edit_expression_path(first_expression_items[0].expression.id)
+    end
+
     it 'check if it is home_path when user access to edit url of expression that user_id is nil when the user logged in' do
       sign_in_with_welcome_page '.last-login-button', new_user
       expect(page).to have_content 'ログインしました'

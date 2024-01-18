@@ -2,6 +2,8 @@
 - description '間違いやすい英単語やフレーズの学習をサポートするツールWord Warmupのクイズページ'
 
 .bg-white.pt-24.lg:pt-16.pb-14.max-w-800.w-full.mx-auto
+  p.text-green-700.font-bold.pt-1.pb-3
+    = notice
   h1.text-2xl.font-bold.mb-10.border-b.border-neutral-400.pb-2.mx-2.sm:mx-0
     = t('.title')
   div(data-vue='WordQuiz' data-vue-path='/api/quiz')

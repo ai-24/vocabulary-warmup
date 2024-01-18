@@ -508,4 +508,18 @@ RSpec.describe 'Expressions' do
       end
     end
   end
+
+  describe 'redirect' do
+    let!(:user) { FactoryBot.create(:user) }
+    let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+
+    it 'check if the page is redirected to the expression after login' do
+      visit "/expressions/#{first_expression_items[0].expression.id}"
+      expect(page).to have_content 'ログインが必要です'
+      expect(page).to have_current_path root_path
+      sign_in_with_warning user
+      expect(page).to have_content 'ログインしました'
+      expect(page).to have_current_path expression_path(first_expression_items[0].expression.id)
+    end
+  end
 end

@@ -3,6 +3,32 @@
 require 'rails_helper'
 
 RSpec.describe 'Bookmarked expressions' do
+  describe 'redirect' do
+    let!(:user) { FactoryBot.create(:user) }
+    let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+
+    before do
+      FactoryBot.create(:bookmarking, user:, expression: first_expression_items[0].expression)
+    end
+
+    it 'check the page is redirected to 要復習リスト after login' do
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+      visit home_path
+      click_link '要復習'
+      expect(page).to have_current_path bookmarked_expressions_path
+      expect(page).to have_content 'ログインしていないため閲覧できません'
+      within '.button-on-header' do
+        click_button 'Sign up / Log in with Google'
+      end
+      expect(page).to have_content 'ログインしました'
+      expect(page).to have_current_path bookmarked_expressions_path
+      expect(all('li.expression').count).to eq 1
+      expect(page).not_to have_content 'ログインしていないため閲覧できません'
+    end
+  end
+
   context 'when user who already has a bookmarking logged in' do
     let!(:user) { FactoryBot.create(:user) }
     let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }

@@ -77,7 +77,6 @@ class ExpressionsController < ApplicationController
   def require_login
     return if logged_in?
 
-    store_location
     redirect_to root_path, alert: t('not_logged_in')
   end
 
