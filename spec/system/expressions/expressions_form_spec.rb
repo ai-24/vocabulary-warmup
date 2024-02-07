@@ -41,7 +41,7 @@ RSpec.describe 'Expressions' do
       let!(:user) { FactoryBot.create(:user) }
       let(:new_user) { FactoryBot.build(:user) }
 
-      it 'check if a form is on the page when user logged in from login button on header after failing to access the form' do
+      it 'check if a form is on the page when user logged in from first-login-button after failing to access the form' do
         visit '/expressions/new'
         expect(page).to have_current_path root_path
         sign_in_with_welcome_page '.first-login-button', user
