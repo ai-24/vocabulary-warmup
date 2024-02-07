@@ -124,6 +124,42 @@ RSpec.describe 'Quiz' do
     end
   end
 
+  describe 'redirect' do
+    let!(:user) { FactoryBot.create(:user) }
+
+    before do
+      FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id))
+
+      visit '/'
+      within '.without-login' do
+        click_link '試してみる'
+      end
+      click_link 'クイズを試す'
+    end
+
+    it 'check if it is redirected to a new quiz' do
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+      fill_in('解答を入力', with: 'balcony')
+      click_button 'クイズに解答する'
+      click_button '次へ'
+      fill_in('解答を入力', with: '')
+      click_button 'クイズに解答する'
+      click_button 'クイズの結果を確認する'
+
+      click_button '保存する'
+      expect(page).to have_content '保存するにはサインアップ / ログインしてください。'
+
+      within '.button-on-header' do
+        click_button 'Sign up / Log in with Google'
+      end
+      expect(page).to have_content 'ログインしました'
+      expect(page).to have_current_path quiz_path
+      expect(page).to have_content '問題'
+    end
+  end
+
   describe 'count questions' do
     let!(:user) { FactoryBot.build(:user) }
 
@@ -195,42 +231,6 @@ RSpec.describe 'Quiz' do
   end
 
   describe 'quiz result' do
-    describe 'redirect' do
-      let!(:user) { FactoryBot.create(:user) }
-
-      before do
-        FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id))
-
-        visit '/'
-        within '.without-login' do
-          click_link '試してみる'
-        end
-        click_link 'クイズを試す'
-      end
-
-      it 'check if it is redirected to a new quiz' do
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
-        fill_in('解答を入力', with: 'balcony')
-        click_button 'クイズに解答する'
-        click_button '次へ'
-        fill_in('解答を入力', with: '')
-        click_button 'クイズに解答する'
-        click_button 'クイズの結果を確認する'
-
-        click_button '保存する'
-        expect(page).to have_content '保存するにはサインアップ / ログインしてください。'
-
-        within '.button-on-header' do
-          click_button 'Sign up / Log in with Google'
-        end
-        expect(page).to have_content 'ログインしました'
-        expect(page).to have_current_path quiz_path
-        expect(page).to have_content '問題'
-      end
-    end
-
     describe 'check if screens change' do
       before do
         visit '/'
