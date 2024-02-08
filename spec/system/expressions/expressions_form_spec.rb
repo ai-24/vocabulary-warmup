@@ -41,24 +41,21 @@ RSpec.describe 'Expressions' do
       let!(:user) { FactoryBot.create(:user) }
       let(:new_user) { FactoryBot.build(:user) }
 
-      it 'check if a form is on the page when user logged in from login button on header after failing to access the form' do
+      it 'check if a form is on the page when user logged in from first-login-button after failing to access the form' do
         visit '/expressions/new'
         expect(page).to have_current_path root_path
         sign_in_with_welcome_page '.first-login-button', user
         expect(page).to have_current_path '/expressions/new'
+        expect(page).to have_content 'ログインしました'
         expect(page).to have_content '意味の違いや使い分けを学習したい英単語・フレーズを入力してください'
       end
 
       it 'check if a form is on the page when user logged in from the section of error message after failing to access the form' do
-        OmniAuth.config.test_mode = true
-        OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
-
         visit '/expressions/new'
         expect(page).to have_current_path root_path
-        within '.error' do
-          click_button 'Sign up / Log in with Google'
-        end
+        sign_in_with_warning user
         expect(page).to have_current_path '/expressions/new'
+        expect(page).to have_content 'ログインしました'
         expect(page).to have_content '意味の違いや使い分けを学習したい英単語・フレーズを入力してください'
       end
 

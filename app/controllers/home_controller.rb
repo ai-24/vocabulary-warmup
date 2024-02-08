@@ -7,8 +7,5 @@ class HomeController < ApplicationController
                    else
                      Expression.where(user_id: nil)
                    end
-    return if session[:forwarding_url]&.match?(/new$/)
-
-    store_location
   end
 end

@@ -20,4 +20,13 @@ module SignInHelper
       click_button 'Sign up / Log in with Google'
     end
   end
+
+  def sign_in_with_warning(user)
+    OmniAuth.config.test_mode = true
+    OmniAuth.config.add_mock(:google_oauth2, { uid: user.uid, info: { name: user.name } })
+
+    within '.error' do
+      click_button 'Sign up / Log in with Google'
+    end
+  end
 end
