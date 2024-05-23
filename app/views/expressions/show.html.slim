@@ -52,14 +52,14 @@
       = link_to t('.edit'), edit_expression_path(@expression), class: 'mr-4 hover:text-neutral-400'
       = button_to t('.delete'), @expression, method: :delete, data: { turbo_confirm: t('.confirm_deletion_of_expression') }, class: 'hover:text-neutral-400'
   .grid.grid-cols-2.mt-10.h-6.relative
-    - if @expression.previous(@user)
+    - if @expression.previous(current_user)
       .text-center
-        = link_to expression_path(@expression.previous(@user)), id: 'previous', class: 'hover:opacity-50' do
+        = link_to expression_path(@expression.previous(current_user)), id: 'previous', class: 'hover:opacity-50' do
           i class="fa-solid fa-angle-left fa-2xl" style="color: #8d628d;"
-    - if @expression.next(@user)
+    - if @expression.next(current_user)
       .absolute.right-0.top-0.w-1/2
         .text-center
-          = link_to expression_path(@expression.next(@user)), id: 'next', class: 'hover:opacity-50' do
+          = link_to expression_path(@expression.next(current_user)), id: 'next', class: 'hover:opacity-50' do
             i class="fa-solid fa-angle-right fa-2xl" style="color: #8d628d;"
   .text-center.pt-10.text-darklavender-800
     - if @expression.bookmarking?

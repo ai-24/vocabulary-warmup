@@ -7,15 +7,10 @@ class ExpressionsController < ApplicationController
 
   def show
     if @expression.user_id.nil?
-      @user = current_user
       session.delete(:forwarding_url)
       session[:forwarding_url] = home_path
     elsif logged_in?
-      if @expression.user_id == current_user.id
-        @user = current_user
-      else
-        redirect_to home_path, alert: t('.no_authority')
-      end
+      redirect_to home_path, alert: t('.no_authority') if @expression.user_id != current_user.id
     else
       redirect_to root_path, alert: t('not_logged_in')
     end
