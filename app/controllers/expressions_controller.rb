@@ -21,8 +21,7 @@ class ExpressionsController < ApplicationController
   def edit; end
 
   def create
-    @expression = Expression.new(expression_params)
-    @expression.user_id = current_user.id
+    @expression = current_user.expressions.new(expression_params)
     @expression.tags = Tag.find_tags_object(@expression.tags)
 
     if @expression.save
