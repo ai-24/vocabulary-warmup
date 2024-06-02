@@ -33,7 +33,7 @@ class ExpressionsController < ApplicationController
 
   def update
     params = expression_params
-    Tagging.destroy_taggings(params, @expression)
+    @expression.destroy_taggings(params)
     ExpressionItem.destroy_expression_items(params, @expression)
     Example.destroy_examples(params, @expression)
     remove_tag_params(params) if params[:tags_attributes]
