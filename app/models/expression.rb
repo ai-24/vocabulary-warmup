@@ -123,6 +123,15 @@ class Expression < ApplicationRecord
     end
   end
 
+  def destroy_expression_items(params)
+    current_expression_items = expression_items.map(&:content)
+    new_expression_items = params[:expression_items_attributes].to_h.map { |expression_item| expression_item[1][:content].presence }.compact
+    return unless current_expression_items.count > new_expression_items.count
+
+    delete_expression_items = current_expression_items.difference(new_expression_items)
+    delete_expression_items.each { |expression_item| ExpressionItem.find_by(content: expression_item, expression_id: id)&.destroy }
+  end
+
   def extract_current_examples
     expression_items.map { |expression_item| expression_item.examples.map(&:content) }
   end

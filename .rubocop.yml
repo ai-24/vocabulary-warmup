@@ -13,7 +13,8 @@ Style/CaseLikeIf:
   Enabled: false
 
 Metrics/ClassLength:
-  Max: 120
+  Exclude:
+    - app/models/expression.rb
 
 RSpec/MultipleExpectations:
   Max: 11
