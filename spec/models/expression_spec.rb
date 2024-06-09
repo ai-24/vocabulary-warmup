@@ -294,6 +294,82 @@ RSpec.describe Expression, type: :model do
     end
   end
 
+  describe '#extract_current_examples' do
+    it 'check examples of expression' do
+      expression = described_class.find 1
+      current_examples = [["I'm drying my clothes on the balcony."], ['The postman left my parcel on the veranda.']]
+      expect(expression.extract_current_examples).to eq current_examples
+    end
+  end
+
+  describe '.extract_new_examples' do
+    it 'check new examples of expression' do
+      parameters = {
+        expression: {
+          note: '',
+          expression_items_attributes: {
+            '0' => {
+              id: 1,
+              content: 'balcony',
+              explanation: '(noun) A platform on the side of a building, accessible from inside the building.',
+              examples_attributes: { '0' => { id: 1, content: "I'm drying my clothes on the balcony." }, '1' => { content: 'This is new' } }
+            },
+            '1' => {
+              id: 2,
+              content: 'veranda',
+              explanation: '(noun) A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.',
+              examples_attributes: { '0' => { id: 2, content: 'The postman left my parcel on the veranda.' } }
+            },
+            '2' => {
+              content: '',
+              explanation: '',
+              examples_attributes: { '0' => { content: '' }, '1' => { content: '' }, '2' => { content: '' } }
+            }
+          }
+        }
+      }
+      raw_params = ActionController::Parameters.new(parameters)
+      params =
+        raw_params.require(:expression).permit(:id, :note, expression_items_attributes: [:id, :content, :explanation, { examples_attributes: %i[id content] }])
+      new_examples = [["I'm drying my clothes on the balcony.", 'This is new'], ['The postman left my parcel on the veranda.'], []]
+      expect(described_class.extract_new_examples(params)).to eq new_examples
+    end
+  end
+
+  describe '#destroy_examples' do
+    it 'check if old example is deleted' do
+      expression = described_class.find 1
+      parameters = {
+        expression: {
+          note: '',
+          expression_items_attributes: {
+            '0' => {
+              id: 1,
+              content: 'balcony',
+              explanation: '(noun) A platform on the side of a building, accessible from inside the building.',
+              examples_attributes: { '0' => { id: 1, content: "I'm drying my clothes on the balcony." } }
+            },
+            '1' => {
+              id: 2,
+              content: 'veranda',
+              explanation: '(noun) A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.',
+              examples_attributes: { '0' => { id: 2, content: '' } }
+            },
+            '2' => {
+              content: '',
+              explanation: '',
+              examples_attributes: { '0' => { content: '' }, '1' => { content: '' }, '2' => { content: '' } }
+            }
+          }
+        }
+      }
+      raw_params = ActionController::Parameters.new(parameters)
+      params =
+        raw_params.require(:expression).permit(:id, :note, expression_items_attributes: [:id, :content, :explanation, { examples_attributes: %i[id content] }])
+      expect { expression.destroy_examples(params) }.to change(Example, :count).by(-1)
+    end
+  end
+
   describe '#destroy_taggings' do
     let!(:user) { FactoryBot.create(:user) }
     let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }

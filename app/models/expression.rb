@@ -123,6 +123,29 @@ class Expression < ApplicationRecord
     end
   end
 
+  def extract_current_examples
+    expression_items.map { |expression_item| expression_item.examples.map(&:content) }
+  end
+
+  def self.extract_new_examples(params)
+    params[:expression_items_attributes].to_h.map do |expression_item|
+      expression_item[1][:examples_attributes].map { |example| example[1][:content].presence }.compact
+    end
+  end
+
+  def destroy_examples(params)
+    current_examples = extract_current_examples
+    new_examples = Expression.extract_new_examples(params)
+    current_examples.zip(new_examples) do |current_examples_of_expression_item, new_examples_of_expression_item|
+      next unless current_examples_of_expression_item.count > new_examples_of_expression_item.count
+
+      delete_examples = current_examples_of_expression_item.difference(new_examples_of_expression_item)
+      delete_examples.each do |example|
+        expression_items.each { |expression_item| Example.find_by(content: example, expression_item_id: expression_item.id)&.destroy }
+      end
+    end
+  end
+
   def destroy_taggings(params)
     current_tags = tags.map(&:name)
     new_tags = params[:tags_attributes].to_h.map { |tag| tag[1][:name] }
