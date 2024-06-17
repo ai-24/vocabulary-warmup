@@ -407,6 +407,75 @@ RSpec.describe Expression, type: :model do
     end
   end
 
+  describe '#find_tags_object' do
+    let!(:user) { FactoryBot.create(:user) }
+    let!(:tag) { FactoryBot.create(:tag) }
+
+    it 'return a new tag object when the tag does not exist on database' do
+      parameters = {
+        expression: {
+          note: '',
+          expression_items_attributes: {
+            '0' => {
+              content: 'balcony',
+              explanation: '(noun) A platform on the side of a building, accessible from inside the building.',
+              examples_attributes: { '0' => { content: "I'm drying my clothes on the balcony." } }
+            },
+            '1' => {
+              content: 'veranda',
+              explanation: '(noun) A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.',
+              examples_attributes: { '0' => { content: '' } }
+            },
+            '2' => { content: '', explanation: '', examples_attributes: { '0' => { content: '' }, '1' => { content: '' } } }
+          },
+          tags_attributes: { '0' => { name: 'new tag' } }
+        }
+      }
+      raw_params = ActionController::Parameters.new(parameters)
+      params = raw_params.require(:expression).permit(
+        :id, :note, expression_items_attributes: [:id, :content, :explanation, { examples_attributes: %i[id content] }], tags_attributes: %i[id name]
+      )
+      expression = user.expressions.new(params)
+      new_tag_object = expression.find_tags_object
+
+      expect(new_tag_object[0].id).to eq nil
+      expect(new_tag_object[0].name).to eq 'new tag'
+      expect { new_tag_object[0].save }.to change(Tag, :count).by(1)
+    end
+
+    it 'return a tag object from database when the tag exist' do
+      parameters = {
+        expression: {
+          note: '',
+          expression_items_attributes: {
+            '0' => {
+              content: 'balcony',
+              explanation: '(noun) A platform on the side of a building, accessible from inside the building.',
+              examples_attributes: { '0' => { content: "I'm drying my clothes on the balcony." } }
+            },
+            '1' => {
+              content: 'veranda',
+              explanation: '(noun) A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.',
+              examples_attributes: { '0' => { content: '' } }
+            },
+            '2' => { content: '', explanation: '', examples_attributes: { '0' => { content: '' }, '1' => { content: '' } } }
+          },
+          tags_attributes: { '0' => { name: tag.name } }
+        }
+      }
+      raw_params = ActionController::Parameters.new(parameters)
+      params = raw_params.require(:expression).permit(
+        :id, :note, expression_items_attributes: [:id, :content, :explanation, { examples_attributes: %i[id content] }], tags_attributes: %i[id name]
+      )
+      expression = user.expressions.new(params)
+      saved_tag_object = expression.find_tags_object
+
+      expect(saved_tag_object[0].id).not_to eq nil
+      expect(saved_tag_object[0].name).to eq 'test'
+      expect { saved_tag_object[0].save }.to change(Tag, :count).by(0)
+    end
+  end
+
   describe '#destroy_taggings' do
     let!(:user) { FactoryBot.create(:user) }
     let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }

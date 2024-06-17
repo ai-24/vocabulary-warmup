@@ -155,6 +155,10 @@ class Expression < ApplicationRecord
     end
   end
 
+  def find_tags_object
+    tags.map { |tag| Tag.find_by(name: tag.name) || tag }
+  end
+
   def destroy_taggings(params)
     current_tags = tags.map(&:name)
     new_tags = params[:tags_attributes].to_h.map { |tag| tag[1][:name] }

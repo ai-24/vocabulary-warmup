@@ -22,7 +22,7 @@ class ExpressionsController < ApplicationController
 
   def create
     @expression = current_user.expressions.new(expression_params)
-    @expression.tags = Tag.find_tags_object(@expression.tags)
+    @expression.tags = @expression.find_tags_object
 
     if @expression.save
       redirect_to expression_url(@expression), notice: t('.success')
