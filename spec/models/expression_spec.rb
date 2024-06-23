@@ -293,4 +293,229 @@ RSpec.describe Expression, type: :model do
       expect(second_expression_items[0].expression).not_to be_memorising
     end
   end
+
+  describe '#destroy_expression_items' do
+    let!(:user) { FactoryBot.create(:user) }
+    let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 3, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+
+    it 'check if old expression_item is deleted' do
+      parameters = {
+        expression: {
+          note: '',
+          expression_items_attributes: {
+            '0' => {
+              id: first_expression_items[0].id,
+              content: first_expression_items[0].content,
+              explanation: first_expression_items[0].explanation,
+              examples_attributes: { '0' => { content: 'This is an example.' } }
+            },
+            '1' => {
+              id: first_expression_items[1].id,
+              content: first_expression_items[1].content,
+              explanation: first_expression_items[1].explanation,
+              examples_attributes: { '0' => { content: 'This is an example.' } }
+            },
+            '2' => {
+              id: first_expression_items[2].id,
+              content: '',
+              explanation: '',
+              examples_attributes: { '0' => { content: '' }, '1' => { content: '' }, '2' => { content: '' } }
+            }
+          }
+        }
+      }
+      raw_params = ActionController::Parameters.new(parameters)
+      params =
+        raw_params.require(:expression).permit(:id, :note, expression_items_attributes: [:id, :content, :explanation, { examples_attributes: %i[id content] }])
+      expect { first_expression_items[0].expression.destroy_expression_items(params) }.to change(ExpressionItem, :count).by(-1)
+    end
+  end
+
+  describe '#extract_current_examples' do
+    it 'check examples of expression' do
+      expression = described_class.find 1
+      current_examples = [["I'm drying my clothes on the balcony."], ['The postman left my parcel on the veranda.']]
+      expect(expression.extract_current_examples).to eq current_examples
+    end
+  end
+
+  describe '.extract_new_examples' do
+    it 'check new examples of expression' do
+      parameters = {
+        expression: {
+          note: '',
+          expression_items_attributes: {
+            '0' => {
+              id: 1,
+              content: 'balcony',
+              explanation: '(noun) A platform on the side of a building, accessible from inside the building.',
+              examples_attributes: { '0' => { id: 1, content: "I'm drying my clothes on the balcony." }, '1' => { content: 'This is new' } }
+            },
+            '1' => {
+              id: 2,
+              content: 'veranda',
+              explanation: '(noun) A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.',
+              examples_attributes: { '0' => { id: 2, content: 'The postman left my parcel on the veranda.' } }
+            },
+            '2' => {
+              content: '',
+              explanation: '',
+              examples_attributes: { '0' => { content: '' }, '1' => { content: '' }, '2' => { content: '' } }
+            }
+          }
+        }
+      }
+      raw_params = ActionController::Parameters.new(parameters)
+      params =
+        raw_params.require(:expression).permit(:id, :note, expression_items_attributes: [:id, :content, :explanation, { examples_attributes: %i[id content] }])
+      new_examples = [["I'm drying my clothes on the balcony.", 'This is new'], ['The postman left my parcel on the veranda.'], []]
+      expect(described_class.extract_new_examples(params)).to eq new_examples
+    end
+  end
+
+  describe '#destroy_examples' do
+    it 'check if old example is deleted' do
+      expression = described_class.find 1
+      parameters = {
+        expression: {
+          note: '',
+          expression_items_attributes: {
+            '0' => {
+              id: 1,
+              content: 'balcony',
+              explanation: '(noun) A platform on the side of a building, accessible from inside the building.',
+              examples_attributes: { '0' => { id: 1, content: "I'm drying my clothes on the balcony." } }
+            },
+            '1' => {
+              id: 2,
+              content: 'veranda',
+              explanation: '(noun) A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.',
+              examples_attributes: { '0' => { id: 2, content: '' } }
+            },
+            '2' => {
+              content: '',
+              explanation: '',
+              examples_attributes: { '0' => { content: '' }, '1' => { content: '' }, '2' => { content: '' } }
+            }
+          }
+        }
+      }
+      raw_params = ActionController::Parameters.new(parameters)
+      params =
+        raw_params.require(:expression).permit(:id, :note, expression_items_attributes: [:id, :content, :explanation, { examples_attributes: %i[id content] }])
+      expect { expression.destroy_examples(params) }.to change(Example, :count).by(-1)
+    end
+  end
+
+  describe '#find_tags_object' do
+    let!(:user) { FactoryBot.create(:user) }
+    let!(:tag) { FactoryBot.create(:tag) }
+
+    it 'return a new tag object when the tag does not exist on database' do
+      parameters = {
+        expression: {
+          note: '',
+          expression_items_attributes: {
+            '0' => {
+              content: 'balcony',
+              explanation: '(noun) A platform on the side of a building, accessible from inside the building.',
+              examples_attributes: { '0' => { content: "I'm drying my clothes on the balcony." } }
+            },
+            '1' => {
+              content: 'veranda',
+              explanation: '(noun) A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.',
+              examples_attributes: { '0' => { content: '' } }
+            },
+            '2' => { content: '', explanation: '', examples_attributes: { '0' => { content: '' }, '1' => { content: '' } } }
+          },
+          tags_attributes: { '0' => { name: 'new tag' } }
+        }
+      }
+      raw_params = ActionController::Parameters.new(parameters)
+      params = raw_params.require(:expression).permit(
+        :id, :note, expression_items_attributes: [:id, :content, :explanation, { examples_attributes: %i[id content] }], tags_attributes: %i[id name]
+      )
+      expression = user.expressions.new(params)
+      new_tag_object = expression.find_tags_object
+
+      expect(new_tag_object[0].id).to eq nil
+      expect(new_tag_object[0].name).to eq 'new tag'
+      expect { new_tag_object[0].save }.to change(Tag, :count).by(1)
+    end
+
+    it 'return a tag object from database when the tag exist' do
+      parameters = {
+        expression: {
+          note: '',
+          expression_items_attributes: {
+            '0' => {
+              content: 'balcony',
+              explanation: '(noun) A platform on the side of a building, accessible from inside the building.',
+              examples_attributes: { '0' => { content: "I'm drying my clothes on the balcony." } }
+            },
+            '1' => {
+              content: 'veranda',
+              explanation: '(noun) A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.',
+              examples_attributes: { '0' => { content: '' } }
+            },
+            '2' => { content: '', explanation: '', examples_attributes: { '0' => { content: '' }, '1' => { content: '' } } }
+          },
+          tags_attributes: { '0' => { name: tag.name } }
+        }
+      }
+      raw_params = ActionController::Parameters.new(parameters)
+      params = raw_params.require(:expression).permit(
+        :id, :note, expression_items_attributes: [:id, :content, :explanation, { examples_attributes: %i[id content] }], tags_attributes: %i[id name]
+      )
+      expression = user.expressions.new(params)
+      saved_tag_object = expression.find_tags_object
+
+      expect(saved_tag_object[0].id).not_to eq nil
+      expect(saved_tag_object[0].name).to eq 'test'
+      expect { saved_tag_object[0].save }.to change(Tag, :count).by(0)
+    end
+  end
+
+  describe '#destroy_taggings' do
+    let!(:user) { FactoryBot.create(:user) }
+    let!(:first_expression_items) { FactoryBot.create_list(:expression_item, 2, expression: FactoryBot.create(:empty_note, user_id: user.id)) }
+    let!(:tagging) { FactoryBot.create(:tagging, expression: first_expression_items[0].expression) }
+
+    before do
+      FactoryBot.create(:tagging2, expression: first_expression_items[0].expression)
+    end
+
+    it 'check if old tagging is deleted' do
+      parameters = {
+        expression: {
+          note: '',
+          expression_items_attributes: {
+            '0' => {
+              id: 1,
+              content: 'balcony',
+              explanation: '(noun) A platform on the side of a building, accessible from inside the building.',
+              examples_attributes: { '0' => { id: 1, content: "I'm drying my clothes on the balcony." } }
+            },
+            '1' => {
+              id: 2,
+              content: 'veranda',
+              explanation: '(noun) A covered area in front of an entrance, normally on the ground floor and generally quite ornate or fancy, with room to sit.',
+              examples_attributes: { '0' => { id: 2, content: '' } }
+            },
+            '2' => {
+              content: '',
+              explanation: '',
+              examples_attributes: { '0' => { content: '' }, '1' => { content: '' }, '2' => { content: '' } }
+            }
+          },
+          tags_attributes: { '0' => { id: tagging.tag.id, name: tagging.tag.name } }
+        }
+      }
+      raw_params = ActionController::Parameters.new(parameters)
+      params = raw_params.require(:expression).permit(
+        :id, :note, expression_items_attributes: [:id, :content, :explanation, { examples_attributes: %i[id content] }], tags_attributes: %i[id name]
+      )
+      expect { first_expression_items[0].expression.destroy_taggings(params) }.to change(Tagging, :count).by(-1)
+    end
+  end
 end

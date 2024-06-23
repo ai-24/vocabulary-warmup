@@ -22,7 +22,7 @@ class ExpressionsController < ApplicationController
 
   def create
     @expression = current_user.expressions.new(expression_params)
-    @expression.tags = Tag.find_tags_object(@expression.tags)
+    @expression.tags = @expression.find_tags_object
 
     if @expression.save
       redirect_to expression_url(@expression), notice: t('.success')
@@ -33,9 +33,9 @@ class ExpressionsController < ApplicationController
 
   def update
     params = expression_params
-    Tagging.destroy_taggings(params, @expression)
-    ExpressionItem.destroy_expression_items(params, @expression)
-    Example.destroy_examples(params, @expression)
+    @expression.destroy_taggings(params)
+    @expression.destroy_expression_items(params)
+    @expression.destroy_examples(params)
     remove_tag_params(params) if params[:tags_attributes]
 
     if @expression.update(params)

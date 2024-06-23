@@ -122,4 +122,48 @@ class Expression < ApplicationRecord
       next_expression(user)
     end
   end
+
+  def destroy_expression_items(params)
+    current_expression_items = expression_items.map(&:content)
+    new_expression_items = params[:expression_items_attributes].to_h.map { |expression_item| expression_item[1][:content].presence }.compact
+    return unless current_expression_items.count > new_expression_items.count
+
+    delete_expression_items = current_expression_items.difference(new_expression_items)
+    delete_expression_items.each { |expression_item| ExpressionItem.find_by(content: expression_item, expression_id: id)&.destroy }
+  end
+
+  def extract_current_examples
+    expression_items.map { |expression_item| expression_item.examples.map(&:content) }
+  end
+
+  def self.extract_new_examples(params)
+    params[:expression_items_attributes].to_h.map do |expression_item|
+      expression_item[1][:examples_attributes].map { |example| example[1][:content].presence }.compact
+    end
+  end
+
+  def destroy_examples(params)
+    current_examples = extract_current_examples
+    new_examples = Expression.extract_new_examples(params)
+    current_examples.zip(new_examples) do |current_examples_of_expression_item, new_examples_of_expression_item|
+      next unless current_examples_of_expression_item.count > new_examples_of_expression_item.count
+
+      delete_examples = current_examples_of_expression_item.difference(new_examples_of_expression_item)
+      delete_examples.each do |example|
+        expression_items.each { |expression_item| Example.find_by(content: example, expression_item_id: expression_item.id)&.destroy }
+      end
+    end
+  end
+
+  def find_tags_object
+    tags.map { |tag| Tag.find_by(name: tag.name) || tag }
+  end
+
+  def destroy_taggings(params)
+    current_tags = tags.map(&:name)
+    new_tags = params[:tags_attributes].to_h.map { |tag| tag[1][:name] }
+    delete_tag_names = current_tags.difference(new_tags)
+    delete_tags = Tag.where(name: delete_tag_names)
+    delete_tags.each { |tag| Tagging.find_by(tag:, expression: self)&.destroy }
+  end
 end
