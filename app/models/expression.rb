@@ -24,11 +24,11 @@ class Expression < ApplicationRecord
   end
 
   def bookmarking?
-    !!Bookmarking.find_by(expression_id: id, user_id:)
+    Bookmarking.exists?(expression_id: id, user_id:)
   end
 
   def memorising?
-    !!Memorising.find_by(expression_id: id, user_id:)
+    Memorising.exists?(expression_id: id, user_id:)
   end
 
   def self.copy_initial_expressions!(user_id)
