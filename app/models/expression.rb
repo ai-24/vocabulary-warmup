@@ -31,11 +31,10 @@ class Expression < ApplicationRecord
     Memorising.exists?(expression_id: id, user_id:)
   end
 
-  def self.copy_initial_expressions!(user_id)
+  def self.copy_initial_expressions!(current_user)
     Expression.where(user_id: nil).find_each do |expression|
-      new_expression = Expression.new
+      new_expression = current_user.expressions.new
       new_expression.note = expression.note
-      new_expression.user_id = user_id
       new_expression.save!
 
       ExpressionItem.copy_expression_items!(expression, new_expression)
