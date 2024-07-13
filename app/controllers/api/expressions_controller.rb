@@ -10,7 +10,7 @@ class API::ExpressionsController < API::BaseController
                        users_expressions = Expression.where(user_id: current_user.id)
                        search_by_keyword(search_words, users_expressions)
                      else
-                       Expression.find_expressions_of_users_default_list(current_user.id)
+                       Expression.find_expressions_of_users_default_list(current_user)
                      end
                    else
                      Expression.where(user_id: nil)

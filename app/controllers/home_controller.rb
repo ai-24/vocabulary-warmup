@@ -3,7 +3,7 @@
 class HomeController < ApplicationController
   def index
     @expressions = if logged_in?
-                     Expression.find_expressions_of_users_default_list(current_user.id)
+                     Expression.find_expressions_of_users_default_list(current_user)
                    else
                      Expression.where(user_id: nil)
                    end

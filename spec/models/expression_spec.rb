@@ -248,13 +248,13 @@ RSpec.describe Expression, type: :model do
     end
 
     it 'return expressions that belongs to the user but does not belong to bookmarking and memorising' do
-      expect(described_class.find_expressions_of_users_default_list(user.id).count).to eq 1
-      expect(described_class.find_expressions_of_users_default_list(user.id)[0].expression_items[0].content).to eq second_expression_items[0].content
+      expect(described_class.find_expressions_of_users_default_list(user).count).to eq 1
+      expect(described_class.find_expressions_of_users_default_list(user)[0].expression_items[0].content).to eq second_expression_items[0].content
     end
 
     it 'return empty array when none expressions are found' do
       FactoryBot.create(:bookmarking, user:, expression: second_expression_items[0].expression)
-      expect(described_class.find_expressions_of_users_default_list(user.id)).to eq []
+      expect(described_class.find_expressions_of_users_default_list(user)).to eq []
     end
   end
 
