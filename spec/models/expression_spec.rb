@@ -228,7 +228,7 @@ RSpec.describe Expression, type: :model do
 
     it 'check if expressions which user_id are nil are copied' do
       expect do
-        described_class.copy_initial_expressions!(user.id)
+        described_class.copy_initial_expressions!(user)
       end.to change(described_class, :count).by(2).and change(ExpressionItem, :count).by(4).and change(Example, :count).by(2)
       expect(described_class.where('user_id = ?', user.id).count).to eq 2
       expect(ExpressionItem.where('content = ?', first_expression_item.content).count).to eq 2
