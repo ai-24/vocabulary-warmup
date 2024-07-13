@@ -1216,7 +1216,7 @@ RSpec.describe 'Quiz' do
       it 'check if the quiz does not start when question is none' do
         click_button '保存する'
         expect(page).to have_content '要復習リストに英単語・フレーズを保存しました！'
-        expect(Expression.find_expressions_of_users_default_list(user.id).count).to eq 0
+        expect(Expression.find_expressions_of_users_default_list(user).count).to eq 0
 
         click_button 'クイズに再挑戦'
         expect(page).to have_current_path '/home'

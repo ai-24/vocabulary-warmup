@@ -41,10 +41,10 @@ class Expression < ApplicationRecord
     end
   end
 
-  def self.find_expressions_of_users_default_list(user_id)
+  def self.find_expressions_of_users_default_list(current_user)
     expressions = []
 
-    Expression.where('user_id = ?', user_id).order(:created_at, :id).each do |expression|
+    current_user.expressions.order(:created_at, :id).each do |expression|
       next unless !expression.bookmarking? && !expression.memorising?
 
       expressions.push(Expression.find(expression.id))
@@ -67,7 +67,7 @@ class Expression < ApplicationRecord
   def previous_expression(user)
     if !!user
       previous_expressions = []
-      expressions = Expression.find_expressions_of_users_default_list(user.id)
+      expressions = Expression.find_expressions_of_users_default_list(user)
       expressions.each_with_index do |expression, i|
         previous_expressions.push(expressions[i - 1]) if self == expression && i - 1 >= 0
       end
@@ -102,7 +102,7 @@ class Expression < ApplicationRecord
   def next_expression(user)
     if !!user
       next_expressions = []
-      expressions = Expression.find_expressions_of_users_default_list(user.id)
+      expressions = Expression.find_expressions_of_users_default_list(user)
       expressions.each_with_index do |expression, i|
         next_expressions.push(expressions[i + 1]) if self == expression
       end
