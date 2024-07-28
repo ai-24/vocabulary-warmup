@@ -7,7 +7,7 @@ class API::ExpressionsController < API::BaseController
     @expressions = if logged_in?
                      if params[:search_word]
                        search_words = params[:search_word].split(/[[:blank:]]/)
-                       users_expressions = Expression.where(user_id: current_user.id)
+                       users_expressions = current_user.expressions
                        search_by_keyword(search_words, users_expressions)
                      else
                        Expression.find_expressions_of_users_default_list(current_user)
