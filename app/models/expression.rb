@@ -44,10 +44,10 @@ class Expression < ApplicationRecord
   def self.find_expressions_of_users_default_list(current_user)
     expressions = []
 
-    current_user.expressions.order(:created_at, :id).each do |expression|
-      next unless !expression.bookmarking? && !expression.memorising?
+    current_user.expressions.preload(:bookmarkings, :memorisings).order(:created_at, :id).each do |expression|
+      next unless expression.bookmarkings.blank? && expression.memorisings.blank?
 
-      expressions.push(Expression.find(expression.id))
+      expressions.push(expression)
     end
     expressions
   end
