@@ -4,6 +4,7 @@ ja:
       expression: 英単語・フレーズ
   welcome:
     index:
+      browser_title: 間違いやすい英単語やフレーズの学習をサポートするツール
       target: 間違いやすい英単語・フレーズの学習をサポート
       about_word_warmup: このツールでできること
       function1: 間違いやすい英単語・フレーズの登録
@@ -22,25 +23,34 @@ ja:
       cost: 無料でご利用いただけます
       try_app: 試してみる
       limitation_of_functions: 機能に制限があります
+    terms_of_service:
+      browser_title: 利用規約
+    privacy_policy:
+      browser_title: プライバシーポリシー
   home:
     index:
+      browser_title: 英単語・フレーズの一覧
       start_quiz: クイズに挑戦
       try_quiz: クイズを試す
       warning: ログイン後に挑戦すると英単語・フレーズを要復習や覚えたリストに保存可能となります
   bookmarked_expressions:
     index:
+      browser_title: ブックマーク一覧
       unauthorized: ログインしていないため閲覧できません
       start_quiz: クイズに挑戦
     quizzes:
       show:
+        browser_title: クイズ（ブックマーク）
         title: クイズ
         no_data: このリストのクイズに問題が存在しません
   memorised_expressions:
     index:
+      browser_title: 覚えた語彙一覧
       unauthorized: ログインしていないため閲覧できません
       start_quiz: クイズに挑戦
     quizzes:
       show:
+        browser_title: クイズ（覚えた語彙一覧）
         title: クイズ
         no_data: このリストのクイズに問題が存在しません
   users:
@@ -60,6 +70,7 @@ ja:
     destroy:
       success: 英単語・フレーズを削除しました
     show:
+      browser_title: 英単語・フレーズの詳細
       no_authority: 権限がないため閲覧できません
       and: と
       about_differences: の違いについて
@@ -72,13 +83,16 @@ ja:
       delete: 削除
       confirm_deletion_of_expression: この英単語・フレーズを本当に削除しますか？
     new:
+      browser_title: 英単語・フレーズの新規作成
       title: 英単語・フレーズの新規作成フォーム
     edit:
+      browser_title: 英単語・フレーズの編集
       title: 英単語・フレーズの内容変更
       cancel: キャンセル
       go_to_index: 英単語・フレーズ一覧に戻る
   quizzes:
     show:
+      browser_title: クイズ
       title: クイズ
       no_data: このリストのクイズに問題が存在しません
   no_authority: 権限がありません
